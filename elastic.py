@@ -10,6 +10,8 @@ from ase.atoms import Atoms
 from pyspglib import spglib as spg
 from pvasp import ParCalculate
 from scipy.linalg import norm
+from numpy import dot
+from math import acos, pi
 
 def BMEOS(v,v0,b0,b0p):
     return (b0/b0p)*(pow(v0/v,b0p) - 1)
@@ -102,6 +104,36 @@ class Crystal(Atoms):
             self.pv=pvdat
         return self.bm_eos
 
+    def get_elastic_tensor(self):
+        pass
+    
+    def get_vecang_cell(self, uc=None):
+        '''
+        Compute A,B,C, alpha,beta,gamma cell params
+        from the unit cell matrix (uc)
+        '''
+        if uc==None :
+            uc=self.get_cell()
+        ucv=[uc[i,:]/norm(uc[i,:]) for i in range(3)]
+        uca=[180*acos(dot(ucv[(i+1)%3],ucv[(i+2)%3]))/pi for i in range(3)]
+        return [norm(uc[i,:]) for i in range(3)] + uca
+        
+    def get_deformed_cell(self, axis=0, size=1):
+        '''
+        Return the cell (with atoms) deformed along one
+        cell parameter (0,1,2 = a,b,c ; 3,4,5 = alpha,beta,gamma) by
+        size percent or size degrees (axis/angles).
+        '''
+        cryst=Crystal(self)
+        uc=cryst.get_cell()
+        if axis < 3 :
+            uc[axis,:]=(1+size/100.0)*uc[axis,:]
+            cryst.set_cell(uc, scale_atoms=True)
+            #print cryst.get_cell()
+            #print uc
+        else :
+            pass
+        return cryst
 
 
 
@@ -132,11 +164,19 @@ if __name__ == '__main__':
         c = 2.96
         crystals.append(Crystal(crystal(['Ti', 'O'], [(0, 0, 0), (0.302, 0.302, 0)],
             spacegroup=136, cellpar=[a, a, c, 90, 90, 90])))
+        # Trigonal
+        a = 4.38
+        c = 11.55
+        crystals.append(Crystal(crystal(['Sb'], [(0, 0, 0.24098)],
+            spacegroup=166, cellpar=[a, a, c, 90, 90, 120])))
+
+
 
     for cryst in crystals :
 
         cryst.get_lattice_type()
 
+        print cryst.get_vecang_cell()
         print cryst.bravais, cryst.sg_type, cryst.sg_name, cryst.sg_nr
         
         view(cryst)
@@ -149,8 +189,8 @@ if __name__ == '__main__':
                     nsw=30, 
                     ibrion=2)
 
-        cryst.calc.set(kpts=[6,6,6])
-        fit=cryst.get_BM_EOS(n=10)
+        cryst.calc.set(kpts=[3,3,3])
+        fit=cryst.get_BM_EOS()
         pv=array(cryst.pv)
         
         # Sort data on the first column (V)
@@ -158,6 +198,8 @@ if __name__ == '__main__':
         
         print "V0=%.3f B0=%.2f B0'=%.3f a0=%.5f" % ( 
                 fit[0], fit[1], fit[2], pow(fit[0],1./3) )
+                
+        v0=fit[0]
 
         fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
 
@@ -165,26 +207,28 @@ if __name__ == '__main__':
         y=array([min(pv[:,1]),max(pv[:,1])])
 
         figure(1)
-        plot(pv[:,0],pv[:,2],'x')
-        plot(pv[:,0],pv[:,3],'+')
-        plot(pv[:,0],pv[:,4],'o')
-        axvline(fit[0],ls='--')
+        plot(pv[:,0]/v0,pv[:,2],'x')
+        plot(pv[:,0]/v0,pv[:,3],'+')
+        plot(pv[:,0]/v0,pv[:,4],'o')
+        axvline(1,ls='--')
         draw()
         
         figure(3)
-        plot(pv[:,0],pv[:,3]/pv[:,2],'o')
-        plot(pv[:,0],pv[:,4]/pv[:,2],'x-')
+        plot(pv[:,0]/v0,pv[:,3]/pv[:,2],'o')
+        plot(pv[:,0]/v0,pv[:,4]/pv[:,2],'x-')
         #print pv[:,4]/pv[:,2]
-        axvline(fit[0],ls='--')
+        axvline(1,ls='--')
         draw()
         
         figure(2)
-        plot(pv[:,0],pv[:,1],'o')
-        axvline(fit[0],ls='--')
+        plot(pv[:,0]/v0,pv[:,1],'o')
+        axvline(1,ls='--')
         axhline(0,ls='--')
         xa=linspace(x[0],x[-1],20)
-        plot(xa,fitfunc(fit,xa),'-')
+        plot(xa/v0,fitfunc(fit,xa),'-')
         draw()
+        
+        cryst.get_deformed_cell(axis=2,size=2)
     
     show()
 
