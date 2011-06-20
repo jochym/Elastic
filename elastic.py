@@ -112,36 +112,45 @@ if __name__ == '__main__':
     from pvasp import ClusterVasp
 
     if len(sys.argv)>1 :
-        cryst=Crystal(ase.io.read(sys.argv[1]+'/CONTCAR'))
+        crystals=[Crystal(ase.io.read(sys.argv[1]+'/CONTCAR'))]
     else :
+        crystals=[]
+        
+        # Cubic
         a = 4.194
-        MgO = crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
-                cellpar=[a, a, a, 90, 90, 90])
-        cryst=Crystal(MgO)
+        crystals.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)],
+            spacegroup=225, cellpar=[a, a, a, 90, 90, 90]))
+        # Tetragonal
+        a = 4.39
+        c = 2.86
+        crystals.append(crystal(['Mn', 'O'], [(0, 0, 0), (0.302, 0.302, 0)],
+            spacegroup=136, cellpar=[a, a, c, 90, 90, 90]))
 
-    cryst.get_lattice_type()
+    for cryst in crystals :
 
-    print cryst.bravais, cryst.sg_type, cryst.sg_name, cryst.sg_nr
+        cryst.get_lattice_type()
 
-    calc=ClusterVasp(nodes=1,ppn=8)
-    cryst.set_calculator(calc)
-    calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2)
+        print cryst.bravais, cryst.sg_type, cryst.sg_name, cryst.sg_nr
 
-    cryst.calc.set(kpts=[5,5,5])
-    fit=cryst.get_BM_EOS(n=10)
-    pv=cryst.pv[:]
-    print "V0=%.3f B0=%.2f B0'=%.3f a0=%.5f" % ( fit[0], fit[1], fit[2], pow(fit[0],1./3) )
-    print "B0=", cryst.get_bulk_modulus()
+        calc=ClusterVasp(nodes=1,ppn=8)
+        cryst.set_calculator(calc)
+        calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2)
 
-    fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
+        cryst.calc.set(kpts=[5,5,5])
+        fit=cryst.get_BM_EOS()
+        pv=cryst.pv[:]
+        print "V0=%.3f B0=%.2f B0'=%.3f a0=%.5f" % ( fit[0], fit[1], fit[2], pow(fit[0],1./3) )
+        print "B0=", cryst.get_bulk_modulus()
 
-    plot(pv[:,0],pv[:,1],'o')
-    x=array([pv[0,0],pv[-1,0]])
-    y=array([pv[0,1],pv[-1,1]])
-    plot([fit[0],fit[0]],y,'--')
-    xa=linspace(x[0],x[-1],20)
-    plot(xa,fitfunc(fit,xa),'-')
-    show()
+        fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
+
+        plot(pv[:,0],pv[:,1],'o')
+        x=array([pv[0,0],pv[-1,0]])
+        y=array([pv[0,1],pv[-1,1]])
+        plot([fit[0],fit[0]],y,'--')
+        xa=linspace(x[0],x[-1],20)
+        plot(xa,fitfunc(fit,xa),'-')
+        show()
 
 
 
