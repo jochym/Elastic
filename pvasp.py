@@ -1,0 +1,122 @@
+#!/usr/bin/python
+
+# Parallel vasp calculator
+# Multitreaded
+
+from ase.calculators.vasp import *
+from Queue import Empty
+from multiprocessing import Process, Queue
+
+import time
+import os
+import tempfile
+import shutil
+
+class ClusterVasp(Vasp):
+    def __init__(self, nodes=1, ppn=8, **kwargs):
+        Vasp.__init__(self, **kwargs)
+        self.nodes=nodes
+        self.ppn=ppn
+        
+    def prepare_calc_dir(self):
+        f=open("vasprun.conf","w")
+        f.write('NODES="nodes=%d:ppn=%d"' % (self.nodes, self.ppn))
+        #print  self.nodes, self.ppn
+        f.close()
+   
+    def calculate(self, atoms):
+        self.prepare_calc_dir()
+        Vasp.calculate(self, atoms)
+
+
+
+def ParCalculate(systems,calc,prefix="Calc_"):
+
+    class PCalcProc(Process):
+        def __init__(self, iq, oq, calc, prefix):
+            Process.__init__(self)
+            self.calc=calc
+            self.basedir=os.getcwd()
+            self.place=tempfile.mkdtemp(prefix=prefix, dir=self.basedir)
+            self.iq=iq
+            self.oq=oq
+        
+        def run(self):
+            wd=os.getcwd()
+            os.chdir(self.place)
+            system=self.iq.get()
+            system.set_calculator(self.calc)
+            self.calc.calculate(system)
+            #print "Finito: ", self.place, os.getcwd()
+            self.oq.put(system)
+            #print system.get_volume(), system.get_isotropic_pressure(system.get_stress())
+            os.chdir(wd)
+            self.calc.clean()
+            shutil.rmtree(self.place, ignore_errors=True)
+
+
+    if type(systems) != type([]) :
+        sys=[systems]
+    else :
+        sys=systems
+
+    runs=[]
+    iq=Queue(len(sys)+1)
+    oq=Queue(len(sys)+1)
+        
+    # Create workers    
+    for s in sys:
+        c=PCalcProc(iq, oq, calc, prefix=prefix)
+        c.start()
+        runs.append(c)
+
+    # Put jobs into the queue
+    for s in sys:
+        iq.put(s)
+        time.sleep(0.2)
+    
+    time.sleep(2)
+    print "Workers started"
+    
+   # Collect the results
+    res=[]
+    while len(res)<len(sys) :
+        s=oq.get()
+        res.append(s)
+        #print "Got from oq:", s.get_volume(), s.get_isotropic_pressure(s.get_stress())
+    return res
+
+
+if __name__ == '__main__':
+    from ase.lattice.spacegroup import crystal
+    import numpy
+    from pylab import *
+
+    a = 4.291
+    MgO = crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
+                   cellpar=[a, a, a, 90, 90, 90])
+                   
+    calc=ClusterVasp(nodes=1,ppn=8)
+    MgO.set_calculator(calc)
+    calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
+    
+    print MgO.get_isotropic_pressure(MgO.get_stress())
+                   
+    sys=[]
+    for av in numpy.linspace(a*0.95,a*1.05,5):
+        sys.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
+                   cellpar=[av, av, av, 90, 90, 90]))
+                       
+    pcalc=ClusterVasp(nodes=1,ppn=8)
+    pcalc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
+    res=ParCalculate(sys,pcalc)
+    
+    v=[]
+    p=[]
+    for s in res :
+        v.append(s.get_volume())
+        p.append(s.get_isotropic_pressure(s.get_stress()))
+    
+    plot(v,p,'o')
+    show()
+    
