@@ -50,8 +50,8 @@ def ParCalculate(systems,calc,prefix="Calc_"):
             #print "Finito: ", self.place, os.getcwd()
             self.oq.put(system)
             #print system.get_volume(), system.get_isotropic_pressure(system.get_stress())
-            os.chdir(wd)
             self.calc.clean()
+            os.chdir(wd)
             shutil.rmtree(self.place, ignore_errors=True)
 
 
