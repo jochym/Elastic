@@ -30,16 +30,17 @@ class ClusterVasp(Vasp):
 
 
 
-def ParCalculate(systems,calc,prefix="Calc_"):
+def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
 
     class PCalcProc(Process):
-        def __init__(self, iq, oq, calc, prefix):
+        def __init__(self, iq, oq, calc, prefix, cleanup):
             Process.__init__(self)
             self.calc=calc
             self.basedir=os.getcwd()
             self.place=tempfile.mkdtemp(prefix=prefix, dir=self.basedir)
             self.iq=iq
             self.oq=oq
+            self.CleanUp=cleanup
         
         def run(self):
             wd=os.getcwd()
@@ -50,9 +51,10 @@ def ParCalculate(systems,calc,prefix="Calc_"):
             #print "Finito: ", self.place, os.getcwd()
             self.oq.put(system)
             #print system.get_volume(), system.get_isotropic_pressure(system.get_stress())
-            self.calc.clean()
-            os.chdir(wd)
-            shutil.rmtree(self.place, ignore_errors=True)
+            if self.CleanUp :
+                self.calc.clean()
+                os.chdir(wd)
+                shutil.rmtree(self.place, ignore_errors=True)
 
 
     if type(systems) != type([]) :
@@ -66,7 +68,7 @@ def ParCalculate(systems,calc,prefix="Calc_"):
         
     # Create workers    
     for s in sys:
-        c=PCalcProc(iq, oq, calc, prefix=prefix)
+        c=PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup)
         c.start()
         runs.append(c)
 
@@ -76,7 +78,7 @@ def ParCalculate(systems,calc,prefix="Calc_"):
         time.sleep(0.2)
     
     time.sleep(2)
-    print "Workers started"
+    print len(sys), "Workers started"
     
    # Collect the results
     res=[]
