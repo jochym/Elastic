@@ -1,5 +1,11 @@
 #!/usr/bin/python
 
+#
+# Copyright 1998-2011 by Paweł T. Jochym <pawel.jochym@ifj.edu.pl>
+#
+# This code is licensed under Gnu Public License (GPL) v3 or later.
+#
+
 import re
 import sys
 import string

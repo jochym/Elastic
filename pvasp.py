@@ -1,7 +1,18 @@
 #!/usr/bin/python
 
-# Parallel vasp calculator
-# Multitreaded
+#
+# Copyright 2011 by Paweł T. Jochym <pawel.jochym@ifj.edu.pl>
+#
+# This code is licensed under Gnu Public License (GPL) v3 or later.
+#
+
+#
+# Parallel vasp calculator using mulitprocessing.
+# This code can be used with other ASE calculators 
+# with very minor changes.
+# The final goal is to provide a module for parallel 
+# calculator execution in the cluster environment.
+#
 
 from ase.calculators.vasp import *
 from Queue import Empty
@@ -19,6 +30,11 @@ class ClusterVasp(Vasp):
         self.ppn=ppn
         
     def prepare_calc_dir(self):
+        '''
+        Prepare the calculation directory for VASP execution.
+        This needs to be re-implemented for each local setup.
+        The following code reflects just my particular setup.
+        '''
         f=open("vasprun.conf","w")
         f.write('NODES="nodes=%d:ppn=%d"' % (self.nodes, self.ppn))
         #print  self.nodes, self.ppn
@@ -31,7 +47,11 @@ class ClusterVasp(Vasp):
 
 
 def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
-
+    '''
+    Run calculators in parallel for all systems. 
+    Calculators are executed in isolated processes and directories.
+    The resulting objects are returned in the list (one per input system).
+    '''
     class PCalcProc(Process):
         def __init__(self, iq, oq, calc, prefix, cleanup):
             Process.__init__(self)
@@ -88,7 +108,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         #print "Got from oq:", s.get_volume(), s.get_isotropic_pressure(s.get_stress())
     return res
 
-
+# Testing routines using VASP as a calculator in the cluster environment.
 if __name__ == '__main__':
     from ase.lattice.spacegroup import crystal
     import numpy
