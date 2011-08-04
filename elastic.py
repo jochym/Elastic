@@ -18,6 +18,45 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
+'''
+Program for calculation of Cij components of elastic 
+tensor from the strain-stress relation.
+ 
+This code is (C) 2002-2006 by Pawel T. Jochym
+and it is licensed to use and redistribute under 
+the terms of the GNU General Public License v2
+See http://www.gnu.org/licenses/licenses.html 
+for the details of the terms and conditions.
+
+The strain components here are ordered in non-standard way
+this is for historical reasons and does not metter realy
+The ordering is: uxx, uyy, uzz, uxy, uxz, uyz  
+The same goes for the ordering of Cij components
+It is:
+
+    C   C   C   C   C   C   C   C   C   C   C   C   C
+     11  22  33  12  13  23  44  55  66  16  26  36  45
+
+These functions define the symmetry of the Cij matrix.
+The matrix is N columns by 6 rows where the columns
+corespond to independent elastic constants of the given
+crystal, while the rows corespond to the canonical deformations
+of a crystal. The elements are the second partial derivatives of 
+the free energy formula for the crystal written down as a 
+quadratic form of the deformations with respect to elastic
+constant and deformation. 
+
+IMPORTANT!
+
+The elements for deformations uxy, uxz, uyz have to be divided
+by 2 to properly match the usual definition of elastic constants.
+
+See: L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
+
+There is some usefull summary also at: 
+http://scienceworld.wolfram.com/physics/Elasticity.html
+'''
+
 
 import re
 import sys
@@ -55,7 +94,90 @@ def regular(u):
     [0,             0,              2*uxz],
     [0,             0,              2*uxy]])
 
+def tetragonal(u):
+    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    return array(
+    [[uxx,   0,    uyy,  uzz,      0,      0],
+     [uyy,   0,    uxx,  uzz,      0,      0],
+     [0,     uzz,  0,    uxx+uyy,  0,      0],
+     [0,     0,    0,    0,        0,      2*uxy],
+     [0,     0,    0,    0,        2*uxz,  0],
+     [0,     0,    0,    0,        2*uyz,  0]])
+ 
 
+def orthorombic(u):
+    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    return array(
+    [[uxx,    0,    0,  uyy,  uzz,    0,    0,    0,    0],
+    [0,     uyy,    0,  uxx,    0,  uzz,    0,    0,    0],
+    [0,       0,  uzz,    0,  uxx,  uyy,    0,    0,    0],
+    [0,       0,    0,    0,    0,    0,    0,    0,2*uxy],
+    [0,       0,    0,    0,    0,    0,    0,2*uxz,    0],
+    [0,       0,    0,    0,    0,    0,2*uyz,    0,    0]])
+ 
+
+def trigonal(u):
+    '''
+    The matrix is constructed based on the approach from L&L
+    using xi=x+iy ; eta=x-iy auxiliary coordinates. 
+    There is some doubt about the C14 constants. 
+    This is still to be verified at a later stage.
+    The order of constants is as follows:
+    C   C   C   C   C   C  
+     11  33  12  13  44  14
+    '''
+    
+    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    return array(
+    [[   uxx,   0,    uyy,     uzz,     0,   2*uxz],
+     [   uyy,   0,    uxx,     uzz,     0,  -2*uxz],
+     [     0, uzz,      0, uxx+uyy,     0,   0],
+     [ 2*uxy,   0, -2*uxy,       0,     0,  -4*uyz],
+     [     0,   0,      0,       0, 2*uxz,   2*(uxx-uyy)],
+     [     0,   0,      0,       0, 2*uyz,  -4*uxy]])
+
+def hexagonal(u):
+    '''
+    The matrix is constructed based on the approach from L&L
+    using xi=x+iy ; eta=x-iy auxiliary coordinates. 
+    This is still to be verified at a later stage.
+    The order of constants is as follows:
+    C   C   C   C   C
+     11  33  12  13  44
+    '''
+    
+    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    return array(
+    [[   uxx,   0,    uyy,     uzz,     0   ],
+     [   uyy,   0,    uxx,     uzz,     0   ],
+     [     0, uzz,      0, uxx+uyy,     0   ],
+     [ 2*uxy,   0, -2*uxy,       0,     0   ],
+     [     0,   0,      0,       0, 2*uxz   ],
+     [     0,   0,      0,       0, 2*uyz   ]])
+
+def monoclinic(u):
+    '''
+    Monoclinic group, the order is:
+    C   C   C   C   C   C   C   C   C   C   C   C   C
+     11  22  33  12  13  23  44  55  66  16  26  36  45
+    '''
+    
+    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    return array(
+    [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0],
+     [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0],
+     [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,  0],
+     [  0,  0,  0,  0,  0,  0,2*uyz,    0,    0,  0,  0,  0,uxz],
+     [  0,  0,  0,  0,  0,  0,    0,2*uxz,    0,  0,  0,  0,uyz],
+     [  0,  0,  0,  0,  0,  0,    0,    0,2*uxy,uxx,uyy,uzz,  0]])
+
+
+def triclinic(u):
+    '''
+    Triclinic crystals
+    '''
+    #TODO To be implemented
+    pass
 
 class Crystal(Atoms):
 
@@ -76,15 +198,6 @@ class Crystal(Atoms):
     ]
     
 
-    sij={
-#        "Triclinic": array(),
-#        "Monoclinic": array(),
-#        "Orthorombic": array(),
-#        "Tetragonal": array(),
-#        "Trigonal": array(),
-#        "Hexagonal": array(),
-        "Cubic": regular
-    }
 
 
     def get_lattice_type(self):
@@ -174,13 +287,22 @@ class Crystal(Atoms):
         '''
         # TODO: Provide API to enforce calculator selection
         
+        # Deformation look-up table
+        # Perhaps the number of deformations for trigonal 
+        # system could be reduced to [0,3] but better safe then sorry
+        deform={
+            "Cubic": [[0,3], regular],
+            "Hexagonal": [[0,2,3,5], hexagonal],
+            "Trigonal": [[0,1,2,3,4,5], trigonal],
+            "Tetragonal": [[0,2,3,5], tetragonal],
+            "Orthorombic": [[0,1,2,3,4,5], orthorombic],
+            "Monoclinic": [[0,1,2,3,4,5], monoclinic]
+            "Triclinic": [[0,1,2,3,4,5], triclinic],
+        }
+        
         # Decide which deformations should be used
-        axis=[]
-        if self.bravais=="Cubic" :
-            axis=[0,3]
-            symm=regular
-        else :
-            1/0
+        axis, symm=deform[self.bravais]
+            
         # Generate deformations
         sys=[]
         for a in axis :
