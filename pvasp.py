@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+# -*- coding: utf-8 -*-
 #
 # Copyright 2011 by Paweł T. Jochym <pawel.jochym@ifj.edu.pl>
 #
