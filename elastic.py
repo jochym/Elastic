@@ -296,8 +296,8 @@ class Crystal(Atoms):
             "Trigonal": [[0,1,2,3,4,5], trigonal],
             "Tetragonal": [[0,2,3,5], tetragonal],
             "Orthorombic": [[0,1,2,3,4,5], orthorombic],
-            "Monoclinic": [[0,1,2,3,4,5], monoclinic]
-            "Triclinic": [[0,1,2,3,4,5], triclinic],
+            "Monoclinic": [[0,1,2,3,4,5], monoclinic],
+            "Triclinic": [[0,1,2,3,4,5], triclinic]
         }
         
         # Decide which deformations should be used
