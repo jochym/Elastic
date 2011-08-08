@@ -29,9 +29,9 @@ of the solid crystalline body with a particular symmetry. This is a simple tenso
 equation, sometimes called generalised *Hook’s law* (in standard tensor notation):
 
 .. math::
-    \sigma_{\lambda\ksi} = C_{λξμν} s_{μν}
+    \sigma_{\lambda\xi} = C_{λξμν} s_{μν}
 
-This formula simply states that the stress in the crystal :math:`\sigma_{\lambda\ksi}` is a linear function
+This formula simply states that the stress in the crystal :math:`\sigma_{\lambda\xii}` is a linear function
 of the strain sμν incurred by its deformation, and the elasticity tensor Cλξμν is
 just a tensor proportionality coefficient. The Greek indexes run through coordin-
 ates x, y, z. The elasticity tensor inherits symmetries of the crystal and has some
