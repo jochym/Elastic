@@ -128,6 +128,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     return res
 
 # Testing routines using VASP as a calculator in the cluster environment.
+# TODO: Make it calculator/environment agnostic
 if __name__ == '__main__':
     from ase.lattice.spacegroup import crystal
     import numpy
@@ -137,7 +138,15 @@ if __name__ == '__main__':
     MgO = crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
                    cellpar=[a, a, a, 90, 90, 90])
                    
+    ##################################
+    # Provide your own calculator here
+    ##################################
     calc=ClusterVasp(nodes=1,ppn=8)
+    # The calculator must be runnable in an isolated directory
+    # Without disturbing other running instances of the same calculator
+    # They are run in separate processes (not threads!)
+    
+    
     MgO.set_calculator(calc)
     calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
     

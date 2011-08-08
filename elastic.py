@@ -495,7 +495,7 @@ if __name__ == '__main__':
     from matplotlib.pyplot import plot, show, figure, draw, axvline, axhline
     from ase.lattice.spacegroup import crystal
     from ase.visualize import view
-    from pvasp import ClusterVasp
+    from parcalc import ClusterVasp
 
 
 # You can specify the directory with coerged VASP crystal for the test run
