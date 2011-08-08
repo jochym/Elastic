@@ -19,9 +19,9 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-# Parallel vasp calculator using mulitprocessing.
-# This code can be used with other ASE calculators 
-# with very minor changes.
+# Parallel ASE calculator using mulitprocessing.
+# This implementation uses VASP but this code can 
+# be used with other ASE calculators with very minor changes.
 # The final goal is to provide a module for parallel 
 # calculator execution in the cluster environment.
 #
@@ -36,6 +36,13 @@ import tempfile
 import shutil
 
 class ClusterVasp(Vasp):
+    '''
+    Adaptation of VASP calculator to the cluster environment where you often
+    have to make some preparations before job submission. You can easily 
+    adapt this class to your particular environment. It is also easy to
+    use this as a template for other type of calculator.
+    '''
+    
     def __init__(self, nodes=1, ppn=8, **kwargs):
         Vasp.__init__(self, **kwargs)
         self.nodes=nodes
