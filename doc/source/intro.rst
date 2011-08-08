@@ -46,14 +46,15 @@ represented as six-dimensional vectors. The symmetries of the elastic tensor are
 directly translated into symmetries of the :math:`C_{ij}` matrix. The Voight’s
 notation is commonly used in tensor calculus. For this particular case we can
 write it as an index assignment where each pair of Greek indexes is replaced
-with a corresponding Latin index :math:`(i, j, k, l, m, n)`: :math:`xx = 1`,
-:math:`yy = 2`, :math:`zz = 3`, :math:`yz = 4`, :math:`xz = 5`, :math:`xy = 6`.
+with a corresponding Latin index (i, j, k, l, m, n): xx=1, yy=2, zz=3, 
+yz=4, xz=5, xy=6.
 
 While this convention makes presentation of elastic constants much easier -
 since it is just a square table of numbers - it slightly complicates algebraic
 procedures as we lose the simplicity of the tensor formalism. Every class of
 crystal cells implies, through its symmetry, a different number of independent
 parameters defining the :math:`C_{ij}` matrix. 
+
 For example, the cubic lattice has just three independent elastic constants:
 :math:`C_{11}, C_{12}, C_{44}` and the matrix looks as follows:
 
