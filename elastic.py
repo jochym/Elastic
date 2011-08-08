@@ -186,6 +186,9 @@ class Crystal(Atoms):
         self.recalc_bulk=True
         self.bulk_modulus=None
         self.bm_eos=None
+        self.full_min_calc=None
+        self.cell_min_calc=None
+        self.idof_min_calc=None
         
     ls=[
         [3,   "Triclinic"],
@@ -198,7 +201,14 @@ class Crystal(Atoms):
     ]
     
 
-
+    def set_full_min_calc(self, calc):
+        self.full_min_calc=calc
+        
+    def set_cell_min_calc(self, calc):
+        self.cell_min_calc=calc
+        
+    def set_idof_min_calc(self, calc):
+        self.idof_min_calc=calc
 
     def get_lattice_type(self):
         sg=spg.get_spacegroup(self)
@@ -333,7 +343,18 @@ class Crystal(Atoms):
         #print slm
         Bij = lstsq(eqm,slm)
         #print Bij[0] / units.GPa
-        return Bij
+        # Calculate elastic constants from Birch coeff.
+        if (symm == orthorombic):
+            Cij = Bij[0] - array([-p,-p,-p, p, p, p,-p,-p,-p])
+        elif (symm == tetragonal):
+            Cij = Bij[0] - array([-p,-p, p, p,-p,-p])
+        elif (symm == regular):
+            Cij = Bij[0] - array([-p, p,-p])
+        elif (symm == trigonal):
+            Cij = Bij[0] - array([-p,-p,p,p,-p,p])
+        elif (symm == hexagonal):
+            Cij = Bij[0] - array([-p,-p,p,p,-p])
+        return Cij, Bij
     
     def scan_pressures(self, lo, hi, n=5):
         '''
@@ -497,7 +518,7 @@ if __name__ == '__main__':
         c = 2.96
         crystals.append(Crystal(crystal(['Ti', 'O'], [(0, 0, 0), (0.302, 0.302, 0)],
             spacegroup=136, cellpar=[a, a, c, 90, 90, 90])))
-        # Trigonal
+        # Trigonal (this is metal - for sure the k spacing will be too small)
         a = 4.48
         c = 11.04
         crystals.append(Crystal(crystal(['Sb'], [(0, 0, 0.24098)],
@@ -507,7 +528,7 @@ if __name__ == '__main__':
     print "Running tests"
     # Iterate over all crystals. 
     # We do not paralelize over test cases for clarity.
-    for cryst in crystals[:1] :
+    for cryst in crystals[:] :
 
         
         # Setup the calculator
@@ -597,8 +618,11 @@ if __name__ == '__main__':
         calc.set(isif=2)
 
         # Elastic tensor by internal routine
-        Bij=cryst.get_elastic_tensor(n=8,d=0.33)
-        print "Bij (GPa)", Bij[0]/units.GPa
+        Cij, Bij=cryst.get_elastic_tensor(n=5,d=0.33)
+        print "Cij (GPa):", Cij/units.GPa
+        
+        calc.clean()
+        
         # Now let us do it (only c11 and c12) by hand
         sys=[]
         for d in linspace(-0.5,0.5,6):
@@ -607,7 +631,6 @@ if __name__ == '__main__':
         ss=[]
         for s in r:
             ss.append([s.get_strain(cryst), s.get_stress()])
-
         # Plot strain-stress relation
         figure(3)
 
@@ -632,7 +655,7 @@ if __name__ == '__main__':
         f=numpy.polyfit(ss[:,0,0],ss[:,1,1],3)
         c12=f[-2]/units.GPa
         plot(xa,numpy.polyval(f,xa),'g-')
-        print 'C11 = %.3f GPa, C12 = %.3f GPa => K= %.3f GPa' % (c11, c12, (c11+2*c12)/3)
+        print 'C11 = %.3f GPa, C12 = %.3f GPa => K= %.3f GPa (cubic only)' % (c11, c12, (c11+2*c12)/3)
         axvline(0,ls='--')
         axhline(0,ls='--')
         draw()
