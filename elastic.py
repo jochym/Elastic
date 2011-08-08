@@ -186,6 +186,9 @@ class Crystal(Atoms):
         self.recalc_bulk=True
         self.bulk_modulus=None
         self.bm_eos=None
+        self.full_min_calc=None
+        self.cell_min_calc=None
+        self.idof_min_calc=None
         
     ls=[
         [3,   "Triclinic"],
@@ -198,7 +201,14 @@ class Crystal(Atoms):
     ]
     
 
-
+    def set_full_min_calc(self, calc):
+        self.full_min_calc=calc
+        
+    def set_cell_min_calc(self, calc):
+        self.cell_min_calc=calc
+        
+    def set_idof_min_calc(self, calc):
+        self.idof_min_calc=calc
 
     def get_lattice_type(self):
         sg=spg.get_spacegroup(self)
@@ -508,7 +518,7 @@ if __name__ == '__main__':
         c = 2.96
         crystals.append(Crystal(crystal(['Ti', 'O'], [(0, 0, 0), (0.302, 0.302, 0)],
             spacegroup=136, cellpar=[a, a, c, 90, 90, 90])))
-        # Trigonal
+        # Trigonal (this is metal - for sure the k spacing will be too small)
         a = 4.48
         c = 11.04
         crystals.append(Crystal(crystal(['Sb'], [(0, 0, 0.24098)],
