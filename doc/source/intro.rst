@@ -15,18 +15,18 @@ thesis introducing the method and some implementation details.
 Elasticity of crystals
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The classical, linear theory of elasticity of crystalline materials has been formu-
-lated already in the 18th and 19th century by Cauchy, Euler, Poisson, Young and
-many other great mathematicians and physicists of that time. The standard text-
-book formulation (e.g. classical book by Landau et al. [LL]_) can be, in prin-
-ciple, directly used as a basis for numerical determination of the elastic tensor
-and other mechanical properties of the crystal. Nevertheless, practical imple-
-mentation of these formulas have some non-obvious aspects, worthy of explicit
-presentation.
-The *finite deformation* method developed and used in the presented papers [1,
-2, 3, 4, 5, 6, 7] is based on the fundamental relationship between stress and strain
-of the solid crystalline body with a particular symmetry. This is a simple tensor
-equation, sometimes called generalised *Hook’s law* (in standard tensor notation):
+The classical, linear theory of elasticity of crystalline materials has been
+formulated already in the 18th and 19th century by Cauchy, Euler, Poisson,
+Young and many other great mathematicians and physicists of that time. The
+standard textbook formulation (e.g. classical book by Landau et al. [LL]_) can
+be, in principle, directly used as a basis for numerical determination of the
+elastic tensor and other mechanical properties of the crystal. Nevertheless,
+practical implementation of these formulas have some non-obvious aspects,
+worthy of explicit presentation. The *finite deformation* method developed and
+used in the presented papers [1, 2, 3, 4, 5, 6, 7] is based on the fundamental
+relationship between stress and strain of the solid crystalline body with a
+particular symmetry. This is a simple tensor equation, sometimes called
+generalised *Hook’s law* (in standard tensor notation):
 
 .. math::
     \sigma_{\lambda\xi} = C_{\lambda\xi\mu\nu} s_{\mu\nu}
