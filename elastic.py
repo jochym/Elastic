@@ -66,7 +66,7 @@ import string
 import ase.io
 from ase.atoms import Atoms
 from pyspglib import spglib as spg
-from pvasp import ParCalculate
+from parcalc import ParCalculate
 from scipy.linalg import norm, lstsq
 from numpy.linalg import inv
 from numpy import dot, diag, ones, reshape
@@ -495,7 +495,7 @@ if __name__ == '__main__':
     from matplotlib.pyplot import plot, show, figure, draw, axvline, axhline
     from ase.lattice.spacegroup import crystal
     from ase.visualize import view
-    from pvasp import ClusterVasp
+    from parcalc import ClusterVasp
 
 
 # You can specify the directory with coerged VASP crystal for the test run

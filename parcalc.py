@@ -19,9 +19,9 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-# Parallel vasp calculator using mulitprocessing.
-# This code can be used with other ASE calculators 
-# with very minor changes.
+# Parallel ASE calculator using mulitprocessing.
+# This implementation uses VASP but this code can 
+# be used with other ASE calculators with very minor changes.
 # The final goal is to provide a module for parallel 
 # calculator execution in the cluster environment.
 #
@@ -36,6 +36,13 @@ import tempfile
 import shutil
 
 class ClusterVasp(Vasp):
+    '''
+    Adaptation of VASP calculator to the cluster environment where you often
+    have to make some preparations before job submission. You can easily 
+    adapt this class to your particular environment. It is also easy to
+    use this as a template for other type of calculator.
+    '''
+    
     def __init__(self, nodes=1, ppn=8, **kwargs):
         Vasp.__init__(self, **kwargs)
         self.nodes=nodes
@@ -121,6 +128,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     return res
 
 # Testing routines using VASP as a calculator in the cluster environment.
+# TODO: Make it calculator/environment agnostic
 if __name__ == '__main__':
     from ase.lattice.spacegroup import crystal
     import numpy
@@ -130,7 +138,15 @@ if __name__ == '__main__':
     MgO = crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
                    cellpar=[a, a, a, 90, 90, 90])
                    
+    ##################################
+    # Provide your own calculator here
+    ##################################
     calc=ClusterVasp(nodes=1,ppn=8)
+    # The calculator must be runnable in an isolated directory
+    # Without disturbing other running instances of the same calculator
+    # They are run in separate processes (not threads!)
+    
+    
     MgO.set_calculator(calc)
     calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
     
