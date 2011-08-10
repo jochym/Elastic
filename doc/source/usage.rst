@@ -51,12 +51,47 @@ program (the examples here use VASP calculator)::
 
     from ase.lattice.spacegroup import crystal
     from parcalc import ClusterVasp
-    
+    import ase.units as units
+
 next we need to create the crystal, MgO in this case::
 
-    a = 4.291
+    a = 4.194
     MgO = crystal(['Mg', 'O'], 
                     [(0, 0, 0), (0.5, 0.5, 0.5)], 
                     spacegroup=225,
                     cellpar=[a, a, a, 90, 90, 90])
+
+We need a calculator for our job, here we use VASP and ClusterVasp defined 
+in the parcalc module. You can probably replace this calculator by any other ASE
+calculator but this was not tested yet. Thus let us define the calculator::
+
+    # Create the calculator running on one, eight-core node.
+    # This is specific to the setup on my cluster.
+    # You have to adapt this part to your environment
+    calc=ClusterVasp(nodes=1,ppn=8)
+    
+    # Assign the calculator to the crystal
+    cryst.set_calculator(calc)
+    
+    # Set the calculation parameters
+    calc.set(prec = 'Accurate', 
+                xc = 'PBE', 
+                lreal = False, 
+                isif=4, 
+                nsw=30,
+                ediff=1e-8, 
+                ibrion=2)
+    calc.set(kpts=[3,3,3])
+    
+    # Set the calculation mode first.
+    # Full structure optimization in this case.
+    # Not all calculators have this type of internal minimizer!
+    calc.set(isif=3)
+
+Finally, run our first calculation. Obtain relaxed structure and 
+residual pressure after optimization::
+
+    print "Residual pressure: %.3f GPa" % (
+                cryst.get_pressure(cryst.get_stress())/units.GPa)
+
 

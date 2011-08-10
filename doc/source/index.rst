@@ -24,8 +24,13 @@ the GPL. Elastic is the fruit of this effort. The source code lives on the
 on-line documentation is placed on 
 `Elastic website <http://wolf.ifj.edu.pl/elastic/>`_.
 
+The project is open and I welcome patches, ideas and other feedback. 
+You can also support the project and motivate me to work on it even more 
+by donating using bitcoin address: 1Geq8khANDueVt1QdCS5GU2oNCtdc1uSMv .
+
 
 Contents:
+---------
 
 .. toctree::
    :maxdepth: 2
@@ -36,17 +41,19 @@ Contents:
    usage
    examples
 
+
+Indices and tables
+------------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+
 References
 ----------
 .. [TiC] TiC, JoP C
 .. [ZrC] ZrC, JoP C
 .. [LL] Landau, Lifshitz
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
