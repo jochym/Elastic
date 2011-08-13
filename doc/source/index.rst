@@ -38,7 +38,6 @@ Contents:
    
    intro
    modules
-   api
    usage
    examples
 
@@ -55,6 +54,7 @@ References
 ----------
 .. [TiC] TiC, JoP C
 .. [ZrC] ZrC, JoP C
-.. [LL] Landau, Lifshitz
+.. [LL] L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
+
 
 

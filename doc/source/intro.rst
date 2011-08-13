@@ -1,19 +1,15 @@
-Introduction
-============
+Physical Principles
+===================
 
 Elastic is based on the standard elasticity theory (see [LL]_ for the detailed
 introduction) and *finite deformation* approach to the calculation of elastic 
 tensor of the crystal.
-
-Physical Principles
--------------------
-
 I have described basic physical principles on which the code rests in my 
 habilitation thesis. Here I will include slightly edited second chapter of the 
 thesis introducing the method and some implementation details.
 
 Elasticity of crystals
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
 The classical, linear theory of elasticity of crystalline materials has been
 formulated already in the 18th and 19th century by Cauchy, Euler, Poisson,
@@ -72,7 +68,7 @@ constants and lower symmetry of the :math:`C_{ij}` matrix (see [LL]_ for full
 introduction to theory of elasticity).
 
 Numerical derivation of elastic matrix
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------
 
 Numerical derivation of the :math:`C_{ij}` matrix may be approached in many
 different ways. Basically, we can employ the same methods as ones used
@@ -134,7 +130,7 @@ derivation of elastic matrix and provides lower error level than other two
 methods.
 
 Crystal symmetry and elastic matrix derivation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------
 
 As mentioned above, the symmetry of the crystal determines the number and
 position of independent components of the :math:`C_{ij}` matrix. Therefore, the
@@ -199,7 +195,7 @@ independent :math:`C_{ij}` components (i.e. length of the :math:`C_{u}` vector)
 and separate shape of the :math:`S` matrix. This is an approach used by Elastic. 
 
 For example, in the orthorhombic crystal the vector of independent
-:math:`C_{ij}` components has nine elements and the S matrix is a 9\times6 one:
+:math:`C_{ij}` components has nine elements and the S matrix is a :math:`9\times6` one:
 
 .. math::
     \left[\begin{array}{ccccccccc}
@@ -285,9 +281,5 @@ available in every self-respecting numerical linear algebra library. The
 implementation used in the Elastic code is the one included in the Scientific
 Python library (SciPy).
 
-Implementation
---------------
-
-Elastic is implemented as an extension module to ASE system
 
 

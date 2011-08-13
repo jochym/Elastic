@@ -72,6 +72,16 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     The resulting objects are returned in the list (one per input system).
     '''
     class PCalcProc(Process):
+        '''
+        Internal Class representing the calculation process isolated
+        from the rest of the ASE script. The process (not thread) runs in 
+        the separate, temporary directory, created on-the-fly and removed at
+        the end. It is vital for the calculator to read in all the results 
+        after the run since the files will be removed as soon as the 
+        "calculate" function terminates. You can pass False to the cleanup
+        argument to prevent the clean-up. This is very usefull for debuging.
+        '''
+        
         def __init__(self, iq, oq, calc, prefix, cleanup):
             Process.__init__(self)
             self.calc=calc

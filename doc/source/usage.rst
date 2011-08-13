@@ -31,13 +31,17 @@ simply running each module as a python script::
     python parcalc.py
 
 which will run a short series of single-point calculations on the MgO unit
-cell and plot the resulting equation of state. The main module testing routine::
+cell and plot the resulting equation of state. 
+
+The main module testing routine::
 
     python elastic.py
 
 will run the equation of state and elastic tensor calculations for a set of 
 small crystals - one for each Bravais lattice. This may take some considerable
-time. The testing routines will probably not work out of the box in your system.
+time. 
+
+The testing routines will probably not work out of the box in your system.
 Review the comments at the end of the files to make them work. I will try to make 
 them as setup-agnostic as possible.
 
@@ -73,19 +77,14 @@ calculator but this was not tested yet. Thus let us define the calculator::
     # Create the calculator running on one, eight-core node.
     # This is specific to the setup on my cluster.
     # You have to adapt this part to your environment
-    calc=ClusterVasp(nodes=1,ppn=8)
+    calc = ClusterVasp(nodes=1, ppn=8)
     
     # Assign the calculator to the crystal
     cryst.set_calculator(calc)
     
     # Set the calculation parameters
-    calc.set(prec = 'Accurate', 
-                xc = 'PBE', 
-                lreal = False,  
-                nsw=30,
-                ediff=1e-8, 
-                ibrion=2),
-                kpts=[3,3,3])
+    calc.set(prec = 'Accurate', xc = 'PBE', lreal = False,  
+                nsw=30, ediff=1e-8, ibrion=2, kpts=[3,3,3])
     
     # Set the calculation mode first.
     # Full structure optimization in this case.

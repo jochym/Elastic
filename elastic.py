@@ -19,25 +19,20 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
-Program for calculation of Cij components of elastic 
+Module for calculation of :math:`C_{ij}` components of elastic 
 tensor from the strain-stress relation.
  
-This code is (C) 2002-2006 by Pawel T. Jochym
-and it is licensed to use and redistribute under 
-the terms of the GNU General Public License v2
-See http://www.gnu.org/licenses/licenses.html 
-for the details of the terms and conditions.
-
 The strain components here are ordered in non-standard way
 this is for historical reasons and does not metter realy
-The ordering is: uxx, uyy, uzz, uxy, uxz, uyz  
-The same goes for the ordering of Cij components
+The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{xy}, u_{xz}, u_{yz}`  
+The same goes for the ordering of :math:`C_{ij}` components
 It is:
 
-    C   C   C   C   C   C   C   C   C   C   C   C   C
-     11  22  33  12  13  23  44  55  66  16  26  36  45
+.. math::
+   C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
+   C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
 
-These functions define the symmetry of the Cij matrix.
+These functions define the symmetry of the :math:`C_{ij}` matrix.
 The matrix is N columns by 6 rows where the columns
 corespond to independent elastic constants of the given
 crystal, while the rows corespond to the canonical deformations
@@ -46,12 +41,12 @@ the free energy formula for the crystal written down as a
 quadratic form of the deformations with respect to elastic
 constant and deformation. 
 
-IMPORTANT!
+Note:
+The elements for deformations :math:`u_{xy}, u_{xz}, u_{yz}`
+have to be divided by 2 to properly match the usual definition 
+of elastic constants.
 
-The elements for deformations uxy, uxz, uyz have to be divided
-by 2 to properly match the usual definition of elastic constants.
-
-See: L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
+See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 
 There is some usefull summary also at: 
 http://scienceworld.wolfram.com/physics/Elasticity.html
@@ -119,12 +114,13 @@ def orthorombic(u):
 def trigonal(u):
     '''
     The matrix is constructed based on the approach from L&L
-    using xi=x+iy ; eta=x-iy auxiliary coordinates. 
-    There is some doubt about the C14 constants. 
+    using :math:`\\xi=x+iy`, :math:`\\eta=x-iy` auxiliary coordinates. 
+    There is some doubt about the :math:`C_{14}` constants. 
     This is still to be verified at a later stage.
     The order of constants is as follows:
-    C   C   C   C   C   C  
-     11  33  12  13  44  14
+
+    .. math::
+       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
     '''
     
     uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
@@ -139,11 +135,12 @@ def trigonal(u):
 def hexagonal(u):
     '''
     The matrix is constructed based on the approach from L&L
-    using xi=x+iy ; eta=x-iy auxiliary coordinates. 
+    using :math:`\\xi=x+iy`, :math:`\\eta=x-iy` auxiliary coordinates. 
     This is still to be verified at a later stage.
     The order of constants is as follows:
-    C   C   C   C   C
-     11  33  12  13  44
+    
+    .. math::
+       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}
     '''
     
     uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
@@ -157,9 +154,11 @@ def hexagonal(u):
 
 def monoclinic(u):
     '''
-    Monoclinic group, the order is:
-    C   C   C   C   C   C   C   C   C   C   C   C   C
-     11  22  33  12  13  23  44  55  66  16  26  36  45
+    Monoclinic group, the ordering of constants is:
+    
+    .. math::
+       C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
+       C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
     '''
     
     uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
@@ -174,12 +173,25 @@ def monoclinic(u):
 
 def triclinic(u):
     '''
-    Triclinic crystals
+    Triclinic crystals (not yet implemented).
     '''
     #TODO To be implemented
     pass
 
 class Crystal(Atoms):
+    '''
+    Extension of standard ASE Atoms class designed to handle specifics of the
+    crystalline materials. This code should, in principle, be folded into the 
+    Atoms class in the future. At this moment it is too early to think about it.
+    Additionally there are some aspects of this code which may be difficult to
+    harmonize with the principles of the Atoms class. I am sure it is better,
+    for now to leave this as a separate extension class.
+    
+    Basically, this class provides set of functions concerned with derivation 
+    of elastic properties using "finite deformation approach" 
+    (see the documentation for physics background information).
+    '''
+
 
     def __init__(self, *args, **kwargs):
         Atoms.__init__(self, *args, **kwargs)
