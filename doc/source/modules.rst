@@ -19,12 +19,12 @@ separate section and in the examples (not yet included in the repository).
 .. _modules:
 
 Modules
-=======
+-------
 
 .. _par-calc-mod:
 
 Parallel Calculator Module
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parallel calculator module is an extension of the standard 
 `ASE <https://wiki.fysik.dtu.dk/ase/>`_ calculator working in the
@@ -39,7 +39,7 @@ cluster of machines at your disposal (probably with some queuing system).
 .. _elastic-mod:
 
 Elastic Module
---------------
+^^^^^^^^^^^^^^
 
 This module depends on :ref:`par-calc-mod` for parallelisation of 
 independent calculations.

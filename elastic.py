@@ -49,7 +49,7 @@ of elastic constants.
 See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 
 There is some usefull summary also at: 
-http://scienceworld.wolfram.com/physics/Elasticity.html
+`ScienceWorld <http://scienceworld.wolfram.com/physics/Elasticity.html>`_
 '''
 
 
@@ -80,6 +80,13 @@ def csc(x):
 
 
 def regular(u):
+    '''
+    Equation matrix generation for the regular (cubic) lattice.
+    The order of constants is as follows:
+
+    .. math::
+       C_{11}, C_{12}, C_{44}
+    '''
     uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array([
     [uxx,     uyy + uzz,      0],
@@ -90,6 +97,13 @@ def regular(u):
     [0,             0,              2*uxy]])
 
 def tetragonal(u):
+    '''
+    Equation matrix generation for the tetragonal lattice.
+    The order of constants is as follows:
+
+    .. math::
+       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
+    '''
     uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[uxx,   0,    uyy,  uzz,      0,      0],
@@ -101,6 +115,14 @@ def tetragonal(u):
  
 
 def orthorombic(u):
+    '''
+    Equation matrix generation for the orthorombic lattice.
+    The order of constants is as follows:
+
+    .. math::
+       C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
+       C_{44}, C_{55}, C_{66}
+    '''
     uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[uxx,    0,    0,  uyy,  uzz,    0,    0,    0,    0],
@@ -202,6 +224,8 @@ class Crystal(Atoms):
         self.cell_min_calc=None
         self.idof_min_calc=None
         
+    # Table of lattice types and correcponding group numbers dividing
+    # the ranges. See get_lattice_type method for precise definition.
     ls=[
         [3,   "Triclinic"],
         [16,  "Monoclinic"],
@@ -223,6 +247,19 @@ class Crystal(Atoms):
         self.idof_min_calc=calc
 
     def get_lattice_type(self):
+        '''
+        Find the symmetry of the crystal using spglib symmetry finder.
+        Assign to sg_name i sg_nr members name of the space group and
+        its number extracted from the result. Based on the group number
+        identify also the lattice type (assigned to sg_type member) and
+        the Bravais lattice of the crystal (assigned to bravais member).
+        The returned value is the lattice type number.
+        The lattice type numbers are 
+        (see also Crystal.ls, the numbering starts from 1): 
+        
+        Triclinic (1), Monoclinic (2), Orthorombic (3), Tetragonal (4)
+        Trigonal (5), Hexagonal (6), Cubic (7)
+        '''
         sg=spg.get_spacegroup(self)
         m=re.match('([A-Z].*\\b)\s*\(([0-9]*)\)',sg)
         self.sg_name=m.group(1)
@@ -238,7 +275,12 @@ class Crystal(Atoms):
         return lattype
         
     def get_bulk_modulus(self,n=5, lo=0.98, hi=1.02, recalc=False):
-        """Calculate bulk modulus."""
+        '''
+        Calculate bulk modulus using the Birch-Murnaghan equation of state
+        data calculated by get_BM_EOS routine (see). 
+        The returned bulk modulus is a :math:`B_0` coefficient of the B-M EOS.
+        The arguments are the same as in BM EOS function.
+        '''
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
@@ -250,12 +292,34 @@ class Crystal(Atoms):
     def get_pressure(self,s):
         '''
         Return isotropic (hydrostatic) pressure in ASE units
-        instead of bar. Convenience function.
+        instead of bar - the standard function in ASE returns result in bar.
+        This is a convenience function.
         '''
         return 1e5*units.Pascal*self.get_isotropic_pressure(s)
         
     def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False):
-        """Calculate Birch-Murnaghan EOS."""
+        """
+        Calculate Birch-Murnaghan Equation of State for the crystal:
+        
+        .. math::
+           P(V)= \\frac{B_0}{B'_0}\\left[
+           \\left({\\frac{V}{V_0}}\\right)^{-B'_0} - 1
+           \\right]
+        
+        using n single-point structures ganerated from the 
+        crystal (self) by the scan_volumes method between lo and hi 
+        relative volumes. The BM EOS is fitted to the computed points by 
+        least squares method. The returned value is a list of fitted 
+        parameters: :math:`V_0, B_0, B_0'` if the fit succeded. 
+        If the fitting fails the RuntimeError('Calculation failed') is reised.
+        The data from the calculation and fit is stored in the bm_eos and pv
+        members for future reference.
+        
+        *Note:* For now you have to set up the calculator to properly 
+        optimize the structure without changing the volume at each point.
+        There will be a way to specify basic types of the calculator 
+        minimization at the later stage.
+        """
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
@@ -306,6 +370,9 @@ class Crystal(Atoms):
         The geometry and stress at the call point is taken as
         the reference point. No additional optimization will be run.
         It is also assumed that the calculator is set to pure IDOF optimization.
+        The size of used finite deformation is passed in d parameter as a 
+        percentage relative deformation. The n parameter defines number of 
+        deformed structures used in the calculation.
         '''
         # TODO: Provide API to enforce calculator selection
         
@@ -484,6 +551,11 @@ class Crystal(Atoms):
         return cryst
         
     def get_strain(self,refcell=None):
+        '''
+        Return the strain tensor in the Voight notation as a conventional 
+        6-vector. The calculation is done with respect to the crystal 
+        geometry passed in refcell parameter.
+        '''
         if refcell==None :
             refcell=self
         du=self.get_cell()-refcell.get_cell()

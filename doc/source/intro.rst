@@ -224,10 +224,18 @@ For example, in the orthorhombic crystal the vector of independent
 The elements of the matrix S have direct relation to the terms of expansion of
 the elastic free energy as a function of deformation (strain tensor) F(s). For
 example, the orthorhombic equation can be derived from the free energy formula
-[LL]_ (in the Voight's notation):F(s)The elements of the S matrix are simply
-coefficients of first derivatives of the F(s) over respective strain components.
-Alternatively, we can rewrite the S(s) matrix in the compact form as a mixed
-derivative: 
+[LL]_ (in the Voight's notation):
+
+.. math::
+    F(s)  =  \frac{1}{2}C_{11}s_{1}^{2}+
+             \frac{1}{2}C_{22}s_{2}^{2}+
+             \frac{1}{2}C_{33}s_{3}^{2}+
+     C_{12}s_{1}s_{2}+C_{13}s_{1}s_{3}+C_{23}s_{2}s_{3}+ 
+     2C_{44}s_{4}^{2}+2C_{55}s_{5}^{2}+2C_{66}s_{6}^{2}
+
+The elements of the S matrix are simply coefficients of first derivatives of the
+F(s) over respective strain components. Alternatively, we can rewrite the S(s)
+matrix in the compact form as a mixed derivative: 
 
 .. math::
     S_{iu}=A\frac{\partial^{2}F}{\partial s_{i}\partial C_{u}},

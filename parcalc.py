@@ -18,13 +18,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
-#
-# Parallel ASE calculator using mulitprocessing.
-# This implementation uses VASP but this code can 
-# be used with other ASE calculators with very minor changes.
-# The final goal is to provide a module for parallel 
-# calculator execution in the cluster environment.
-#
+'''
+Parallel ASE calculator using mulitprocessing.
+This implementation uses VASP but this code can 
+be used with other ASE calculators with very minor changes.
+The final goal is to provide a module for parallel 
+calculator execution in the cluster environment.
+'''
 
 from ase.calculators.vasp import *
 from Queue import Empty
@@ -71,6 +71,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     Calculators are executed in isolated processes and directories.
     The resulting objects are returned in the list (one per input system).
     '''
+
     class PCalcProc(Process):
         '''
         Internal Class representing the calculation process isolated
