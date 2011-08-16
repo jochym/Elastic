@@ -46,10 +46,10 @@ Review the comments at the end of the files to make them work. I will try to mak
 them as setup-agnostic as possible.
 
 Usage
-=====
+-----
 
 Simple Parallel Calculation
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Once you have everything installed and running you can run your first real 
 calculation. The testing code at the end of the parcalc.py may be used as 
