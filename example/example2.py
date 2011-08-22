@@ -19,11 +19,13 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
-Example of parallel volume scan using VASP calculator and parcalc module.
+Example of Birch-Murnaghan EOS calculation using VASP calculator and 
+elastic module.
 '''
 
 from ase.lattice.spacegroup import crystal
-from parcalc import ClusterVasp, ParCalculate
+from parcalc import ClusterVasp
+from elastic import Crystal, 
 import ase.units as units
 import numpy
 import matplotlib.pyplot as plt
