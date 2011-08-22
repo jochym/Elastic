@@ -148,4 +148,54 @@ If you set up everything correctly you should obtain plot similar to this:
    
    The pressure dependence on volume in MgO crystal (example1.py).
 
+Birch-Murnaghan Equation of State
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Let us now use the tools provided by the modules to calculate equation 
+of state for the crystal and verify it by plotting the data points against
+fitted EOS curve. We will start with the same crystal optimized above, 
+but we will import one additional module: the elastic itself::
+
+    from elastic import Crystal, BMEOS
+
+    # Switch to cell shape+IDOF optimizer
+    calc.set(isif=4)
+
+    # Calculate few volumes and fit B-M EOS to the result
+    # Use +/-3% volume deformation and 5 data points
+    fit=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
+    
+    # Get the P(V) data points just calculated
+    pv=array(cryst.pv)
+    
+    # Sort data on the first column (V)
+    pv=pv[pv[:,0].argsort()]
+    
+    # Print just fitted parameters
+    print "V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
+            fit[0], fit[1]/units.GPa, fit[2], pow(fit[0],1./3))
+            
+    v0=fit[0]
+
+    # B-M EOS for plotting
+    fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
+
+    # Ranges - the ordering in pv is not guarateed at all!
+    # In fact it may be purely random.
+    x=array([min(pv[:,0]),max(pv[:,0])])
+    y=array([min(pv[:,1]),max(pv[:,1])])
+
+    
+    # Plot the P(V) curves and points for the crystal
+    # Plot the points
+    plot(pv[:,0]/v0,pv[:,1],'o')
+    
+    # Mark the center P=0 V=V0
+    axvline(1,ls='--')
+    axhline(0,ls='--')
+
+    # Plot the fitted B-M EOS through the points
+    xa=linspace(x[0],x[-1],20)
+    plot(xa/v0,fitfunc(fit,xa),'-')
+    draw()
 

@@ -649,7 +649,7 @@ if __name__ == '__main__':
         calc.set(isif=4)
         
         # Calculate few volumes and fit B-M EOS to the result
-        # Use default +/-2% volume deformation and 5 data points
+        # Use +/-3% volume deformation and 5 data points
         fit=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
         
         # Get the P(V) data points just calculated
