@@ -117,8 +117,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         
     # Create workers    
     for s in sys:
-        c=PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup)
-        c.start()
+        PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup).start()
 
     # Put jobs into the queue
     for s in sys:
