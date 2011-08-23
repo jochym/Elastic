@@ -19,29 +19,29 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
-Module for calculation of :math:`C_{ij}` components of elastic 
+Elastic is a module for calculation of :math:`C_{ij}` components of elastic 
 tensor from the strain-stress relation.
  
-The strain components here are ordered in non-standard way
-this is for historical reasons and does not metter realy
-The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{xy}, u_{xz}, u_{yz}`  
-The same goes for the ordering of :math:`C_{ij}` components
-It is:
+The strain components here ordered standard way which is different
+to ordering in previous versions of the code.
+
+The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
+
+The ordering of :math:`C_{ij}` components is:
 
 .. math::
    C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
    C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
 
-These functions define the symmetry of the :math:`C_{ij}` matrix.
-The matrix is N columns by 6 rows where the columns
-corespond to independent elastic constants of the given
-crystal, while the rows corespond to the canonical deformations
-of a crystal. The elements are the second partial derivatives of 
-the free energy formula for the crystal written down as a 
-quadratic form of the deformations with respect to elastic
-constant and deformation. 
+The functions outside of the Crystal class define the symmetry of the
+:math:`C_{ij}` matrix. The matrix is N columns by 6 rows where the columns
+corespond to independent elastic constants of the given crystal, while the rows
+corespond to the canonical deformations of a crystal. The elements are the
+second partial derivatives of the free energy formula for the crystal written
+down as a quadratic form of the deformations with respect to elastic constant
+and deformation. 
 
-Note:
+*Note:*
 The elements for deformations :math:`u_{xy}, u_{xz}, u_{yz}`
 have to be divided by 2 to properly match the usual definition 
 of elastic constants.
