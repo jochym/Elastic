@@ -56,6 +56,7 @@ calc.set(prec = 'Accurate',
 # Not all calculators have this type of internal minimizer!
 calc.set(isif=3)
 
+print "Running initial optimization ... ",
 print "Residual pressure: %.3f bar" % (
             cryst.get_isotropic_pressure(cryst.get_stress()))
 

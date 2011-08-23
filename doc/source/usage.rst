@@ -145,7 +145,6 @@ If you set up everything correctly you should obtain plot similar to this:
    :scale: 75%
    :align: center
    
-   
    The pressure dependence on volume in MgO crystal (example1.py).
 
 Birch-Murnaghan Equation of State
@@ -153,10 +152,29 @@ Birch-Murnaghan Equation of State
 
 Let us now use the tools provided by the modules to calculate equation 
 of state for the crystal and verify it by plotting the data points against
-fitted EOS curve. We will start with the same crystal optimized above, 
-but we will import one additional module: the elastic itself::
+fitted EOS curve. The EOS used by the module is a well established 
+Birch-Murnaghan formula (P - pressure, V - volume, B - parameters):
+
+.. math::
+   P(V)= \frac{B_0}{B'_0}\left[
+   \left({\frac{V}{V_0}}\right)^{-B'_0} - 1
+   \right]
+
+We will start with the same crystal optimized above, 
+but this time we will wrap it with a new class imported from the elastic 
+module - the Crystal class::
 
     from elastic import Crystal, BMEOS
+
+    a = 4.194
+    cryst = Crystal(crystal(['Mg', 'O'], 
+                    [(0, 0, 0), (0.5, 0.5, 0.5)], 
+                    spacegroup=225,
+                    cellpar=[a, a, a, 90, 90, 90]))
+
+Now we repeat the setup and optimization procedure from the example 1 above 
+but using a new Crystal class (see above we skip this part for brevity). 
+Then comes a new part (IDOF - Internal Degrees of Freedom)::
 
     # Switch to cell shape+IDOF optimizer
     calc.set(isif=4)
@@ -166,7 +184,7 @@ but we will import one additional module: the elastic itself::
     fit=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
     
     # Get the P(V) data points just calculated
-    pv=array(cryst.pv)
+    pv=numpy.array(cryst.pv)
     
     # Sort data on the first column (V)
     pv=pv[pv[:,0].argsort()]
@@ -182,20 +200,41 @@ but we will import one additional module: the elastic itself::
 
     # Ranges - the ordering in pv is not guarateed at all!
     # In fact it may be purely random.
-    x=array([min(pv[:,0]),max(pv[:,0])])
-    y=array([min(pv[:,1]),max(pv[:,1])])
+    x=numpy.array([min(pv[:,0]),max(pv[:,0])])
+    y=numpy.array([min(pv[:,1]),max(pv[:,1])])
 
     
     # Plot the P(V) curves and points for the crystal
     # Plot the points
-    plot(pv[:,0]/v0,pv[:,1],'o')
+    plt.plot(pv[:,0]/v0,pv[:,1],'o')
     
     # Mark the center P=0 V=V0
-    axvline(1,ls='--')
-    axhline(0,ls='--')
+    plt.axvline(1,ls='--')
+    plt.axhline(0,ls='--')
 
     # Plot the fitted B-M EOS through the points
-    xa=linspace(x[0],x[-1],20)
-    plot(xa/v0,fitfunc(fit,xa),'-')
-    draw()
+    xa=numpy.linspace(x[0],x[-1],20)
+    plt.plot(xa/v0,fitfunc(fit,xa),'-')
+    plt.draw()
+
+If you set up everything correctly you should obtain fitted parameters printed 
+out in the output close to:
+
+.. math::
+   V_0 = 73.75 \text{ A}^3 \quad
+   B_0 = 170 \text{ GPa}  \quad
+   B'_0 = 4.3  \quad
+   a_0 = 4.1936 \text{ A}
+
+and the following (or similar) plot:
+
+.. figure:: fig/plot2.*
+   :figwidth: 90%
+   :height: 600
+   :width: 800
+   :scale: 75%
+   :align: center
+   
+   The pressure dependence on volume in MgO crystal (example2.py). 
+
 

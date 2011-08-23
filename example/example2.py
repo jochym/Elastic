@@ -24,17 +24,17 @@ elastic module.
 '''
 
 from ase.lattice.spacegroup import crystal
-from parcalc import ClusterVasp
-from elastic import Crystal, 
+from parcalc import ClusterVasp, ParCalculate
+from elastic import Crystal, BMEOS
 import ase.units as units
-import numpy
+from numpy import array, linspace
 import matplotlib.pyplot as plt
 
 a = 4.194
-cryst = crystal(['Mg', 'O'], 
+cryst = Crystal(crystal(['Mg', 'O'], 
                 [(0, 0, 0), (0.5, 0.5, 0.5)], 
                 spacegroup=225,
-                cellpar=[a, a, a, 90, 90, 90])
+                cellpar=[a, a, a, 90, 90, 90]))
 
 # Create the calculator running on one, eight-core node.
 # This is specific to the setup on my cluster.
@@ -57,7 +57,7 @@ calc.set(prec = 'Accurate',
 # Full structure optimization in this case.
 # Not all calculators have this type of internal minimizer!
 calc.set(isif=3)
-
+print "Running initial optimization ... ",
 print "Residual pressure: %.3f bar" % (
             cryst.get_isotropic_pressure(cryst.get_stress()))
 
@@ -68,29 +68,46 @@ a=cryst.get_cell()[0,0]
 # Clean up the directory
 calc.clean()
 
-sys=[]
-# Iterate over lattice constant in the +/-5% range
-for av in numpy.linspace(a*0.95,a*1.05,5):
-    sys.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], 
-                spacegroup=225, cellpar=[av, av, av, 90, 90, 90]))
-                   
-# Define the template calculator for this run
-# We can use the calc from above. It is only used as a template.
-# Just change the params to fix the cell volume
-calc.set(isif=2)
+# Switch to cell shape+IDOF optimizer
+calc.set(isif=4)
 
-# Run the calculation for all systems in sys in parallel
-# The result will be returned as list of systems res
-res=ParCalculate(sys,calc)
+# Calculate few volumes and fit B-M EOS to the result
+# Use +/-3% volume deformation and 5 data points
+fit=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
 
-# Collect the results
-v=[]
-p=[]
-for s in res :
-    v.append(s.get_volume())
-    p.append(s.get_isotropic_pressure(s.get_stress()))
+# Get the P(V) data points just calculated
+pv=array(cryst.pv)
 
-# Plot the result (you need matplotlib for this
-plt.plot(v,p,'o')
+# Sort data on the first column (V)
+pv=pv[pv[:,0].argsort()]
+
+# Print just fitted parameters
+print "V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
+        fit[0], fit[1]/units.GPa, fit[2], pow(fit[0],1./3))
+        
+v0=fit[0]
+
+# B-M EOS for plotting
+fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
+
+# Ranges - the ordering in pv is not guarateed at all!
+# In fact it may be purely random.
+x=array([min(pv[:,0]),max(pv[:,0])])
+y=array([min(pv[:,1]),max(pv[:,1])])
+
+
+# Plot the P(V) curves and points for the crystal
+# Plot the points
+plt.plot(pv[:,0]/v0,pv[:,1],'o')
+
+# Mark the center P=0 V=V0
+plt.axvline(1,ls='--')
+plt.axhline(0,ls='--')
+
+# Plot the fitted B-M EOS through the points
+xa=linspace(x[0],x[-1],20)
+plt.plot(xa/v0,fitfunc(fit,xa),'-')
 plt.show()
+
+
 
