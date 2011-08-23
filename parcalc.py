@@ -112,7 +112,6 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     else :
         sys=systems
 
-    runs=[]
     iq=Queue(len(sys)+1)
     oq=Queue(len(sys)+1)
         
@@ -120,7 +119,6 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     for s in sys:
         c=PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup)
         c.start()
-        runs.append(c)
 
     # Put jobs into the queue
     for s in sys:
