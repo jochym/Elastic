@@ -63,8 +63,9 @@ from ase.atoms import Atoms
 from pyspglib import spglib as spg
 from parcalc import ParCalculate
 from scipy.linalg import norm, lstsq
+from scipy import optimize
 from numpy.linalg import inv
-from numpy import dot, diag, ones, reshape
+from numpy import dot, diag, ones, reshape, linspace, array
 from math import acos, pi, cos, sin, tan
 import ase.units as units
 
@@ -573,7 +574,6 @@ if __name__ == '__main__':
     import os
     from numpy import linspace, array, arange
     import numpy
-    from scipy import stats, optimize
     from math import pow
 
     from matplotlib.pyplot import plot, show, figure, draw, axvline, axhline
