@@ -19,7 +19,7 @@ be, in principle, directly used as a basis for numerical determination of the
 elastic tensor and other mechanical properties of the crystal. Nevertheless,
 practical implementation of these formulas have some non-obvious aspects,
 worthy of explicit presentation. The *finite deformation* method developed and
-used in the presented papers [1, 2, 3, 4, 5, 6, 7] is based on the fundamental
+used in the mentioned papers [TiC]_, [ZrC]_ is based on the fundamental
 relationship between stress and strain of the solid crystalline body with a
 particular symmetry. This is a simple tensor equation, sometimes called
 generalised *Hook’s law* (in standard tensor notation):
@@ -48,11 +48,11 @@ yz=4, xz=5, xy=6.
 While this convention makes presentation of elastic constants much easier -
 since it is just a square table of numbers - it slightly complicates algebraic
 procedures as we lose the simplicity of the tensor formalism. Every class of
-crystal cells implies, through its symmetry, a different number of independent
-parameters defining the :math:`C_{ij}` matrix. 
+crystal implies, through its symmetry, a different number of independent
+elements in the :math:`C_{ij}` matrix. 
 
-For example, the cubic lattice has just three independent elastic constants:
-:math:`C_{11}, C_{12}, C_{44}` and the matrix looks as follows:
+For example, the cubic lattice has just three independent elements in the 
+elastic matrix: :math:`C_{11}, C_{12}, C_{44}`, and the matrix itself has the following shape:
 
 .. math::
     \left[\begin{array}{cccccc}
@@ -71,7 +71,7 @@ Numerical derivation of elastic matrix
 --------------------------------------
 
 Numerical derivation of the :math:`C_{ij}` matrix may be approached in many
-different ways. Basically, we can employ the same methods as ones used
+different ways. Basically, we can employ the same methods as used
 effectively in experimental work. From all experimental procedures we can select
 three classes which are relevant to our discussion:
 
@@ -95,7 +95,7 @@ of elastic tensor, :math:`v_{k}` is a long-wave sound velocity in particular
 direction, which is equivalent to the slope of the acoustic branch
 of phonon dispersion curve in this direction, and :math:`\varrho` is crystal
 density. Full set of these equations for the cubic crystal is included
-in [TiC]. Unfortunately, it is difficult and non-practical
+in [TiC]_. Unfortunately, it is difficult and non-practical
 to use this method to obtain more then few of the simplest of components,
 since the numerical properties of the non-linear formulas involved
 lead to the error pile-up in the results. It is particularly susceptible
@@ -146,7 +146,7 @@ order to provide enough data points to derive all independent components of the
 the symmetry of the crystal and contains tetragonal and sheer deformations along
 some or all axis -- as the symmetry of the case dictates. To improve the
 accuracy of the results the deformations may be of different sizes (typically
-:math:`0.1-1\%` in length or :math:`0.1-1^{\circ}` in angle). 
+0.1-1% in length or 0.1-1 degree in angle). 
 
 Having a set of calculation data :math:`\{s^{a}, \sigma^{a}\}`, we can rewrite
 generalised Hook's law to form a set of linear equations (in Voight notation for
@@ -191,7 +191,7 @@ manipulate in formal transformations, it is not very useful for numerical
 calculations or writing computer code -- multi-dimensional arrays are difficult
 to manipulate and are prone to many trivial notation errors. Thus, it is better
 to split the general formula to crystal classes with different number of
-independent :math:`C_{ij}` components (i.e. length of the :math:`C_{u}` vector)
+:math:`C_{ij}` components (i.e. length of the :math:`C_{u}` vector)
 and separate shape of the :math:`S` matrix. This is an approach used by Elastic. 
 
 For example, in the orthorhombic crystal the vector of independent
@@ -224,13 +224,13 @@ For example, in the orthorhombic crystal the vector of independent
 The elements of the matrix S have direct relation to the terms of expansion of
 the elastic free energy as a function of deformation (strain tensor) F(s). For
 example, the orthorhombic equation can be derived from the free energy formula
-[LL]_ (in the Voight's notation):
+(see [LL]_ for derivation):
 
 .. math::
-    F(s)  =  \frac{1}{2}C_{11}s_{1}^{2}+
+    F(s)   =  \frac{1}{2}C_{11}s_{1}^{2}+
              \frac{1}{2}C_{22}s_{2}^{2}+
-             \frac{1}{2}C_{33}s_{3}^{2}+
-     C_{12}s_{1}s_{2}+C_{13}s_{1}s_{3}+C_{23}s_{2}s_{3}+ 
+             \frac{1}{2}C_{33}s_{3}^{2}+ 
+     C_{12}s_{1}s_{2}+C_{13}s_{1}s_{3}+C_{23}s_{2}s_{3}+  \\
      2C_{44}s_{4}^{2}+2C_{55}s_{5}^{2}+2C_{66}s_{6}^{2}
 
 The elements of the S matrix are simply coefficients of first derivatives of the
@@ -245,7 +245,8 @@ off-diagonal components in the free energy formula (see note at the end of the
 exercises in [LL]_). The multiplier :math:`A=\frac{1}{2}` for
 :math:`i \leq 4`, and 1 otherwise. The above general formula turns out to be quite
 helpful in less trivial cases of trigonal or hexagonal classes. For instance,
-the hexagonal elastic free energy [LL]_ leads to the following set of equations:
+the hexagonal elastic free energy (see [LL]_ for rather lengthy formula) leads
+to the following set of equations:
 
 .. math::
     \left[\begin{array}{ccccc}
@@ -267,7 +268,7 @@ the hexagonal elastic free energy [LL]_ leads to the following set of equations:
     \sigma_{5}\\
     \sigma_{6}\end{array}\right]^{a}.
 
-The set of linear equations, where we insert calculated strains and stresses
+The set of linear equations, with calculated strains and stresses inserted
 into the :math:`S^{a}` matrix and :math:`\sigma^{a}` vector, could be
 constructed for any crystal -- only the form of the S matrix and the length of
 the :math:`C_{u}` vector will be different for each symmetry. 
@@ -278,7 +279,7 @@ could exist. Nevertheless, this set of equations can be solved in approximate
 sense -- i.e. minimising the length of the residual vector of the solution.
 Fortunately, a very clever algorithm capable of dealing with just this type of
 linear equations has been known for a long time. It is called Singular Value
-Decomposition (SVD). Not only does it provide the approximate solution
+Decomposition [SVD]_. Not only does it provide the approximate solution
 minimising the residual vector of the equation but also is stable against
 numerically ill-conditioned equations or equations which provide too little data
 to determine all components of the solution. The SVD provides also some
@@ -287,7 +288,7 @@ singular values, which could be used to judge whether the solution is
 well-determined. It is a well known algorithm and its implementations are
 available in every self-respecting numerical linear algebra library. The
 implementation used in the Elastic code is the one included in the Scientific
-Python library (SciPy).
+Python library `SciPy <http://www.scipy.org/>`_.
 
 
 

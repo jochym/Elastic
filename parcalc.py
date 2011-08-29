@@ -19,11 +19,25 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
-Parallel ASE calculator using mulitprocessing.
-This implementation uses VASP but this code can 
-be used with other ASE calculators with very minor changes.
-The final goal is to provide a module for parallel 
+
+.. _par-calc-mod:
+
+Parallel Calculator Module
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Parallel calculator module is an extension of the standard 
+`ASE <https://wiki.fysik.dtu.dk/ase/>`_ calculator working in the
+parallel cluster environment. It is very useful in all situations where 
+you need to run several, independent calculations and you have a large 
+cluster of machines at your disposal (probably with some queuing system).
+
+This implementation uses VASP but the code can be easily adapted for use
+with other ASE calculators with minor changes.
+The final goal is to provide a universal module for parallel 
 calculator execution in the cluster environment.
+
+Class description
+"""""""""""""""""
 '''
 
 from ase.calculators.vasp import *
