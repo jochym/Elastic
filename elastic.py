@@ -19,10 +19,19 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
+
+.. _elastic-mod:
+
+Elastic Module
+^^^^^^^^^^^^^^
+
+This module depends on :ref:`par-calc-mod` for parallelisation of 
+independent calculations.
+
 Elastic is a module for calculation of :math:`C_{ij}` components of elastic 
 tensor from the strain-stress relation.
  
-The strain components here ordered standard way which is different
+The strain components here are ordered in standard way which is different
 to ordering in previous versions of the code.
 
 The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
@@ -50,6 +59,9 @@ See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 
 There is some usefull summary also at: 
 `ScienceWorld <http://scienceworld.wolfram.com/physics/Elasticity.html>`_
+
+Class description
+"""""""""""""""""
 '''
 
 
@@ -90,7 +102,7 @@ def regular(u):
     '''
     uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array([
-    [uxx,     uyy + uzz,      0],
+    [uxx,   uyy + uzz,      0],
     [uyy,   uxx + uzz,      0],
     [uzz,   uxx + uyy,      0],
     [0,             0,              2*uyz],
@@ -105,7 +117,7 @@ def tetragonal(u):
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
     '''
-    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[uxx,   0,    uyy,  uzz,      0,      0],
      [uyy,   0,    uxx,  uzz,      0,      0],
@@ -124,14 +136,14 @@ def orthorombic(u):
        C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
        C_{44}, C_{55}, C_{66}
     '''
-    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[uxx,    0,    0,  uyy,  uzz,    0,    0,    0,    0],
     [0,     uyy,    0,  uxx,    0,  uzz,    0,    0,    0],
     [0,       0,  uzz,    0,  uxx,  uyy,    0,    0,    0],
-    [0,       0,    0,    0,    0,    0,    0,    0,2*uxy],
+    [0,       0,    0,    0,    0,    0,2*uyz,    0,    0],
     [0,       0,    0,    0,    0,    0,    0,2*uxz,    0],
-    [0,       0,    0,    0,    0,    0,2*uyz,    0,    0]])
+    [0,       0,    0,    0,    0,    0,    0,    0,2*uxy]])
  
 
 def trigonal(u):
@@ -146,14 +158,14 @@ def trigonal(u):
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
     '''
     
-    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[   uxx,   0,    uyy,     uzz,     0,   2*uxz],
      [   uyy,   0,    uxx,     uzz,     0,  -2*uxz],
      [     0, uzz,      0, uxx+uyy,     0,   0],
-     [ 2*uxy,   0, -2*uxy,       0,     0,  -4*uyz],
+     [     0,   0,      0,       0, 2*uyz,  -4*uxy],
      [     0,   0,      0,       0, 2*uxz,   2*(uxx-uyy)],
-     [     0,   0,      0,       0, 2*uyz,  -4*uxy]])
+     [ 2*uxy,   0, -2*uxy,       0,     0,  -4*uyz]])
 
 def hexagonal(u):
     '''
@@ -166,14 +178,14 @@ def hexagonal(u):
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}
     '''
     
-    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    uxx, uyy, uzz, uyz, uxz, uxy  = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[   uxx,   0,    uyy,     uzz,     0   ],
      [   uyy,   0,    uxx,     uzz,     0   ],
      [     0, uzz,      0, uxx+uyy,     0   ],
-     [ 2*uxy,   0, -2*uxy,       0,     0   ],
+     [     0,   0,      0,       0, 2*uyz   ],
      [     0,   0,      0,       0, 2*uxz   ],
-     [     0,   0,      0,       0, 2*uyz   ]])
+     [ 2*uxy,   0, -2*uxy,       0,     0   ]])
 
 def monoclinic(u):
     '''
@@ -184,7 +196,7 @@ def monoclinic(u):
        C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
     '''
     
-    uxx, uyy, uzz, uxy, uxz, uyz = u[0],u[1],u[2],u[3],u[4],u[5]
+    uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0],
      [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0],
@@ -199,6 +211,7 @@ def triclinic(u):
     Triclinic crystals (not yet implemented).
     '''
     #TODO To be implemented
+    uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     pass
 
 class Crystal(Atoms):
