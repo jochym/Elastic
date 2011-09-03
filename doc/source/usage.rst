@@ -48,6 +48,8 @@ them as setup-agnostic as possible.
 Usage
 -----
 
+.. _parcalc:
+
 Simple Parallel Calculation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -147,6 +149,8 @@ If you set up everything correctly you should obtain plot similar to this:
    
    The pressure dependence on volume in MgO crystal (example1.py).
 
+.. _BMEOS:
+
 Birch-Murnaghan Equation of State
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -237,4 +241,23 @@ and the following (or similar) plot:
    
    The pressure dependence on volume in MgO crystal (example2.py). 
 
+Calculation of the elastic tensor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Finally let us calculate an elastic tensor for the same simple cubic crystal -
+magnesium oxide (MgO). For this we need to create the crystal and optimize its 
+structure (see :ref:`parcalc` above). Once we have an optimized structure we can
+switch the calculator to internal degrees of freedom optimization (IDOF) and
+calculate the elastic tensor::
+
+    # Switch to IDOF optimizer
+    calc.set(isif=2)
+
+    # Elastic tensor by internal routine
+    Cij, Bij=cryst.get_elastic_tensor(n=5,d=0.33)
+    print "Cij (GPa):", Cij/units.GPa
+    
+
+To make sure we are getting the correct answer let us make the calculation 
+for :math:`C_{11}, C{12}` by hand. 
 
