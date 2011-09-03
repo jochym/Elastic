@@ -129,6 +129,8 @@ relationship approach described here is much better suited for computational
 derivation of elastic matrix and provides lower error level than other two
 methods.
 
+.. _symmetry:
+
 Crystal symmetry and elastic matrix derivation
 ----------------------------------------------
 
@@ -242,8 +244,8 @@ matrix in the compact form as a mixed derivative:
 
 where A is a multiplier taking into account the double counting of the
 off-diagonal components in the free energy formula (see note at the end of the
-exercises in [LL]_). The multiplier :math:`A=\frac{1}{2}` for
-:math:`i \leq 4`, and 1 otherwise. The above general formula turns out to be quite
+exercises in [LL]_). The multiplier :math:`A=1` for
+:math:`i \leq 4`, and :math:`1/2` otherwise. The above general formula turns out to be quite
 helpful in less trivial cases of trigonal or hexagonal classes. For instance,
 the hexagonal elastic free energy (see [LL]_ for rather lengthy formula) leads
 to the following set of equations:

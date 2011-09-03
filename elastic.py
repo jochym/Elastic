@@ -36,7 +36,8 @@ to ordering in previous versions of the code.
 
 The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
 
-The ordering of :math:`C_{ij}` components is:
+The general ordering of :math:`C_{ij}` components is (except for triclinic symmetry and taking into account customary names of constants - e.g. 
+:math:`C_{16} \\rightarrow C_{14}`):
 
 .. math::
    C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
@@ -149,15 +150,16 @@ def orthorombic(u):
 def trigonal(u):
     '''
     The matrix is constructed based on the approach from L&L
-    using :math:`\\xi=x+iy`, :math:`\\eta=x-iy` auxiliary coordinates. 
-    There is some doubt about the :math:`C_{14}` constants. 
-    This is still to be verified at a later stage.
+    using auxiliary coordinates: :math:`\\xi=x+iy`, :math:`\\eta=x-iy`.
+    The components are calculated from free energy using formula 
+    introduced in :ref:`symmetry` with appropriate coordinate changes.
     The order of constants is as follows:
 
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
     '''
-    
+    #TODO: Not tested yet. 
+    #TODO: There is still some doubt about the :math:`C_{14}` constant. 
     uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[   uxx,   0,    uyy,     uzz,     0,   2*uxz],
@@ -170,14 +172,15 @@ def trigonal(u):
 def hexagonal(u):
     '''
     The matrix is constructed based on the approach from L&L
-    using :math:`\\xi=x+iy`, :math:`\\eta=x-iy` auxiliary coordinates. 
-    This is still to be verified at a later stage.
+    using auxiliary coordinates: :math:`\\xi=x+iy`, :math:`\\eta=x-iy`.
+    The components are calculated from free energy using formula 
+    introduced in :ref:`symmetry` with appropriate coordinate changes.
     The order of constants is as follows:
     
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}
     '''
-    
+    #TODO: Still needs good verification
     uxx, uyy, uzz, uyz, uxz, uxy  = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[   uxx,   0,    uyy,     uzz,     0   ],
@@ -208,11 +211,31 @@ def monoclinic(u):
 
 def triclinic(u):
     '''
-    Triclinic crystals (not yet implemented).
+    Triclinic crystals. 
+    
+    *Note*: This was never tested on the real case. Beware!
+    
+    The ordering of constants is:
+    
+    .. math::
+       C_{11}, C_{22}, C_{33}, 
+       C_{12}, C_{13}, C_{23}, 
+       C_{44}, C_{55}, C_{66}, 
+       C_{16}, C_{26}, C_{36}, C_{46}, C_{56}, 
+       C_{14}, C_{15}, C_{25}, C_{45}
     '''
-    #TODO To be implemented
+    # Based on the monoclinic matrix and not tested on real case.
+    # If you have test cases for this symmetry send them to the author.
     uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
-    pass
+    return array(
+    [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0,  0,uyz,uxz,  0,  0],
+     [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0,  0,  0,  0,uxz,  0],
+     [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,  0,  0,  0,  0,  0,  0],
+     [  0,  0,  0,  0,  0,  0,2*uyz,    0,    0,  0,  0,  0,uxy,  0,uxx,  0,  0,uxz],
+     [  0,  0,  0,  0,  0,  0,    0,2*uxz,    0,  0,  0,  0,  0,uxy,  0,uxx,uyy,uyz],
+     [  0,  0,  0,  0,  0,  0,    0,    0,2*uxy,uxx,uyy,uzz,uyz,uxz,  0,  0,  0,  0]])
+    
+    
 
 class Crystal(Atoms):
     '''
@@ -403,6 +426,7 @@ class Crystal(Atoms):
             "Triclinic": [[0,1,2,3,4,5], triclinic]
         }
         
+        self.get_lattice_type()
         # Decide which deformations should be used
         axis, symm=deform[self.bravais]
             
