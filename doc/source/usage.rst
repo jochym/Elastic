@@ -142,11 +142,9 @@ machines at your disposal this will speed up the calculation considerably::
 
 If you set up everything correctly you should obtain plot similar to this:
 
-.. figure:: fig/plot1.*
+.. figure:: fig/plot1.png
    :figwidth: 90%
-   :height: 600
-   :width: 800
-   :scale: 75%
+   :scale: 70%
    :align: center
    
    The pressure dependence on volume in MgO crystal (example1.py).
@@ -234,11 +232,9 @@ out in the output close to:
 
 and the following (or similar) plot:
 
-.. figure:: fig/plot2.*
-   :figwidth: 80%
-   :height: 600
-   :width: 800
-   :scale: 75%
+.. figure:: fig/plot2.png
+   :figwidth: 90%
+   :scale: 70%
    :align: center
    
    The pressure dependence on volume in MgO crystal (example2.py). 
@@ -325,11 +321,9 @@ With the following result of fitting:
 
 and the following (or similar) plot:
 
-.. figure:: fig/plot3.*
+.. figure:: fig/plot3.png
    :figwidth: 90%
-   :height: 600
-   :width: 800
-   :scale: 75%
+   :scale: 70%
    :align: center
    
    The pressure dependence on volume in MgO crystal (example3.py). 
