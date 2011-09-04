@@ -48,7 +48,11 @@ them as setup-agnostic as possible.
 Usage
 -----
 
-In this section we assume 
+In this section we assume that you have all parts of ASE properly installed and 
+the elastic is installed and working properly. The examples are available in the 
+`example subdirectory <http://bazaar.launchpad.net/~jochym/elastic/trunk/files/head:/example/>`_. 
+The code below use also scipy, numpy and matplotlib functions. 
+The VASP calculator is used in all examples (at least for now).
 
 .. _parcalc:
 
