@@ -48,6 +48,8 @@ them as setup-agnostic as possible.
 Usage
 -----
 
+In this section we assume 
+
 .. _parcalc:
 
 Simple Parallel Calculation
@@ -233,7 +235,7 @@ out in the output close to:
 and the following (or similar) plot:
 
 .. figure:: fig/plot2.*
-   :figwidth: 90%
+   :figwidth: 80%
    :height: 600
    :width: 800
    :scale: 75%
@@ -259,5 +261,76 @@ calculate the elastic tensor::
     
 
 To make sure we are getting the correct answer let us make the calculation 
-for :math:`C_{11}, C{12}` by hand. 
+for :math:`C_{11}, C{12}` by hand. We will deform the cell along a (x) axis
+by +/-0.2% and fit the 3:math:`^{rd}` order polynomial to the stress-strain 
+data. The linear component of the fit is the element of the elastic tensor::
+
+    # Create 10 deformation points on the a axis
+    sys=[]
+    for d in linspace(-0.2,0.2,10):
+        sys.append(cryst.get_cart_deformed_cell(axis=0,size=d))
+    
+    # Calculate the systems and collect the stress tensor for each system
+    r=ParCalculate(sys,cryst.calc)
+    ss=[]
+    for s in r:
+        ss.append([s.get_strain(cryst), s.get_stress()])
+
+    # Plot strain-stress relation
+    ss=[]
+    for p in r:
+        ss.append([p.get_strain(cryst),p.get_stress()])
+    ss=array(ss)
+    lo=min(ss[:,0,0])
+    hi=max(ss[:,0,0])
+    mi=(lo+hi)/2
+    wi=(hi-lo)/2
+    xa=linspace(mi-1.1*wi,mi+1.1*wi, 50)
+    plt.plot(ss[:,0,0],ss[:,1,0],'k.')
+    plt.plot(ss[:,0,0],ss[:,1,1],'r.')
+
+    plt.axvline(0,ls='--')
+    plt.axhline(0,ls='--')
+
+    # Now fit the polynomials to the data to get elastic constants
+    # C11 component
+    f=numpy.polyfit(ss[:,0,0],ss[:,1,0],3)
+    c11=f[-2]/units.GPa
+    
+    # Plot the fitted function
+    plt.plot(xa,numpy.polyval(f,xa),'b-')
+
+    # C12 component
+    f=numpy.polyfit(ss[:,0,0],ss[:,1,1],3)
+    c12=f[-2]/units.GPa
+
+    # Plot the fitted function
+    plt.plot(xa,numpy.polyval(f,xa),'g-')
+
+    # Here are the results. They should agree with the results
+    # of the internal routine.
+    print 'C11 = %.3f GPa, C12 = %.3f GPa => K= %.3f GPa' % (
+            c11, c12, (c11+2*c12)/3)
+
+    plt.show()
+
+If you set up everything correctly you should obtain fitted parameters printed 
+out in the output close to:
+
+    :math:`C_{ij}` (GPa): [ 319.1067       88.8528      139.35852632]
+
+With the following result of fitting:
+
+    :math:`C_{11}` = 317.958 GPa, :math:`C_{12}` = 68.878 GPa => K= 151.905 GPa
+
+and the following (or similar) plot:
+
+.. figure:: fig/plot3.*
+   :figwidth: 90%
+   :height: 600
+   :width: 800
+   :scale: 75%
+   :align: center
+   
+   The pressure dependence on volume in MgO crystal (example3.py). 
 
