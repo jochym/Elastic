@@ -321,7 +321,7 @@ class Crystal(Atoms):
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if self.bm_eos == None :
+        if recalc or self.bm_eos == None :
             self.get_BM_EOS(n,lo,hi,recalc)
         self.bulk_modulus=self.bm_eos[1]
         return self.bulk_modulus
