@@ -77,7 +77,7 @@ class ClusterVasp(Vasp):
         self.prepare_calc_dir()
         Vasp.calculate(self, atoms)
 
-
+verbose=True
 
 def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     '''
@@ -139,7 +139,8 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         time.sleep(0.2)
     
     time.sleep(2)
-    print len(sys), "Workers started"
+    if verbose : 
+        print len(sys), "Workers started"
     
    # Collect the results
     res=[]
