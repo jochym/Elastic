@@ -326,12 +326,14 @@ class Crystal(Atoms):
         self.bulk_modulus=self.bm_eos[1]
         return self.bulk_modulus
         
-    def get_pressure(self,s):
+    def get_pressure(self,s=None):
         '''
         Return isotropic (hydrostatic) pressure in ASE units
         instead of bar - the standard function in ASE returns result in bar.
         This is a convenience function.
         '''
+        if s==None :
+            s=self.get_stress()
         return 1e5*units.Pascal*self.get_isotropic_pressure(s)
         
     def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False):
