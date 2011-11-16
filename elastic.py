@@ -447,8 +447,7 @@ class Crystal(Atoms):
         
         ul=[]
         sl=[]
-        p=self.get_pressure(self.get_stress())
-        p=0
+        p=self.get_pressure()
         for g in r:
             ul.append(g.get_strain(self))
             # Remove the pressure from the stress tensor
@@ -463,6 +462,7 @@ class Crystal(Atoms):
         Bij = lstsq(eqm,slm)
         #print Bij[0] / units.GPa
         # Calculate elastic constants from Birch coeff.
+        # TODO: Check the sign of the pressure array in the B <=> C relation
         if (symm == orthorombic):
             Cij = Bij[0] - array([-p,-p,-p, p, p, p,-p,-p,-p])
         elif (symm == tetragonal):
@@ -473,6 +473,12 @@ class Crystal(Atoms):
             Cij = Bij[0] - array([-p,-p,p,p,-p,p])
         elif (symm == hexagonal):
             Cij = Bij[0] - array([-p,-p,p,p,-p])
+        elif (symm == monoclinic):
+            #TODO: verify this pressure array
+            Cij = Bij[0] - array([-p,-p,-p, p, p, p,-p,-p,-p, p, p, p, p])
+        elif (symm == triclinic):
+            #TODO: verify this pressure array
+            Cij = Bij[0] - array([-p,-p,-p, p, p, p,-p,-p,-p, p, p, p, p, p, p, p, p, p])
         return Cij, Bij
     
     def scan_pressures(self, lo, hi, n=5):
