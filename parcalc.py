@@ -36,11 +36,15 @@ with other ASE calculators with minor changes.
 The final goal is to provide a universal module for parallel 
 calculator execution in the cluster environment.
 
+The SIESTA code by Georgios Tritsaris <gtritsaris@seas.harvard.edu>
+Not fully tested after merge.
+
 Class description
 """""""""""""""""
 '''
 
 from ase.calculators.vasp import *
+from ase.calculators.siesta import *
 from Queue import Empty
 from multiprocessing import Process, Queue
 
@@ -77,6 +81,32 @@ class ClusterVasp(Vasp):
         self.prepare_calc_dir()
         Vasp.calculate(self, atoms)
 
+
+
+class ClusterSiesta(Siesta):
+    '''
+    Siesta calculator. Not fully tested by me - so this should be considered
+    beta quality. Nevertheless it is based on working implementation
+    '''
+    def __init__(self, nodes=1, ppn=8, **kwargs):
+        Siesta.__init__(self, **kwargs)
+        self.nodes=nodes
+        self.ppn=ppn
+    
+    def prepare_calc_dir(self):
+        f=open("siestarun.conf","w")
+        f.write('NODES="nodes=%d:ppn=%d"' % (self.nodes, self.ppn))
+        #print  self.nodes, self.ppn
+        f.close()
+    
+    def get_potential_energy(self, atoms):
+        self.prepare_calc_dir()
+        Siesta.get_potential_energy(self, atoms)
+
+    def clean(self):
+        Siesta.converged = False
+        return
+
 verbose=True
 
 def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
@@ -111,7 +141,10 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
             os.chdir(self.place)
             system=self.iq.get()
             system.set_calculator(self.calc)
-            self.calc.calculate(system)
+            if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
+                system.get_potential_energy()
+            else:
+                self.calc.calculate(system)
             #print "Finito: ", self.place, os.getcwd()
             self.oq.put(system)
             #print system.get_volume(), system.get_isotropic_pressure(system.get_stress())
@@ -136,6 +169,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     # Put jobs into the queue
     for s in sys:
         iq.put(s)
+        # Protection against too quick insertion
         time.sleep(0.2)
     
     time.sleep(2)
