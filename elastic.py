@@ -237,7 +237,7 @@ def triclinic(u):
     
     
 
-class Crystal(Atoms):
+class Crystal:
     '''
     Extension of standard ASE Atoms class designed to handle specifics of the
     crystalline materials. This code should, in principle, be folded into the 
@@ -253,7 +253,7 @@ class Crystal(Atoms):
 
 
     def __init__(self, *args, **kwargs):
-        Atoms.__init__(self, *args, **kwargs)
+        #Atoms.__init__(self, *args, **kwargs)
         self.recalc_bulk=True
         self.bulk_modulus=None
         self.bm_eos=None
@@ -637,8 +637,8 @@ if __name__ == '__main__':
         
         # Cubic
         a = 4.194
-        crystals.append(Crystal(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)],
-            spacegroup=225, cellpar=[a, a, a, 90, 90, 90])))
+        crystals.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)],
+            spacegroup=225, cellpar=[a, a, a, 90, 90, 90]))
 #        a = 4.194
 #        crystals.append(Crystal(crystal(['Ti', 'C'], [(0, 0, 0), (0.5, 0.5, 0.5)],
 #            spacegroup=225, cellpar=[a, a, a, 90, 90, 90])))
