@@ -235,6 +235,8 @@ def triclinic(u):
      [  0,  0,  0,  0,  0,  0,    0,2*uxz,    0,  0,  0,  0,  0,uxy,  0,uxx,uyy,uyz],
      [  0,  0,  0,  0,  0,  0,    0,    0,2*uxy,uxx,uyy,uzz,uyz,uxz,  0,  0,  0,  0]])
     
+
+
     
 
 class CrystalInitError(Exception):
@@ -308,12 +310,25 @@ class __Crystal:
         Triclinic (1), Monoclinic (2), Orthorombic (3), Tetragonal (4)
         Trigonal (5), Hexagonal (6), Cubic (7)
         '''
+        # Table of lattice types and correcponding group numbers dividing
+        # the ranges. See get_lattice_type method for precise definition.
+
+        lattice_types=[
+                [3,   "Triclinic"],
+                [16,  "Monoclinic"],
+                [75,  "Orthorombic"],
+                [143, "Tetragonal"],
+                [168, "Trigonal"],
+                [195, "Hexagonal"],
+                [231, "Cubic"]
+            ]
+
         sg=spg.get_spacegroup(self)
         m=re.match('([A-Z].*\\b)\s*\(([0-9]*)\)',sg)
         self.sg_name=m.group(1)
         self.sg_nr=string.atoi(m.group(2))
         
-        for n,l in enumerate(self.__class__.ls) :
+        for n,l in enumerate(lattice_types) :
             if self.sg_nr < l[0] :
                 lattice=l[1]
                 lattype=n+1
