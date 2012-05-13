@@ -235,9 +235,21 @@ def triclinic(u):
      [  0,  0,  0,  0,  0,  0,    0,2*uxz,    0,  0,  0,  0,  0,uxy,  0,uxx,uyy,uyz],
      [  0,  0,  0,  0,  0,  0,    0,    0,2*uxy,uxx,uyy,uzz,uyz,uxz,  0,  0,  0,  0]])
     
+
+
     
 
-class Crystal:
+class CrystalInitError(Exception):
+    def __str__(self):
+        return '''The Crystal class should NEVER be created by itself - it is intended as 
+        a mix-in base class for the Atoms class. Thus this constructor 
+        just prints the error message and bails out.'''
+
+class Crystal(Atoms):
+    '''Backward compatibility class. To be removed later.'''
+    pass
+
+class __Crystal:
     '''
     Extension of standard ASE Atoms class designed to handle specifics of the
     crystalline materials. This code should, in principle, be folded into the 
@@ -245,34 +257,35 @@ class Crystal:
     Additionally there are some aspects of this code which may be difficult to
     harmonize with the principles of the Atoms class. I am sure it is better,
     for now to leave this as a separate extension class.
-    
+
     Basically, this class provides set of functions concerned with derivation 
     of elastic properties using "finite deformation approach" 
     (see the documentation for physics background information).
     '''
 
+    def __init__(self):
+        '''
+        Dummy constructor for the Crystal class.
+        The class should NEVER be created by itself - it is intended as 
+        a mix-in base class for the Atoms class. Thus this constructor 
+        just prints the error message and bails out.
+        '''
+        print '''Crystal class is not intended to be used directly! 
+            You should never call it constructor. Read the docs or just 
+            import elstic module and enjoy the new functionality of 
+            the Atoms class!. Since this program is not going to work
+            anyway I am bailing out right now.
+            '''
+        raise CrystalInitError
 
-    def __init__(self, *args, **kwargs):
-        #Atoms.__init__(self, *args, **kwargs)
+    def __crystal_init__(self, *args, **kwargs):
+        Atoms.__atoms_init__(self, *args, **kwargs)
         self.recalc_bulk=True
         self.bulk_modulus=None
         self.bm_eos=None
         self.full_min_calc=None
         self.cell_min_calc=None
         self.idof_min_calc=None
-        
-    # Table of lattice types and correcponding group numbers dividing
-    # the ranges. See get_lattice_type method for precise definition.
-    ls=[
-        [3,   "Triclinic"],
-        [16,  "Monoclinic"],
-        [75,  "Orthorombic"],
-        [143, "Tetragonal"],
-        [168, "Trigonal"],
-        [195, "Hexagonal"],
-        [231, "Cubic"]
-    ]
-    
 
     def set_full_min_calc(self, calc):
         self.full_min_calc=calc
@@ -297,12 +310,25 @@ class Crystal:
         Triclinic (1), Monoclinic (2), Orthorombic (3), Tetragonal (4)
         Trigonal (5), Hexagonal (6), Cubic (7)
         '''
+        # Table of lattice types and correcponding group numbers dividing
+        # the ranges. See get_lattice_type method for precise definition.
+
+        lattice_types=[
+                [3,   "Triclinic"],
+                [16,  "Monoclinic"],
+                [75,  "Orthorombic"],
+                [143, "Tetragonal"],
+                [168, "Trigonal"],
+                [195, "Hexagonal"],
+                [231, "Cubic"]
+            ]
+
         sg=spg.get_spacegroup(self)
         m=re.match('([A-Z].*\\b)\s*\(([0-9]*)\)',sg)
         self.sg_name=m.group(1)
         self.sg_nr=string.atoi(m.group(2))
         
-        for n,l in enumerate(Crystal.ls) :
+        for n,l in enumerate(lattice_types) :
             if self.sg_nr < l[0] :
                 lattice=l[1]
                 lattype=n+1
@@ -480,7 +506,7 @@ class Crystal:
             #TODO: verify this pressure array
             Cij = Bij[0] - array([-p,-p,-p, p, p, p,-p,-p,-p, p, p, p, p, p, p, p, p, p])
         return Cij, Bij
-    
+
     def scan_pressures(self, lo, hi, n=5):
         '''
         Scan the pressure axis from lo to hi (inclusive) 
@@ -611,6 +637,15 @@ class Crystal:
         u=(u+u.T)/2
         return array([u[0,0], u[1,1], u[2,2], u[2,1], u[2,0], u[1,0]])
 
+# Enhance the Atoms class by adding new capabilities
+
+
+if not Crystal in Atoms.__bases__ :
+    Atoms.__bases__=Atoms.__bases__ + (__Crystal,)
+    Atoms.__atoms_init__=Atoms.__init__
+    Atoms.__init__=__Crystal.__crystal_init__
+else :
+    print "Already imported"
 
 if __name__ == '__main__':
 
