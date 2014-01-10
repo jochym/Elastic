@@ -171,16 +171,18 @@ Birch-Murnaghan formula (P - pressure, V - volume, B - parameters):
    \right]
 
 We will start with the same crystal optimized above, 
-but this time we will wrap it with a new class imported from the elastic 
-module - the Crystal class::
+but this time we will use a new functionality imported from the elastic 
+module. This module acts as a plug-in for the Atoms class - extending their
+range of quantities accessible for the user::
 
-    from elastic import Crystal, BMEOS
+    import elastic
+    from elastic import BMEOS
 
     a = 4.194
-    cryst = Crystal(crystal(['Mg', 'O'], 
+    cryst = crystal(['Mg', 'O'], 
                     [(0, 0, 0), (0.5, 0.5, 0.5)], 
                     spacegroup=225,
-                    cellpar=[a, a, a, 90, 90, 90]))
+                    cellpar=[a, a, a, 90, 90, 90])
 
 Now we repeat the setup and optimization procedure from the example 1 above 
 but using a new Crystal class (see above we skip this part for brevity). 
