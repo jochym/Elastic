@@ -30,7 +30,7 @@ as well.
 The installation is simple (provided you have all the dependencies like 
 scipy, numpy, ASE, pyspglib to name just a few):
 
-    pip install elastic2
+    pip install elastic
 
 If you need a more elaborate 
 [installation instruction](http://nbviewer.ipython.org/gist/jochym/a7f552e8b1fced1bc996) 
