@@ -74,7 +74,6 @@ import string
 import ase.io
 from ase.atoms import Atoms
 from pyspglib import spglib as spg
-from parcalc import ParCalculate
 from scipy.linalg import norm, lstsq
 from scipy import optimize
 from numpy.linalg import inv
@@ -237,6 +236,11 @@ def triclinic(u):
     
 
 
+def ParCalculate(systems,calc):
+    for s in systems:
+        s.set_calculator(calc.copy())
+    calc.ParallelCalculate(systems,properties=['stress'])
+    return systems
     
 
 class CrystalInitError(Exception):
@@ -272,7 +276,7 @@ class __Crystal:
         '''
         print '''Crystal class is not intended to be used directly! 
             You should never call it constructor. Read the docs or just 
-            import elstic module and enjoy the new functionality of 
+            import elastic module and enjoy the new functionality of 
             the Atoms class!. Since this program is not going to work
             anyway I am bailing out right now.
             '''
@@ -427,7 +431,7 @@ class __Crystal:
             self.pv=pvdat
         return self.bm_eos
 
-    def get_elastic_tensor(self, n=5, d=2):
+    def get_elastic_tensor(self, n=5, d=2, mode='full', systems=None):
         '''
         Calculate elastic tensor of the crystal.
         It is assumed that the crystal is converged and optimized 
@@ -457,19 +461,27 @@ class __Crystal:
         self.get_lattice_type()
         # Decide which deformations should be used
         axis, symm=deform[self.bravais]
-            
-        # Generate deformations
-        sys=[]
-        for a in axis :
-            if a <3 : # tetragonal deformation
-                for dx in linspace(-d,d,n):
-                    sys.append(self.get_cart_deformed_cell(axis=a, size=dx))
-            elif a<6 : # sheer deformation (skip the zero angle)
-                for dx in linspace(d/10.0,d,n):
-                    sys.append(self.get_cart_deformed_cell(axis=a, size=dx))
         
-        # Run the calculation
-        r=ParCalculate(sys,self.calc)
+        if mode!='restart':
+            # Generate deformations if we are not in restart mode
+            systems=[]
+            for a in axis :
+                if a <3 : # tetragonal deformation
+                    for dx in linspace(-d,d,n):
+                        systems.append(self.get_cart_deformed_cell(axis=a, size=dx))
+                elif a<6 : # sheer deformation (skip the zero angle)
+                    for dx in linspace(d/10.0,d,n):
+                        systems.append(self.get_cart_deformed_cell(axis=a, size=dx))
+        
+        # Just generate deformations for manual calculation
+        if mode=='deformations' :
+            return systems
+            
+        if mode!='restart' :
+            # Run the calculation if we are not restarting
+            r=ParCalculate(systems,self.calc)
+        else :
+            r=systems
         
         ul=[]
         sl=[]
@@ -640,7 +652,7 @@ class __Crystal:
 # Enhance the Atoms class by adding new capabilities
 
 
-if not Crystal in Atoms.__bases__ :
+if not __Crystal in Atoms.__bases__ :
     Atoms.__bases__=Atoms.__bases__ + (__Crystal,)
     Atoms.__atoms_init__=Atoms.__init__
     Atoms.__init__=__Crystal.__crystal_init__
