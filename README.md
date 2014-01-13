@@ -19,7 +19,7 @@ Recently, thanks to generous support of:
 * Department of Engineering, University of Saskatchewan, Canada, 
 
 I was able re-implemented elastic as a module for the 
-ASE, integrate create the interface to the QuantumEspresso code and publish 
+ASE, integrate interface to the QuantumEspresso code and publish 
 it properly as a PyPi package (elastic).
 
 The on-line documentation is placed on [Elastic website](http://wolf.ifj.edu.pl/elastic/)
