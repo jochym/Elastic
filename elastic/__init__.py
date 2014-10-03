@@ -351,7 +351,7 @@ class __Crystal:
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if recalc or self.bm_eos == None :
+        if recalc or (self.bm_eos is None) :
             self.get_BM_EOS(n,lo,hi,recalc)
         self.bulk_modulus=self.bm_eos[1]
         return self.bulk_modulus
@@ -362,7 +362,7 @@ class __Crystal:
         instead of bar - the standard function in ASE returns result in bar.
         This is a convenience function.
         '''
-        if s==None :
+        if s is None :
             s=self.get_stress()
         return 1e5*units.Pascal*self.get_isotropic_pressure(s)
         
@@ -392,7 +392,7 @@ class __Crystal:
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if self.bm_eos==None or recalc :
+        if (self.bm_eos is None) or recalc :
             # NOTE: The calculator should properly minimize the energy
             # at each volume by optimizing the internal degrees of freedom
             # in the cell and/or cell shape without touching the volume.
@@ -568,7 +568,7 @@ class __Crystal:
         from the unit cell matrix (uc) or self.
         Angles in radians.
         '''
-        if uc==None :
+        if uc is None :
             uc=self.get_cell()
         ucv=[uc[i,:]/norm(uc[i,:]) for i in range(3)]
         uca=[acos(dot(ucv[(i+1)%3],ucv[(i+2)%3])) for i in range(3)]
@@ -640,7 +640,7 @@ class __Crystal:
         6-vector. The calculation is done with respect to the crystal 
         geometry passed in refcell parameter.
         '''
-        if refcell==None :
+        if refcell is None :
             refcell=self
         du=self.get_cell()-refcell.get_cell()
         m=refcell.get_cell()

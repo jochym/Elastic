@@ -1,10 +1,10 @@
 package:
   name: elastic
-  version: !!str 4.0.5
+  version: !!str 4.0.6
 
 source:
   git_url: git@github.com:jochym/elastic.git
-  git_tag: 4.0.5
+  git_tag: 4.0.6
 #  fn: elastic-4.0.5.tar.gz
 #  url: https://pypi.python.org/packages/source/e/elastic/elastic-4.0.5.tar.gz
 #  md5: 6ebb277694e04f56644776d4396b3933
