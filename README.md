@@ -39,7 +39,7 @@ The installation is simple if you are using conda package menager:
     conda install -c https://conda.binstar.org/jochym elastic
 
 If you need a more elaborate 
-[installation instruction](http://nbviewer.ipython.org/gist/jochym/a7f552e8b1fced1bc996) 
+[installation instruction](http://nbviewer.ipython.org/github/jochym/qe-doc/blob/master/Installation.ipynb) 
 for computing environment to work with ASE - I have written just such a document.
 It is a first in the series of tutorials of this subject and you can 
 find it under nbviewer link above.
