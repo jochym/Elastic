@@ -1,6 +1,10 @@
 Elastic
 =======
 
+[![Binstar Badge](https://binstar.org/jochym/elastic/badges/version.svg)](https://binstar.org/jochym/elastic)
+[![Binstar Badge](https://binstar.org/jochym/elastic/badges/license.svg)](https://binstar.org/jochym/elastic)
+[![Binstar Badge](https://binstar.org/jochym/elastic/badges/downloads.svg)](https://binstar.org/jochym/elastic)
+
 Elastic is a set of python routines for calculation of elastic properties of 
 crystals (elastic constants, equation of state, sound velocities, etc.). 
 It is a third version of the in-house code I have 
@@ -27,10 +31,12 @@ You can obtain the
 [documentation as a PDF file](http://wolf.ifj.edu.pl/~jochym/Elastic.pdf) 
 as well.
 
-The installation is simple (provided you have all the dependencies like 
-scipy, numpy, ASE, pyspglib to name just a few):
+Installation [![Binstar Badge](https://binstar.org/jochym/elastic/badges/installer/conda.svg)](https://conda.binstar.org/jochym)
+-------------
 
-    pip install elastic
+The installation is simple if you are using conda package menager:
+
+    conda install -c https://conda.binstar.org/jochym elastic
 
 If you need a more elaborate 
 [installation instruction](http://nbviewer.ipython.org/gist/jochym/a7f552e8b1fced1bc996) 
