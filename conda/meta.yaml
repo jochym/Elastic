@@ -1,10 +1,10 @@
 package:
   name: elastic
-  version: !!str 4.0.6
+  version: !!str 4.0.7
 
 source:
   git_url: git@github.com:jochym/elastic.git
-  git_tag: 4.0.6
+#  git_tag: 4.0
 #  fn: elastic-4.0.5.tar.gz
 #  url: https://pypi.python.org/packages/source/e/elastic/elastic-4.0.5.tar.gz
 #  md5: 6ebb277694e04f56644776d4396b3933
@@ -25,7 +25,7 @@ build:
 
   # If this is a new build for the same version, increment the build
   # number. If you do not include this key, it defaults to 0.
-  number: 4
+  number: 0
 
 requirements:
   build:
@@ -36,7 +36,7 @@ requirements:
     - python-ase
     - numpy
     - scipy
-    - pyspglib
+    - spglib
 
 test:
   # Python imports
