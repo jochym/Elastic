@@ -177,12 +177,12 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         print len(sys), "Workers started"
     
    # Collect the results
-    res={}
+    res=[]
     while len(res)<len(sys) :
         s=oq.get()
-        res[s]=s
+        res.append(s)
         #print "Got from oq:", s.get_volume(), s.get_isotropic_pressure(s.get_stress())
-    return [res[s] for s in sys]
+    return [r for s in sys for r in res if r==s]
 
 # Testing routines using VASP as a calculator in the cluster environment.
 # TODO: Make it calculator/environment agnostic
