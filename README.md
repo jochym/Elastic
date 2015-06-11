@@ -2,8 +2,10 @@ Elastic
 =======
 
 [![Binstar Badge](https://binstar.org/jochym/elastic/badges/version.svg)](https://binstar.org/jochym/elastic)
-[![Binstar Badge](https://binstar.org/jochym/elastic/badges/license.svg)](https://binstar.org/jochym/elastic)
+[![Binstar Badge](https://binstar.org/jochym/elastic/badges/build.svg)](https://binstar.org/jochym/elastic/builds)
 [![Binstar Badge](https://binstar.org/jochym/elastic/badges/downloads.svg)](https://binstar.org/jochym/elastic)
+[![Binstar Badge](https://binstar.org/jochym/elastic/badges/license.svg)](https://binstar.org/jochym/elastic)
+[![Binstar Badge](https://binstar.org/jochym/elastic/badges/installer/conda.svg)](https://conda.binstar.org/jochym)
 
 Elastic is a set of python routines for calculation of elastic properties of 
 crystals (elastic constants, equation of state, sound velocities, etc.). 
