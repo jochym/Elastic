@@ -1,4 +1,4 @@
-Elastic
+Elastic [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg)](http://dx.doi.org/10.5281/zenodo.18759)
 =======
 
 [![Binstar Badge](https://binstar.org/jochym/elastic/badges/version.svg)](https://binstar.org/jochym/elastic)
@@ -6,7 +6,7 @@ Elastic
 [![Binstar Badge](https://binstar.org/jochym/elastic/badges/downloads.svg)](https://binstar.org/jochym/elastic)
 [![Binstar Badge](https://binstar.org/jochym/elastic/badges/license.svg)](https://binstar.org/jochym/elastic)
 [![Binstar Badge](https://binstar.org/jochym/elastic/badges/installer/conda.svg)](https://conda.binstar.org/jochym)
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg)](http://dx.doi.org/10.5281/zenodo.18759)
+
 
 
 Elastic is a set of python routines for calculation of elastic properties of 
