@@ -402,8 +402,8 @@ class __Crystal:
             #       calculators. Maybe just calc_idof and calc_full members?
             res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc,cleanup=False)
             
-	    #for r in res :
-	    #	print r.get_volume(), self.get_pressure(), r.get_cell() 
+        #for r in res :
+        #print r.get_volume(), self.get_pressure(), r.get_cell() 
 
             pvdat=array([[r.get_volume(),
                             self.get_pressure(r.get_stress()),
