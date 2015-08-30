@@ -37,7 +37,7 @@ package: elastic
 ## Run before the script
 before_script:
   - conda update -n root conda conda-build --yes
-  - conda config --add channels https://conda.binstar.org/jochym
+  - conda config --add channels https://conda.anaconda.org/jochym
 
 ## Put your main computations here!  
 script:
