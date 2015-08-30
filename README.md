@@ -1,11 +1,11 @@
 Elastic [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg)](http://dx.doi.org/10.5281/zenodo.18759)
 =======
 
-[![Binstar Badge](https://binstar.org/jochym/elastic/badges/version.svg)](https://binstar.org/jochym/elastic)
-[![Binstar Badge](https://binstar.org/jochym/elastic/badges/build.svg)](https://binstar.org/jochym/elastic/builds)
-[![Binstar Badge](https://binstar.org/jochym/elastic/badges/downloads.svg)](https://binstar.org/jochym/elastic)
-[![Binstar Badge](https://binstar.org/jochym/elastic/badges/license.svg)](https://binstar.org/jochym/elastic)
-[![Binstar Badge](https://binstar.org/jochym/elastic/badges/installer/conda.svg)](https://conda.binstar.org/jochym)
+[![Binstar Badge](https://anaconda.org/jochym/elastic/badges/version.svg)](https://anaconda.org/jochym/elastic)
+[![Binstar Badge](https://anaconda.org/jochym/elastic/badges/build.svg)](https://anaconda.org/jochym/elastic/builds)
+[![Binstar Badge](https://anaconda.org/jochym/elastic/badges/downloads.svg)](https://anaconda.org/jochym/elastic)
+[![Binstar Badge](https://anaconda.org/jochym/elastic/badges/license.svg)](https://anaconda.org/jochym/elastic)
+[![Binstar Badge](https://anaconda.org/jochym/elastic/badges/installer/conda.svg)](https://conda.anaconda.org/jochym)
 
 
 
@@ -35,7 +35,7 @@ You can obtain the
 [documentation as a PDF file](http://wolf.ifj.edu.pl/~jochym/Elastic.pdf) 
 as well.
 
-Installation [![Binstar Badge](https://binstar.org/jochym/elastic/badges/installer/conda.svg)](https://conda.binstar.org/jochym)
+Installation [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/installer/conda.svg)](https://conda.anaconda.org/jochym)
 -------------
 
 The installation is simple if you are using conda package menager:
