@@ -77,7 +77,7 @@ from pyspglib import spglib as spg
 from scipy.linalg import norm, lstsq
 from scipy import optimize
 from numpy.linalg import inv
-from numpy import dot, diag, ones, reshape, linspace, array
+from numpy import dot, diag, ones, reshape, linspace, array, mean
 from math import acos, pi, cos, sin, tan
 import ase.units as units
 
@@ -236,11 +236,13 @@ def triclinic(u):
     
 
 
-def ParCalculate(systems,calc):
-    for s in systems:
-        s.set_calculator(calc.copy())
-    calc.ParallelCalculate(systems,properties=['stress'])
-    return systems
+#def ParCalculate(systems,calc):
+#    for s in systems:
+#        s.set_calculator(calc.copy())
+#    calc.ParallelCalculate(systems,properties=['stress'])
+#    return systems
+
+from parcalc import ParCalculate
     
 
 class CrystalInitError(Exception):
@@ -358,13 +360,13 @@ class __Crystal:
         
     def get_pressure(self,s=None):
         '''
-        Return isotropic (hydrostatic) pressure in ASE units
-        instead of bar - the standard function in ASE returns result in bar.
+        Return *external* isotropic (hydrostatic) pressure in ASE units.
+        If the pressure is positive the system is under external pressure.
         This is a convenience function.
         '''
         if s is None :
             s=self.get_stress()
-        return 1e5*units.Pascal*self.get_isotropic_pressure(s)
+        return -mean(s[:3])
         
     def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False):
         """
@@ -398,8 +400,11 @@ class __Crystal:
             # in the cell and/or cell shape without touching the volume.
             # TODO: Provide api for specifying IDOF and Full optimization 
             #       calculators. Maybe just calc_idof and calc_full members?
-            res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc)
+            res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc,cleanup=False)
             
+	    #for r in res :
+	    #	print r.get_volume(), self.get_pressure(), r.get_cell() 
+
             pvdat=array([[r.get_volume(),
                             self.get_pressure(r.get_stress()),
                             norm(r.get_cell()[:,0]),

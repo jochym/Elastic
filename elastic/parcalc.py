@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2011 by Paweł T. Jochym <pawel.jochym@ifj.edu.pl>
+# Copyright 2011 by Pawel T. Jochym <pawel.jochym@ifj.edu.pl>
 #
 #    This file is part of Elastic.
 
@@ -52,6 +52,7 @@ import time
 import os
 import tempfile
 import shutil
+import copy
 
 class ClusterVasp(Vasp):
     '''
@@ -73,7 +74,7 @@ class ClusterVasp(Vasp):
         The following code reflects just my particular setup.
         '''
         f=open("vasprun.conf","w")
-        f.write('NODES="nodes=%d:ppn=%d"' % (self.nodes, self.ppn))
+        f.write('NODES="nodes=%s:ppn=%d"' % (self.nodes, self.ppn))
         #print  self.nodes, self.ppn
         f.close()
    
@@ -139,17 +140,17 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         def run(self):
             wd=os.getcwd()
             os.chdir(self.place)
-            system=self.iq.get()
-            system.set_calculator(self.calc)
+            n,system=self.iq.get()
+            system.set_calculator(copy.deepcopy(self.calc))
+	    #print "Start at :", self.place
             if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
                 system.get_potential_energy()
             else:
-                self.calc.calculate(system)
-            #print "Finito: ", self.place, os.getcwd()
-            self.oq.put(system)
-            #print system.get_volume(), system.get_isotropic_pressure(system.get_stress())
+                system.calc.calculate(system)
+            #print("Finito: ", os.getcwd(), system.get_volume(), system.get_pressure())
+	    self.oq.put([n,system])
             if self.CleanUp :
-                self.calc.clean()
+                system.calc.clean()
                 os.chdir(wd)
                 shutil.rmtree(self.place, ignore_errors=True)
 
@@ -167,8 +168,8 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup).start()
 
     # Put jobs into the queue
-    for s in sys:
-        iq.put(s)
+    for n,s in enumerate(sys):
+        iq.put([n,s])
         # Protection against too quick insertion
         time.sleep(0.2)
     
@@ -179,10 +180,10 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
    # Collect the results
     res=[]
     while len(res)<len(sys) :
-        s=oq.get()
-        res.append(s)
-        #print "Got from oq:", s.get_volume(), s.get_isotropic_pressure(s.get_stress())
-    return [r for s in sys for r in res if r==s]
+        n,s=oq.get()
+        res.append([n,s])
+        #print "Got from oq:", n, s.get_volume(), s.get_pressure()
+    return [r for ns,s in enumerate(sys) for nr,r in res if nr==ns]
 
 # Testing routines using VASP as a calculator in the cluster environment.
 # TODO: Make it calculator/environment agnostic
