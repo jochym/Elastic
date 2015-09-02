@@ -65,7 +65,7 @@ Class description
 """""""""""""""""
 '''
 
-from __future__ import print_function, division
+from __future__ import print_function, division, absolute_import
 
 import re
 import sys
@@ -677,7 +677,7 @@ if __name__ == '__main__':
     from matplotlib.pyplot import plot, show, figure, draw, axvline, axhline
     from ase.lattice.spacegroup import crystal
     from ase.visualize import view
-    from parcalc import ClusterVasp
+    from .parcalc import ClusterVasp
 
 
 # You can specify the directory with coerged VASP crystal for the test run
