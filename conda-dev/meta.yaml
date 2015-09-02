@@ -1,6 +1,6 @@
 package:
-  name: elastic
-  version: !!str 4.1.0-dev
+  name: elastic-dev
+  version: !!str 4.1.0_dev
 
 source:
   git_url: https://github.com/jochym/Elastic.git
