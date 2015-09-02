@@ -36,7 +36,6 @@ engine:
 
 ## Run before the script
 before_script:
-  - git checkout dev
   - conda update -n root conda conda-build --yes
   - conda config --add channels https://conda.anaconda.org/jochym
 
