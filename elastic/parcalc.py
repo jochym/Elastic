@@ -43,6 +43,8 @@ Class description
 """""""""""""""""
 '''
 
+from __future__ import print_function, division
+
 from ase.calculators.vasp import *
 from ase.calculators.siesta import *
 from Queue import Empty
