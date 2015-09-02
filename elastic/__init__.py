@@ -659,7 +659,7 @@ class __Crystal:
 
 
 if not __Crystal in Atoms.__bases__ :
-    Atoms.__bases__=Atoms.__bases__ + (__Crystal,)
+    Atoms.__bases__= (__Crystal,) + Atoms.__bases__ 
     Atoms.__atoms_init__=Atoms.__init__
     Atoms.__init__=__Crystal.__crystal_init__
 else :
