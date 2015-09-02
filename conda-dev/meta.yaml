@@ -1,5 +1,5 @@
 package:
-  name: elastic
+  name: elastic-dev
   version: !!str 4.1.0-dev
 
 source:
