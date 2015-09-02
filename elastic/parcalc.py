@@ -144,13 +144,15 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
             os.chdir(self.place)
             n,system=self.iq.get()
             system.set_calculator(copy.deepcopy(self.calc))
-        #print("Start at :", self.place)
+            
+            #print("Start at :", self.place)
             if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
                 system.get_potential_energy()
             else:
                 system.calc.calculate(system)
+            
             #print("Finito: ", os.getcwd(), system.get_volume(), system.get_pressure())
-        self.oq.put([n,system])
+            self.oq.put([n,system])
             if self.CleanUp :
                 system.calc.clean()
                 os.chdir(wd)
