@@ -48,7 +48,7 @@ from __future__ import print_function, division
 from ase.calculators.vasp import *
 from ase.calculators.siesta import *
 from multiprocessing import Process, Queue
-from Queue import Empty
+from queue import Empty
 
 import time
 import os
