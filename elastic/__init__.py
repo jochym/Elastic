@@ -243,7 +243,7 @@ def triclinic(u):
 #    calc.ParallelCalculate(systems,properties=['stress'])
 #    return systems
 
-from parcalc import ParCalculate
+from .parcalc import ParCalculate
     
 
 class CrystalInitError(Exception):
