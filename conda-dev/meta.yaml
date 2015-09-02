@@ -35,7 +35,7 @@ requirements:
 test:
   # Python imports
   imports:
-    - elastic-dev
+    - elastic
 
   #commands:
     # You can put test commands to be run here.  Use this to test that the
@@ -47,7 +47,7 @@ test:
 
   requires:
     # Put any additional test requirements here.  For example
-    # - elastic-dev
+    - elastic-dev
 
 about:
   home: https://github.com/jochym/Elastic
