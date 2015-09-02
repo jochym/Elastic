@@ -285,24 +285,6 @@ class __Crystal:
             ''')
         raise CrystalInitError
 
-    def __crystal_init__(self, *args, **kwargs):
-        Atoms.__atoms_init__(self, *args, **kwargs)
-        self.recalc_bulk=True
-        self.bulk_modulus=None
-        self.bm_eos=None
-        self.full_min_calc=None
-        self.cell_min_calc=None
-        self.idof_min_calc=None
-
-    def set_full_min_calc(self, calc):
-        self.full_min_calc=calc
-        
-    def set_cell_min_calc(self, calc):
-        self.cell_min_calc=calc
-        
-    def set_idof_min_calc(self, calc):
-        self.idof_min_calc=calc
-
     def get_lattice_type(self):
         '''
         Find the symmetry of the crystal using spglib symmetry finder.
@@ -333,7 +315,7 @@ class __Crystal:
         sg=spg.get_spacegroup(self)
         m=re.match('([A-Z].*\\b)\s*\(([0-9]*)\)',sg)
         self.sg_name=m.group(1)
-        self.sg_nr=string.atoi(m.group(2))
+        self.sg_nr=int(m.group(2))
         
         for n,l in enumerate(lattice_types) :
             if self.sg_nr < l[0] :
@@ -354,7 +336,7 @@ class __Crystal:
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if recalc or (self.bm_eos is None) :
+        if recalc or getattr(self,bm_eos,None) is None :
             self.get_BM_EOS(n,lo,hi,recalc)
         self.bulk_modulus=self.bm_eos[1]
         return self.bulk_modulus
@@ -395,7 +377,7 @@ class __Crystal:
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if (self.bm_eos is None) or recalc :
+        if getattr(self,bm_eos,None) is None or recalc :
             # NOTE: The calculator should properly minimize the energy
             # at each volume by optimizing the internal degrees of freedom
             # in the cell and/or cell shape without touching the volume.
@@ -657,13 +639,12 @@ class __Crystal:
 
 # Enhance the Atoms class by adding new capabilities
 
-
-if not __Crystal in Atoms.__bases__ :
-    Atoms.__bases__= (__Crystal,) + Atoms.__bases__ 
-    Atoms.__atoms_init__=Atoms.__init__
-    Atoms.__init__=__Crystal.__crystal_init__
-else :
-    print("Already imported")
+for k in __Crystal.__dict__ :
+    if k[:2]!='__' and k[-2:]!='__' :
+        #print('Implanting', k)
+        setattr(Atoms, k, __Crystal.__dict__[k])
+#    Atoms.__atoms_init__=Atoms.__init__
+#    Atoms.__init__=__Crystal.__crystal_init__
 
 if __name__ == '__main__':
 
