@@ -1,10 +1,10 @@
 package:
   name: elastic
-  version: !!str 4.0.8.dev
+  version: !!str 4.1.0-dev
 
 source:
   git_url: https://github.com/jochym/Elastic.git
-#  git_tag: 4.0.8
+  git_branch: dev
 
 build:
   #preserve_egg_dir: True
