@@ -9,6 +9,12 @@ Indices and tables
 
 References
 ----------
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg
+   :target: http://dx.doi.org/10.5281/zenodo.18759.
+
+The Elastic package should be cited using one or both of the following papers 
+(TiC, ZrC) and its own reference: `doi:10.5281/zenodo.18759 <http://dx.doi.org/10.5281/zenodo.18759>`_.
+
 .. [TiC] P.T. Jochym, K. Parlinski and M. Sternik, 
         *TiC lattice dynamics from ab initio calculations*, 
         European Physical Journal B; **10**, 1 (1999) 9-13 ; 
