@@ -21,12 +21,12 @@ from elastic import BMEOS
 def banner(msg):
     print()
     print(60*'=')
-    print(min(0,(60-len(msg))//2-1)*' ',msg)
+    print(max(0,(60-len(msg))//2-1)*' ',msg)
     print(60*'=')
 
 def secban(msg):
     print()
-    print(min(0,(60-len(msg))//2-1)*' ',msg)
+    print(max(0,(60-len(msg))//2-1)*' ',msg)
     print(60*'-')
 
 
