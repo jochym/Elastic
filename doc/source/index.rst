@@ -6,6 +6,9 @@
 Calculation of elastic properties of crystals
 =============================================
 
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg
+   :target: http://dx.doi.org/10.5281/zenodo.18759
+
 Elastic is a set of python routines for calculation of elastic properties of 
 crystals (elastic constants, equation of state, sound velocities, etc.). 
 It is a third version of the in-house code I have 

@@ -1,6 +1,11 @@
 Installation
 ============
 
+.. image:: https://anaconda.org/jochym/elastic/badges/version.svg
+   :target: https://anaconda.org/jochym/elastic
+.. image:: https://anaconda.org/jochym/elastic/badges/installer/conda.svg
+   :target: https://conda.anaconda.org/jochym
+
 The installation procedure is quite simple if you use, *highly recommended*
 `conda package manager <http://conda.pydata.org/miniconda.html>`_
 
