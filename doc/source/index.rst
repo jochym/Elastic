@@ -9,7 +9,7 @@ Calculation of elastic properties of crystals
 Elastic is a set of python routines for calculation of elastic properties of 
 crystals (elastic constants, equation of state, sound velocities, etc.). 
 It is a third version of the in-house code I have 
-written over last few years and is implemented as a extension to the
+written over several years and is implemented as a extension to the
 `ASE <https://wiki.fysik.dtu.dk/ase/>`_ system.
 The code was a basis for some of my publications and was 
 described briefly in these papers. The code was available to anyone, presented 
@@ -19,14 +19,15 @@ full documentation, project page etc. Nevertheless the old code is still availab
 to anyone as `Elastic 2 <http://wolf.ifj.edu.pl/~jochym/elastic2/elastic2.tgz>`_.
 I just do not recommend to use it without my help - which I am happy to provide.
 
-Recently, I have decided to re-implement elastic as a module for the 
+In 2010, I have decided to re-implement elastic as a module for the 
 `ASE <https://wiki.fysik.dtu.dk/ase/>`_ system and publish it properly under 
 the GPL. 
 
-The source code lives on the 
-`launchpad project page <https://launchpad.net/elastic>`_ and the 
-on-line documentation is placed on 
-`Elastic website <http://wolf.ifj.edu.pl/elastic/>`_ 
+The source code started live on the 
+`launchpad project page <https://launchpad.net/elastic>`_ and later in 2014 
+moved to the `github repository <https://github.com/jochym/Elastic>`_ with 
+corresponding `elastic web page at <https://jochym.github.io/Elastic/>`_ and
+on-line documentation placed at `Elastic website <http://wolf.ifj.edu.pl/elastic/>`_ 
 (you are probably reading from it already). You can obtain the `documentation as a 
 PDF file <http://wolf.ifj.edu.pl/~jochym/Elastic.pdf>`_ as well.
 
