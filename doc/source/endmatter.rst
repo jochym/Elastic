@@ -13,8 +13,12 @@ References
    :target: http://dx.doi.org/10.5281/zenodo.18759.
 
 The Elastic package should be cited using one or both of the following papers 
-(TiC, ZrC) and its own reference: `doi:10.5281/zenodo.18759 <http://dx.doi.org/10.5281/zenodo.18759>`_.
+(TiC, ZrC) and its own reference.: 
 
+.. [Elastic] P.T. Jochym, 
+        *Module for calculating elastic tensor of crystals*,
+        software, https://github.com/jochym/Elastic/,
+        `doi:10.5281/zenodo.18759 <http://dx.doi.org/10.5281/zenodo.18759>`_.
 .. [TiC] P.T. Jochym, K. Parlinski and M. Sternik, 
         *TiC lattice dynamics from ab initio calculations*, 
         European Physical Journal B; **10**, 1 (1999) 9-13 ; 
