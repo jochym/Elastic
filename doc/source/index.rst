@@ -26,7 +26,7 @@ the GPL.
 The source code started live on the 
 `launchpad project page <https://launchpad.net/elastic>`_ and later in 2014 
 moved to the `github repository <https://github.com/jochym/Elastic>`_ with 
-corresponding `elastic web page at <https://jochym.github.io/Elastic/>`_ and
+corresponding `elastic web page <https://jochym.github.io/Elastic/>`_ and
 on-line documentation placed at `Elastic website <http://wolf.ifj.edu.pl/elastic/>`_ 
 (you are probably reading from it already). You can obtain the `documentation as a 
 PDF file <http://wolf.ifj.edu.pl/~jochym/Elastic.pdf>`_ as well.
