@@ -130,7 +130,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         argument to prevent the clean-up. This is very usefull for debuging.
         '''
         
-        def __init__(self, iq, oq, calc, prefix, cleanup):
+        def __init__(self, iq, oq, calc, prefix, cleanup=True):
             Process.__init__(self)
             self.calc=calc
             self.basedir=os.getcwd()
@@ -193,6 +193,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
 # TODO: Make it calculator/environment agnostic
 if __name__ == '__main__':
     from ase.lattice.spacegroup import crystal
+    from ase.units import GPa
     import numpy
     from pylab import *
 
@@ -212,7 +213,7 @@ if __name__ == '__main__':
     MgO.set_calculator(calc)
     calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
     
-    print(MgO.get_isotropic_pressure(MgO.get_stress()))
+    print(MgO.get_pressure()/GPa)
                    
     sys=[]
     for av in numpy.linspace(a*0.95,a*1.05,5):
