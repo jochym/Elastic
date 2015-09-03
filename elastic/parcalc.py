@@ -194,6 +194,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
 if __name__ == '__main__':
     from ase.lattice.spacegroup import crystal
     from ase.units import GPa
+    import elastic
     import numpy
     from pylab import *
 
