@@ -256,9 +256,9 @@ class Crystal(Atoms):
     '''Backward compatibility class. To be removed later.'''
     pass
 
-class __Crystal:
+class ElasticCrystal:
     '''
-    Extension of standard ASE Atoms class designed to handle specifics of the
+    Mixin extension of standard ASE Atoms class designed to handle specifics of the
     crystalline materials. This code should, in principle, be folded into the 
     Atoms class in the future. At this moment it is too early to think about it.
     Additionally there are some aspects of this code which may be difficult to
@@ -639,10 +639,10 @@ class __Crystal:
 
 # Enhance the Atoms class by adding new capabilities
 
-for k in __Crystal.__dict__ :
+for k in ElasticCrystal.__dict__ :
     if k[:2]!='__' and k[-2:]!='__' :
         #print('Implanting', k)
-        setattr(Atoms, k, __Crystal.__dict__[k])
+        setattr(Atoms, k, ElasticCrystal.__dict__[k])
 #    Atoms.__atoms_init__=Atoms.__init__
 #    Atoms.__init__=__Crystal.__crystal_init__
 
