@@ -44,7 +44,6 @@ by donating using bitcoin address: 1Geq8khANDueVt1QdCS5GU2oNCtdc1uSMv .
    intro
    modules
    usage
-   examples
    endmatter
 
 * :ref:`search`

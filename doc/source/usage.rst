@@ -1,16 +1,22 @@
 Installation
 ============
 
-Right now the installation is quite primitive. I will prepare a proper 
-packaging for a final release. For now just head to the 
-`launchpad code repository <http://bazaar.launchpad.net/~jochym/elastic/trunk/files>`_
-and grab two base files: parcalc.py and elastic.py . Then, put them either on 
-your python path or in the working directory. There are no special installation
-procedures required. You just have to have fully functional ASE system with a
-working quantum mechanical calculator. I am trying to write the code 
-independently from any particular setup (i.e. my own setup).
+The installation procedure is quite simple if you use, *highly recommended*
+`conda package manager <http://conda.pydata.org/miniconda.html>`_
 
-To use the code you need to install following python packages (most, if not all, are available in major linux distributions):
+    conda install -c jochym elastic
+
+The above command installs elastic with all dependencies into your current
+conda environment. If you want to add my anaconda.org channel into your conda
+installation you need to run following command:
+
+    conda config --add channels jochym
+
+The above method has additional benefit of providing current installation of
+ASE and spglib libraries.
+
+To install the code *pedestrian way* you need to install following python 
+packages (most, if not all, are available in major linux distributions):
 
 * `SciPy and NumPy <http://www.scipy.org/>`_ libraries
 * `matplotlib <http://matplotlib.sourceforge.net/>`_ (not strictly required,
@@ -21,6 +27,13 @@ To use the code you need to install following python packages (most, if not all,
   it to other calculators.
 * `spglib <http://spglib.sourceforge.net/>`_ space group library 
 * `pyspglib <http://spglib.sourceforge.net/pyspglibForASE/>`_ python space group module
+
+This is highly system-dependent and I am unable to provide detailed support for
+this type of install - I use conda install of ASE/elastic myself!
+
+Some legacy `installation guides <https://github.com/jochym/qe-doc/blob/master/Installation.ipynb>`_ 
+which may help you with manual process could be find at the 
+`QE-doc project pages <https://jochym.github.io/qe-doc/>`_.
 
 Testing
 -------
@@ -46,7 +59,7 @@ Review the comments at the end of the files to make them work. I will try to mak
 them as setup-agnostic as possible.
 
 Usage
------
+=====
 
 In this section we assume that you have all parts of ASE properly installed and 
 the elastic is installed and working properly. The examples are available in the 
@@ -54,10 +67,13 @@ the elastic is installed and working properly. The examples are available in the
 The code below use also scipy, numpy and matplotlib functions. 
 The VASP calculator is used in all examples (at least for now).
 
+IPython notebook with `additional example <http://nbviewer.ipython.org/github/jochym/qe-doc/blob/master/Elastic_constants.ipynb>`_ 
+presents calculation using `QE-util package <https://github.com/jochym/qe-util>`_ 
+
 .. _parcalc:
 
 Simple Parallel Calculation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
 Once you have everything installed and running you can run your first real 
 calculation. The testing code at the end of the parcalc.py may be used as 
@@ -158,7 +174,7 @@ If you set up everything correctly you should obtain plot similar to this:
 .. _BMEOS:
 
 Birch-Murnaghan Equation of State
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------
 
 Let us now use the tools provided by the modules to calculate equation 
 of state for the crystal and verify it by plotting the data points against
@@ -250,7 +266,7 @@ and the following (or similar) plot:
    The pressure dependence on volume in MgO crystal (example2.py). 
 
 Calculation of the elastic tensor
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------
 
 Finally let us calculate an elastic tensor for the same simple cubic crystal -
 magnesium oxide (MgO). For this we need to create the crystal and optimize its 
