@@ -195,6 +195,7 @@ if __name__ == '__main__':
     from ase.lattice.spacegroup import crystal
     from ase.units import GPa
     import elastic
+    from elastic.parcalc import ParCalculate, ClusterVasp
     import numpy
     from pylab import *
 
@@ -214,7 +215,7 @@ if __name__ == '__main__':
     MgO.set_calculator(calc)
     calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
     
-    print("Residual pressure: %.3f GPa" % MgO.get_pressure()/GPa)
+    print("Residual pressure: %.3f GPa" % (MgO.get_pressure()/GPa))
     calc.clean()
     
     systems=[]
