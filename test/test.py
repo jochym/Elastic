@@ -19,13 +19,16 @@ from elastic.parcalc import ParCalculate, ClusterVasp
 
 
 def banner(msg):
-    print('\n',60*'=','\n',msg,'\n',60*'=')
+    print()
+    print(60*'=')
+    print(msg)
+    print(60*'=')
 
 def secban(msg):
     print('\n',msg,'\n',60*'-')
 
 
-banner('Structure optymization on MgO')
+banner('Structure optimization on MgO')
 
 a = 4.291
 MgO = crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
@@ -45,7 +48,7 @@ calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2,
 print("Residual pressure: %.3f GPa" % (MgO.get_pressure()/GPa))
 calc.clean()
 
-banner('Volume scan on MgO (+/- 5%%)')
+banner('Volume scan on MgO (+/- 5%)')
 
 systems=[]
 for av in numpy.linspace(a*0.95,a*1.05,5):
@@ -117,12 +120,12 @@ for cryst in crystals[:] :
     # Optimize the structure first
     calc.set(isif=3)
     
-    secban('Structure optymization')
+    secban('Structure optimization')
     
     # Run the internal optimizer
     print("Residual pressure: %.3f GPa" % (
-                cryst.get_pressure()/units.GPa))
-    print("Residual stress (GPa):", cryst.get_stress()/units.GPa)
+                cryst.get_pressure()/GPa))
+    print("Residual stress (GPa):", cryst.get_stress()/GPa)
 
     calc.clean()
     cryst.get_lattice_type()
@@ -151,7 +154,7 @@ for cryst in crystals[:] :
     
     # Print the fitted parameters
     print("V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
-            fit[0], fit[1]/units.GPa, fit[2], pow(fit[0],1./3)))
+            fit[0], fit[1]/GPa, fit[2], pow(fit[0],1./3)))
             
     v0=fit[0]
 
@@ -198,7 +201,7 @@ for cryst in crystals[:] :
 
     # Elastic tensor by internal routine
     Cij, Bij=cryst.get_elastic_tensor(n=5,d=0.33)
-    print("Cij (GPa):", Cij/units.GPa)
+    print("Cij (GPa):", Cij/GPa)
     
     calc.clean()
     
@@ -229,12 +232,12 @@ for cryst in crystals[:] :
     
     # C11 component
     f=numpy.polyfit(ss[:,0,0],ss[:,1,0],3)
-    c11=f[-2]/units.GPa
+    c11=f[-2]/GPa
     plot(xa,numpy.polyval(f,xa),'b-')
     
     # C12 component
     f=numpy.polyfit(ss[:,0,0],ss[:,1,1],3)
-    c12=f[-2]/units.GPa
+    c12=f[-2]/GPa
     plot(xa,numpy.polyval(f,xa),'g-')
     print('C11 = %.3f GPa, C12 = %.3f GPa => K= %.3f GPa (cubic only)' % (c11, c12, (c11+2*c12)/3))
     axvline(0,ls='--')
@@ -251,10 +254,10 @@ for cryst in crystals[:] :
 #        r=ParCalculate(sys,cryst.calc)
 #        print("Pressure scan (GPa):",end=" ")
 #        for s in r :
-#            print(cryst.get_pressure(s.get_stress())/units.GPa, end=" ")
+#            print(cryst.get_pressure(s.get_stress())/GPa, end=" ")
 #        print()
 #        vl=array([s.get_volume() for s in r])
-#        pl=array([cryst.get_pressure(s.get_stress())/units.GPa for s in r])
+#        pl=array([cryst.get_pressure(s.get_stress())/GPa for s in r])
 #        figure(2)
 #        plot(vl/v0,pl,'+')
 #        
