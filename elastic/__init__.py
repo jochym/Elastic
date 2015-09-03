@@ -351,7 +351,7 @@ class ElasticCrystal:
             s=self.get_stress()
         return -mean(s[:3])
         
-    def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False):
+    def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False, cleanup=True):
         """
         Calculate Birch-Murnaghan Equation of State for the crystal:
         
@@ -383,7 +383,7 @@ class ElasticCrystal:
             # in the cell and/or cell shape without touching the volume.
             # TODO: Provide api for specifying IDOF and Full optimization 
             #       calculators. Maybe just calc_idof and calc_full members?
-            res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc,cleanup=False)
+            res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc,cleanup=cleanup)
             
         #for r in res :
         #print(r.get_volume(), self.get_pressure(), r.get_cell())
