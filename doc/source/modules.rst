@@ -16,7 +16,7 @@ I hope it will be incorporated in the main project sometime in the future.
 Modules
 -------
 
-.. automodule:: parcalc
+.. automodule:: elastic.parcalc
    :members:
 
 
