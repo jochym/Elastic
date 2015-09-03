@@ -43,9 +43,11 @@ Class description
 """""""""""""""""
 '''
 
+from __future__ import print_function, division
+
 from ase.calculators.vasp import *
 from ase.calculators.siesta import *
-from Queue import Empty
+from queue import Empty
 from multiprocessing import Process, Queue
 
 import time
@@ -75,7 +77,7 @@ class ClusterVasp(Vasp):
         '''
         f=open("vasprun.conf","w")
         f.write('NODES="nodes=%s:ppn=%d"' % (self.nodes, self.ppn))
-        #print  self.nodes, self.ppn
+        #print(self.nodes, self.ppn)
         f.close()
    
     def calculate(self, atoms):
@@ -97,7 +99,7 @@ class ClusterSiesta(Siesta):
     def prepare_calc_dir(self):
         f=open("siestarun.conf","w")
         f.write('NODES="nodes=%d:ppn=%d"' % (self.nodes, self.ppn))
-        #print  self.nodes, self.ppn
+        #print(self.nodes, self.ppn)
         f.close()
     
     def get_potential_energy(self, atoms):
@@ -142,13 +144,15 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
             os.chdir(self.place)
             n,system=self.iq.get()
             system.set_calculator(copy.deepcopy(self.calc))
-        #print "Start at :", self.place
+            
+            #print("Start at :", self.place)
             if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
                 system.get_potential_energy()
             else:
                 system.calc.calculate(system)
+            
             #print("Finito: ", os.getcwd(), system.get_volume(), system.get_pressure())
-        self.oq.put([n,system])
+            self.oq.put([n,system])
             if self.CleanUp :
                 system.calc.clean()
                 os.chdir(wd)
@@ -175,14 +179,14 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     
     time.sleep(2)
     if verbose : 
-        print len(sys), "Workers started"
+        print(len(sys), "Workers started")
     
    # Collect the results
     res=[]
     while len(res)<len(sys) :
         n,s=oq.get()
         res.append([n,s])
-        #print "Got from oq:", n, s.get_volume(), s.get_pressure()
+        #print("Got from oq:", n, s.get_volume(), s.get_pressure())
     return [r for ns,s in enumerate(sys) for nr,r in res if nr==ns]
 
 # Testing routines using VASP as a calculator in the cluster environment.
@@ -208,7 +212,7 @@ if __name__ == '__main__':
     MgO.set_calculator(calc)
     calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
     
-    print MgO.get_isotropic_pressure(MgO.get_stress())
+    print(MgO.get_isotropic_pressure(MgO.get_stress()))
                    
     sys=[]
     for av in numpy.linspace(a*0.95,a*1.05,5):

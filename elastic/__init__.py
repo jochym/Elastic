@@ -65,6 +65,7 @@ Class description
 """""""""""""""""
 '''
 
+from __future__ import print_function, division, absolute_import
 
 import re
 import sys
@@ -242,7 +243,7 @@ def triclinic(u):
 #    calc.ParallelCalculate(systems,properties=['stress'])
 #    return systems
 
-from parcalc import ParCalculate
+from .parcalc import ParCalculate
     
 
 class CrystalInitError(Exception):
@@ -276,31 +277,13 @@ class __Crystal:
         a mix-in base class for the Atoms class. Thus this constructor 
         just prints the error message and bails out.
         '''
-        print '''Crystal class is not intended to be used directly! 
+        print('''Crystal class is not intended to be used directly! 
             You should never call it constructor. Read the docs or just 
             import elastic module and enjoy the new functionality of 
             the Atoms class!. Since this program is not going to work
             anyway I am bailing out right now.
-            '''
+            ''')
         raise CrystalInitError
-
-    def __crystal_init__(self, *args, **kwargs):
-        Atoms.__atoms_init__(self, *args, **kwargs)
-        self.recalc_bulk=True
-        self.bulk_modulus=None
-        self.bm_eos=None
-        self.full_min_calc=None
-        self.cell_min_calc=None
-        self.idof_min_calc=None
-
-    def set_full_min_calc(self, calc):
-        self.full_min_calc=calc
-        
-    def set_cell_min_calc(self, calc):
-        self.cell_min_calc=calc
-        
-    def set_idof_min_calc(self, calc):
-        self.idof_min_calc=calc
 
     def get_lattice_type(self):
         '''
@@ -332,7 +315,7 @@ class __Crystal:
         sg=spg.get_spacegroup(self)
         m=re.match('([A-Z].*\\b)\s*\(([0-9]*)\)',sg)
         self.sg_name=m.group(1)
-        self.sg_nr=string.atoi(m.group(2))
+        self.sg_nr=int(m.group(2))
         
         for n,l in enumerate(lattice_types) :
             if self.sg_nr < l[0] :
@@ -353,7 +336,7 @@ class __Crystal:
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if recalc or (self.bm_eos is None) :
+        if recalc or getattr(self,bm_eos,None) is None :
             self.get_BM_EOS(n,lo,hi,recalc)
         self.bulk_modulus=self.bm_eos[1]
         return self.bulk_modulus
@@ -394,7 +377,7 @@ class __Crystal:
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if (self.bm_eos is None) or recalc :
+        if getattr(self,bm_eos,None) is None or recalc :
             # NOTE: The calculator should properly minimize the energy
             # at each volume by optimizing the internal degrees of freedom
             # in the cell and/or cell shape without touching the volume.
@@ -403,14 +386,14 @@ class __Crystal:
             res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc,cleanup=False)
             
         #for r in res :
-        #print r.get_volume(), self.get_pressure(), r.get_cell() 
+        #print(r.get_volume(), self.get_pressure(), r.get_cell())
 
             pvdat=array([[r.get_volume(),
                             self.get_pressure(r.get_stress()),
                             norm(r.get_cell()[:,0]),
                             norm(r.get_cell()[:,1]),
                             norm(r.get_cell()[:,2])] for r in res])
-            #print pvdat
+            #print(pvdat)
 
             # Fitting functions
             fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
@@ -428,7 +411,7 @@ class __Crystal:
             # Initial guess
             p0=[v0,b0,1]
             #Fitting
-            #print p0
+            #print(p0)
             p1, succ = optimize.leastsq(errfunc, p0[:], args=(pvdat[:,0],pvdat[:,1]))
             if not succ :
                 raise RuntimeError('Calculation failed')
@@ -496,14 +479,14 @@ class __Crystal:
             # Remove the pressure from the stress tensor
             sl.append(g.get_stress()-array([p,p,p,0,0,0]))
         eqm=array(map(symm,ul))
-        #print eqm[0].shape, eqm.shape
+        #print(eqm[0].shape, eqm.shape)
         eqm=reshape(eqm,(eqm.shape[0]*eqm.shape[1],eqm.shape[2]))
-        #print eqm
+        #print(eqm)
         slm=reshape(array(sl),(-1,))
-        #print eqm.shape, slm.shape
-        #print slm
+        #print(eqm.shape, slm.shape)
+        #print(slm)
         Bij = lstsq(eqm,slm)
-        #print Bij[0] / units.GPa
+        #print(Bij[0] / units.GPa)
         # Calculate elastic constants from Birch coeff.
         # TODO: Check the sign of the pressure array in the B <=> C relation
         if (symm == orthorombic):
@@ -543,7 +526,7 @@ class __Crystal:
         
         scale=(eos[0]/self.get_volume())*invbmeos(eos[1], eos[2], 
                                                     linspace(lo,hi,num=n))
-        #print scale
+        #print(scale)
         uc=self.get_cell()
         sys=[Atoms(self) for s in scale]
         for n, s in enumerate(scale):
@@ -595,12 +578,12 @@ class __Crystal:
             (alp,bet,gam)=array((alp,bet,gam))+d
             t=1 - (ctg(bet)*ctg(gam)-cos(alp)*csc(bet)*csc(gam))**2;
             if t<0.0 :
-                print '''
+                print('''
                 The parameters (alpha,beta,gamma)=(%f,%f,%f) are probably 
                 incorrect and lead to imaginary coordinates. 
                 This range of parameters is unsupported by this program 
                 (and is, let me say, very strange for a crystal).
-                Cennot continue, bye.''' % (alp,bet,gam)
+                Cennot continue, bye.''' % (alp,bet,gam))
                 raise ValueError
             else :
                 uc=[[a,0.0,0.0],
@@ -609,8 +592,8 @@ class __Crystal:
                         c*(cos(alp)/sin(gam) - cos(bet)*ctg(gam)),
                         c*sin(bet)*sqrt(t)]]
         cryst.set_cell(uc, scale_atoms=True)
-        #print cryst.get_cell()
-        #print uc
+        #print(cryst.get_cell())
+        #print(uc)
         return cryst
 
     def get_cart_deformed_cell(self, axis=0, size=1):
@@ -635,8 +618,8 @@ class __Crystal:
                 L[0,1]+=l
         uc=dot(uc,L)
         cryst.set_cell(uc, scale_atoms=True)
-        #print cryst.get_cell()
-        #print uc
+        #print(cryst.get_cell())
+        #print(uc)
         return cryst
         
     def get_strain(self,refcell=None):
@@ -656,13 +639,12 @@ class __Crystal:
 
 # Enhance the Atoms class by adding new capabilities
 
-
-if not __Crystal in Atoms.__bases__ :
-    Atoms.__bases__=Atoms.__bases__ + (__Crystal,)
-    Atoms.__atoms_init__=Atoms.__init__
-    Atoms.__init__=__Crystal.__crystal_init__
-else :
-    print "Already imported"
+for k in __Crystal.__dict__ :
+    if k[:2]!='__' and k[-2:]!='__' :
+        #print('Implanting', k)
+        setattr(Atoms, k, __Crystal.__dict__[k])
+#    Atoms.__atoms_init__=Atoms.__init__
+#    Atoms.__init__=__Crystal.__crystal_init__
 
 if __name__ == '__main__':
 
@@ -676,7 +658,7 @@ if __name__ == '__main__':
     from matplotlib.pyplot import plot, show, figure, draw, axvline, axhline
     from ase.lattice.spacegroup import crystal
     from ase.visualize import view
-    from parcalc import ClusterVasp
+    from .parcalc import ClusterVasp
 
 
 # You can specify the directory with coerged VASP crystal for the test run
@@ -706,7 +688,7 @@ if __name__ == '__main__':
             spacegroup=166, cellpar=[a, a, c, 90, 90, 120])))
 
 
-    print "Running tests"
+    print("Running tests")
     # Iterate over all crystals. 
     # We do not paralelize over test cases for clarity.
     for cryst in crystals[:] :
@@ -730,15 +712,15 @@ if __name__ == '__main__':
         calc.set(isif=3)
         
         # Run the internal optimizer
-        print "Residual pressure: %.3f GPa" % (
-                    cryst.get_pressure(cryst.get_stress())/units.GPa)
-        print "Residual stress (GPa):", cryst.get_stress()/units.GPa
+        print("Residual pressure: %.3f GPa" % (
+                    cryst.get_pressure(cryst.get_stress())/units.GPa))
+        print("Residual stress (GPa):", cryst.get_stress()/units.GPa)
 
         calc.clean()
         cryst.get_lattice_type()
 
-        print cryst.get_vecang_cell()
-        print cryst.bravais, cryst.sg_type, cryst.sg_name, cryst.sg_nr
+        print(cryst.get_vecang_cell())
+        print(cryst.bravais, cryst.sg_type, cryst.sg_name, cryst.sg_nr)
         
         #view(cryst)
 
@@ -756,8 +738,8 @@ if __name__ == '__main__':
         pv=pv[pv[:,0].argsort()]
         
         # Print the fitted parameters
-        print "V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
-                fit[0], fit[1]/units.GPa, fit[2], pow(fit[0],1./3))
+        print("V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
+                fit[0], fit[1]/units.GPa, fit[2], pow(fit[0],1./3)))
                 
         v0=fit[0]
 
@@ -774,7 +756,7 @@ if __name__ == '__main__':
         figure(1)
         plot(pv[:,0]/v0,pv[:,3]/pv[:,2],'o')
         plot(pv[:,0]/v0,pv[:,4]/pv[:,2],'x-')
-        #print pv[:,4]/pv[:,2]
+        #print(pv[:,4]/pv[:,2])
         axvline(1,ls='--')
         draw()
         
@@ -800,7 +782,7 @@ if __name__ == '__main__':
 
         # Elastic tensor by internal routine
         Cij, Bij=cryst.get_elastic_tensor(n=5,d=0.33)
-        print "Cij (GPa):", Cij/units.GPa
+        print("Cij (GPa):", Cij/units.GPa)
         
         calc.clean()
         
@@ -836,7 +818,7 @@ if __name__ == '__main__':
         f=numpy.polyfit(ss[:,0,0],ss[:,1,1],3)
         c12=f[-2]/units.GPa
         plot(xa,numpy.polyval(f,xa),'g-')
-        print 'C11 = %.3f GPa, C12 = %.3f GPa => K= %.3f GPa (cubic only)' % (c11, c12, (c11+2*c12)/3)
+        print('C11 = %.3f GPa, C12 = %.3f GPa => K= %.3f GPa (cubic only)' % (c11, c12, (c11+2*c12)/3))
         axvline(0,ls='--')
         axhline(0,ls='--')
         draw()
@@ -848,10 +830,10 @@ if __name__ == '__main__':
 #        sys=[]
 #        sys=cryst.scan_pressures(-5.0, 5.0, 3)
 #        r=ParCalculate(sys,cryst.calc)
-#        print "Pressure scan (GPa):",
+#        print("Pressure scan (GPa):",end=" ")
 #        for s in r :
-#            print cryst.get_pressure(s.get_stress())/units.GPa,
-#        print
+#            print(cryst.get_pressure(s.get_stress())/units.GPa, end=" ")
+#        print()
 #        vl=array([s.get_volume() for s in r])
 #        pl=array([cryst.get_pressure(s.get_stress())/units.GPa for s in r])
 #        figure(2)
