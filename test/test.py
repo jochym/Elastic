@@ -104,7 +104,9 @@ banner("Running tests for Elastic")
 # We do not paralelize over test cases for clarity.
 for cryst in crystals[:] :
 
-    
+    cryst.get_lattice_type()
+    banner('Calculating: %s, %s, %s' % 
+            (cryst.get_chemical_formula(), cryst.bravais, cryst.sg_name))
     # Setup the calculator
     calc=ClusterVasp(nodes=1,ppn=8)
     cryst.set_calculator(calc)
