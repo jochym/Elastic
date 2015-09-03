@@ -271,5 +271,9 @@ for cryst in crystals[:] :
 #        ya=invbmeos(fit[1],fit[2],xa)
 #        plot(ya,xa,'-')
 
+banner('Tests finished, showing plots')
+
 show()
+
+
 
