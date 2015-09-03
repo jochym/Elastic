@@ -19,7 +19,7 @@ from elastic.parcalc import ParCalculate, ClusterVasp
 
 
 def banner(msg):
-    print(60*'=','\n',msg,'\n',60*'=','\n')
+    print('\n',60*'=','\n',msg,'\n',60*'=')
 
 def secban(msg):
     print('\n',msg,'\n',60*'-')
@@ -85,13 +85,13 @@ else :
     # Tetragonal
     a = 4.60
     c = 2.96
-    crystals.append(Crystal(crystal(['Ti', 'O'], [(0, 0, 0), (0.302, 0.302, 0)],
-        spacegroup=136, cellpar=[a, a, c, 90, 90, 90])))
+    crystals.append(crystal(['Ti', 'O'], [(0, 0, 0), (0.302, 0.302, 0)],
+        spacegroup=136, cellpar=[a, a, c, 90, 90, 90]))
     # Trigonal (this is metal - for sure the k spacing will be too small)
     a = 4.48
     c = 11.04
-    crystals.append(Crystal(crystal(['Sb'], [(0, 0, 0.24098)],
-        spacegroup=166, cellpar=[a, a, c, 90, 90, 120])))
+    crystals.append(crystal(['Sb'], [(0, 0, 0.24098)],
+        spacegroup=166, cellpar=[a, a, c, 90, 90, 120]))
 
 
 banner("Running tests for Elastic")
