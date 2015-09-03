@@ -5,6 +5,7 @@ package:
 source:
   git_url: https://github.com/jochym/Elastic.git
   git_branch: master
+  git_tag: v4.0.9
 
 build:
   #preserve_egg_dir: True
