@@ -16,16 +16,18 @@ from ase.units import GPa
 
 import elastic
 from elastic.parcalc import ParCalculate, ClusterVasp
-
+from elastic import BMEOS
 
 def banner(msg):
     print()
     print(60*'=')
-    print(msg)
+    print(min(0,(60-len(msg))//2-1)*' ',msg)
     print(60*'=')
 
 def secban(msg):
-    print('\n',msg,'\n',60*'-')
+    print()
+    print(min(0,(60-len(msg))//2-1)*' ',msg)
+    print(60*'-')
 
 
 banner('Structure optimization on MgO')
@@ -135,7 +137,7 @@ for cryst in crystals[:] :
     print(cryst.get_vecang_cell())
     print(cryst.bravais, cryst.sg_type, cryst.sg_name, cryst.sg_nr)
     
-    view(cryst)
+    #view(cryst)
 
     # Switch to cell shape+IDOF optimizer
     calc.set(isif=4)
