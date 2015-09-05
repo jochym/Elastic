@@ -130,7 +130,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         argument to prevent the clean-up. This is very usefull for debuging.
         '''
         
-        def __init__(self, iq, oq, calc, prefix, cleanup):
+        def __init__(self, iq, oq, calc, prefix, cleanup=True):
             Process.__init__(self)
             self.calc=calc
             self.basedir=os.getcwd()
@@ -193,6 +193,9 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
 # TODO: Make it calculator/environment agnostic
 if __name__ == '__main__':
     from ase.lattice.spacegroup import crystal
+    from ase.units import GPa
+    import elastic
+    from elastic.parcalc import ParCalculate, ClusterVasp
     import numpy
     from pylab import *
 
@@ -212,22 +215,23 @@ if __name__ == '__main__':
     MgO.set_calculator(calc)
     calc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
     
-    print(MgO.get_isotropic_pressure(MgO.get_stress()))
-                   
-    sys=[]
+    print("Residual pressure: %.3f GPa" % (MgO.get_pressure()/GPa))
+    calc.clean()
+    
+    systems=[]
     for av in numpy.linspace(a*0.95,a*1.05,5):
-        sys.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
+        systems.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
                    cellpar=[av, av, av, 90, 90, 90]))
                        
     pcalc=ClusterVasp(nodes=1,ppn=8)
     pcalc.set(prec = 'Accurate', xc = 'PBE', lreal = False, isif=2, nsw=20, ibrion=2, kpts=[1,1,1])
-    res=ParCalculate(sys,pcalc)
+    res=ParCalculate(systems,pcalc)
     
     v=[]
     p=[]
     for s in res :
         v.append(s.get_volume())
-        p.append(s.get_isotropic_pressure(s.get_stress()))
+        p.append(s.get_pressure()/GPa)
     
     plot(v,p,'o')
     show()

@@ -243,7 +243,7 @@ def triclinic(u):
 #    calc.ParallelCalculate(systems,properties=['stress'])
 #    return systems
 
-from .parcalc import ParCalculate
+from elastic.parcalc import ParCalculate
     
 
 class CrystalInitError(Exception):
@@ -336,7 +336,7 @@ class ElasticCrystal:
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if recalc or getattr(self,bm_eos,None) is None :
+        if recalc or getattr(self,'bm_eos',None) is None :
             self.get_BM_EOS(n,lo,hi,recalc)
         self.bulk_modulus=self.bm_eos[1]
         return self.bulk_modulus
@@ -351,7 +351,7 @@ class ElasticCrystal:
             s=self.get_stress()
         return -mean(s[:3])
         
-    def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False):
+    def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False, cleanup=True):
         """
         Calculate Birch-Murnaghan Equation of State for the crystal:
         
@@ -377,13 +377,13 @@ class ElasticCrystal:
         if self._calc is None:
             raise RuntimeError('Crystal object has no calculator.')
 
-        if getattr(self,bm_eos,None) is None or recalc :
+        if getattr(self,'bm_eos',None) is None or recalc :
             # NOTE: The calculator should properly minimize the energy
             # at each volume by optimizing the internal degrees of freedom
             # in the cell and/or cell shape without touching the volume.
             # TODO: Provide api for specifying IDOF and Full optimization 
             #       calculators. Maybe just calc_idof and calc_full members?
-            res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc,cleanup=False)
+            res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc,cleanup=cleanup)
             
         #for r in res :
         #print(r.get_volume(), self.get_pressure(), r.get_cell())
@@ -658,13 +658,13 @@ if __name__ == '__main__':
     from matplotlib.pyplot import plot, show, figure, draw, axvline, axhline
     from ase.lattice.spacegroup import crystal
     from ase.visualize import view
-    from .parcalc import ClusterVasp
+    from elastic.parcalc import ClusterVasp
 
 
-# You can specify the directory with coerged VASP crystal for the test run
+# You can specify the directory with prepared VASP crystal for the test run
 # or run through all prepared cases.
     if len(sys.argv)>1 :
-        crystals=[Crystal(ase.io.read(sys.argv[1]+'/CONTCAR'))]
+        crystals=[crystal(ase.io.read(sys.argv[1]+'/CONTCAR'))]
     else :
         # Pre-cooked test cases
         crystals=[]
@@ -713,7 +713,7 @@ if __name__ == '__main__':
         
         # Run the internal optimizer
         print("Residual pressure: %.3f GPa" % (
-                    cryst.get_pressure(cryst.get_stress())/units.GPa))
+                    cryst.get_pressure()/units.GPa))
         print("Residual stress (GPa):", cryst.get_stress()/units.GPa)
 
         calc.clean()
