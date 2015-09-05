@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name='elastic',
-    packages=['elastic'],
+    packages=find_packages(),
     license='GPLv3',
     description = 'Extension for ASE to calculate elastic constants',
     author = 'Paweł T. Jochym',
@@ -13,7 +13,7 @@ setup(
     setup_requires=['setuptools_scm'],
     url = 'https://github.com/jochym/Elastic',
     keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals'],
-    requires = ['pyspglib','numpy','scipy','ase'],
+    requires = ['spglib','numpy','scipy','ase','docutils','sphinx'],
     provides = ['elastic'],
     platforms = ['all'],
     classifiers = [],
