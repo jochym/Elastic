@@ -15,7 +15,7 @@ from ase.visualize import view
 from ase.units import GPa
 
 import elastic
-from elastic.parcalc import ParCalculate, ClusterVasp
+from parcalc import ParCalculate, ClusterVasp
 from elastic import BMEOS
 
 def banner(msg):
