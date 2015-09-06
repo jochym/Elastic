@@ -1,0 +1,113 @@
+#!/bin/bash
+
+MAIL=$USER@wolf.ifj.edu.pl
+NAME=`basename \`pwd\``
+NODES="nodes=1:ppn=1"
+VASP=/home/jochym/src/VASP/newbuild/bin/vasp.Linux.barcelona-64.PGI
+VASP=/home/vasp/bin/vasp5
+NAME=`echo $NAME|sed 's/\(^[^a-zA-Z]\)/J\1/'`
+NCL=0
+QUEUE=batch
+BLOCK=1
+LOCK=`mktemp lockfile.XXXXX`
+
+if [ -f vasprun.conf ] ; then
+    . ./vasprun.conf
+fi
+
+VASPMPI=${VASP}-mpi
+
+if [ $NCL == 1 ] ; then
+    VASP=${VASP}-ncl
+    VASPMPI=${VASPMPI}-ncl
+fi
+
+echo $VASP $VASPMPI $NODES
+
+qsub <<EOF 
+#!/bin/bash
+#PBS -N $NAME
+#PBS -m be
+#PBS -l $NODES
+#PBS -M $MAIL
+#PBS -r n
+#PBS -q $QUEUE
+##
+
+trap "rm -f \$PBS_O_WORKDIR/$LOCK" EXIT
+
+#PATH=/opt/mpi/bin/:\$PATH
+#export LD_LIBRARY_PATH=/opt/lib
+# export MPD_USE_ROOT_MPD=1
+numprocs=\`wc -l <\$PBS_NODEFILE\`
+nodes=\`sort <\$PBS_NODEFILE | uniq |wc -l \`
+
+if [ \$numprocs -gt 1 ] ; then
+    type="MPI "
+else
+    type="Scalar "
+fi
+
+clean-up() {
+    for nd in \`cat \$1|sort|uniq\` ; do
+	    # echo "Cleaning up node: " \$nd
+	    ssh \$nd "ps ux|grep 'mpd\.py'|grep -v grep|awk '{print \\\$2}'|xargs -r -l1 kill"
+    done
+}
+
+echo \$type job started 
+echo "  "  at \`date\`
+echo "  "  on host \`hostname\`
+echo "  "  working directory is \$PBS_O_WORKDIR
+echo "  "  will run on \`cat < \$PBS_NODEFILE\`
+echo "  "  basic executable: $VASP
+
+hn=\`hostname\`
+
+
+hn=\${hn/#c/i}
+hn=\${hn/#h/j}
+
+echo "  "  Head node: \$hn
+
+
+cd \$PBS_O_WORKDIR/
+
+
+echo ""
+echo "=================== JOB OUTPUT =========================="
+echo ""
+
+if [ \$numprocs -gt 1 ] ; then
+    nodefile=\`mktemp nodefile.XXXXXX\`
+    #sed -e 's/^c/i/g' -e 's/^h/j/g' < \$PBS_NODEFILE >\$nodefile
+    sed -e 's/^c/i/g' -e 's/^h/j/g' -e 's/^bl/k/g' < \$PBS_NODEFILE |xargs -l1 getent hosts |sort|uniq -c|awk '{ printf("%s:%s\n",\$2,\$1) }' >\$nodefile
+    #mpdboot --ifhn=\$hn -n \$nodes -f \$nodefile -r ssh
+    mpiexec.mpich2 -f \$nodefile -n \$numprocs  $VASPMPI 
+    #mpdallexit
+    rm -f \$nodefile
+    #clean-up \$PBS_NODEFILE
+else
+    $VASP 
+fi
+
+echo ""
+echo "=================== JOB OUTPUT =========================="
+echo ""
+
+cd \$PBS_O_WORKDIR/
+
+echo Job finished at \`date\`
+rm -f $LOCK
+
+EOF
+
+if [ ".$BLOCK" != ".0" ] ; then
+	# Default mode - we are blocking until the job removes the lock 
+	# or vanishes from the queue
+	#echo "Job submitted. Waiting for it to finish"
+	while [ -e $LOCK ] ; do 
+    		sleep 10
+        done
+fi
+#echo "Job finished"
