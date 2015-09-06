@@ -104,25 +104,27 @@ class ClusterVasp(Vasp):
         if not self.calc_running : return True
         else:
             # The calc is marked as running check if this is still true
-            # we use our unique job name to ask the queuing system
-            # about the status. We do it by external scripts.
-            # You need to write these scripts for your system.
-            
+            # We do it by external scripts. You need to write these 
+            # scripts for your own system. 
+            # See examples/scripts directory for examples.
+            o=check_output(['check-job'])
+            if o[0] in 'R' :
+                # Still running - we do nothing to preserve the state
+                return False
+            else :
+                # The job is not running maybe it finished maybe crashed
+                # We hope for the best at this point ad pass to the 
+                # Standard update function
+                self.calc_running=False
+                return True
    
     def update(self, atoms):
         if self.calc_running :
             # we have started the calculation and have 
             # nothing to read really. But we need to check
             # first if this is still true.
-            o=check_output(['check-job'])
-            if o[0] in 'R' :
-                # Still running - we do nothing to preserve the state
+            if  not __calc_finished():
                 return
-            else :
-                # The job is not running maybe it finished maybe crashed
-                # We hope for the best at this point ad pass to the 
-                # Standard update function
-                self.calc_running=False
         # We are not in the middle of calculation. At least not a
         # Update as normal
         self.update(atoms)
