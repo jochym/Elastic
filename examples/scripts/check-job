@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Check the status of the job running in the current directory
+
+# The job starting script MUST create the JOBDATA file upon submission
+. JOBDATA
+
+jid=`echo $JID|awk -F='.' '{print $1.$2}'`
+
+js=`run-on-tsi "qstat -l -f $jid"|grep job_state|awk '{print $3}'`
+
+if [ -e $LOCK ]; then 
+   if [ $js = R -o $js = Q -o $js = H ]; then
+	res='R'
+   else
+        # something crashed - inconsistent state
+        res='X'
+   fi
+else
+	res='F'
+fi
+
+echo $res
+

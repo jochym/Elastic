@@ -24,7 +24,10 @@ fi
 
 echo $VASP $VASPMPI $NODES
 
-qsub <<EOF 
+echo "LOCK=$LOCK" >JOBDATA
+echo -n "JID=" >>JOBDATA
+
+qsub <<EOF >>JOBDATA
 #!/bin/bash
 #PBS -N $NAME
 #PBS -m be
