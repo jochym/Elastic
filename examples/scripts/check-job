@@ -11,13 +11,13 @@ js=`run-on-tsi "qstat -l -f $jid"|grep job_state|awk '{print $3}'`
 
 if [ -e $LOCK ]; then 
    if [ $js = R -o $js = Q -o $js = H ]; then
-	res='R'
+	res='RL'
    else
         # something crashed - inconsistent state
-        res='X'
+        res='UL'
    fi
 else
-	res='F'
+	res='FN'
 fi
 
 echo $res

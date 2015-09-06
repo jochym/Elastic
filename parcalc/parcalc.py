@@ -57,6 +57,13 @@ import shutil
 import copy
 from subprocess import check_output
 
+class __NonBlockingRunException(Exception):
+    def __str__(self):
+        return '''The __NonBlockingRunException should be caught inside 
+        the calculator class. If you got it outside it is a bug.
+        Contact the author and/or submit a bug ticket at github.'''
+
+
 class ClusterVasp(Vasp):
     '''
     Adaptation of VASP calculator to the cluster environment where you often
@@ -107,34 +114,62 @@ class ClusterVasp(Vasp):
             # we have started the calculation and have 
             # nothing to read really. But we need to check
             # first if this is still true.
-            
-
-        # We are not in the middle of calculation.
+            o=check_output(['check-job'])
+            if o[0] in 'R' :
+                # Still running - we do nothing to preserve the state
+                return
+            else :
+                # The job is not running maybe it finished maybe crashed
+                # We hope for the best at this point ad pass to the 
+                # Standard update function
+                self.calc_running=False
+        # We are not in the middle of calculation. At least not a
         # Update as normal
         self.update(atoms)
-        
+
+
+    def run(self):
+        '''
+        Blocking/Non-blocing run method.
+        In blocking mode it just runs parent run method.
+        In non-blocking mode it raises the __NonBlockingRunException
+        to bail out of the processing of standard calculate method 
+        (or any other method in fact) and signal that the data is not 
+        ready to b collected.
+        '''
+        super.run()
+        if self.block : raise __NonBlockingRunException
    
     def calculate(self, atoms):
+        '''
+        Blocking/Non-blocking calculate method
+
+        If we are in blocking mode we just run, wait for 
+        the job to end and read in the results. Easy ...
+        
+        The non-blocking mode is a little tricky. 
+        We need to start the job and guard against it reading 
+        back possible old data from the directory - the queuing 
+        system may not even started the job when we get control 
+        back from the starting script. Thus anything we read 
+        after invocation is potentially garbage - even if it 
+        is a converged calculation data.
+
+        We handle it by custom run function above which 
+        raises an exception after submitting the job.
+        This skips post-run processing in the calculator, preserves 
+        the state of the data and signals here that we need to wait
+        for results.
+        '''
+        
         self.prepare_calc_dir()
-        if self.block:
-            # just run, wait for the job and read in the results.
-            # Easy ...
+        self.calc_running=True
+        try :
             Vasp.calculate(self, atoms)
-        else :
-            # This is tricky. We need to start the job and guard
-            # against it reading back possible old data from the
-            # directory - the queuing system may not even started
-            # the job when we get control back from the starting 
-            # script. Thus anything we read after invocation is 
-            # potentially garbage - even if it is converged 
-            # calculation data.
-            
-            # start the calculation expecting data reading functions 
-            # to fail at the end. We need to handle any exceptions
-            # and mark the calculation as not ready.
-            self.calc_running=True
-            try :
-                Vasp.calculate(self, atoms)
+        except __NonBlockingRunException :
+            # We have nothing else to docs
+            # until the job finishes
+            pass
 
 
 
