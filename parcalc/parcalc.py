@@ -73,14 +73,15 @@ class ClusterVasp(Vasp):
     '''
     
     def __init__(self, nodes=1, ppn=8, **kwargs):
+        if 'block' in kwargs :
+            self.block=block
+            del kwargs['block']
+        else :
+            self.block=True
         Vasp.__init__(self, **kwargs)
         self.nodes=nodes
         self.ppn=ppn
         self.calc_running=False
-        if 'block' in kwargs :
-            self.block=block
-        else :
-            self.block=True
         
     def prepare_calc_dir(self):
         '''
