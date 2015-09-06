@@ -383,7 +383,7 @@ class ElasticCrystal:
             # in the cell and/or cell shape without touching the volume.
             # TODO: Provide api for specifying IDOF and Full optimization 
             #       calculators. Maybe just calc_idof and calc_full members?
-            res=ParCalculate(self.scan_volumes(lo,hi,n),self.calc,cleanup=cleanup)
+            res=ParCalculate(self.scan_volumes(lo,hi,n),self.get_calculator(),cleanup=cleanup)
             
         #for r in res :
         #print(r.get_volume(), self.get_pressure(), r.get_cell())
@@ -467,7 +467,7 @@ class ElasticCrystal:
             
         if mode!='restart' :
             # Run the calculation if we are not restarting
-            r=ParCalculate(systems,self.calc)
+            r=ParCalculate(systems,self.get_calculator())
         else :
             r=systems
         
@@ -784,7 +784,7 @@ if __name__ == '__main__':
         sys=[]
         for d in linspace(-0.5,0.5,6):
             sys.append(cryst.get_cart_deformed_cell(axis=0,size=d))
-        r=ParCalculate(sys,cryst.calc)
+        r=ParCalculate(sys,cryst.get_calculator())
         ss=[]
         for s in r:
             ss.append([s.get_strain(cryst), s.get_stress()])
@@ -823,7 +823,7 @@ if __name__ == '__main__':
 #        calc.set(isif=4)
 #        sys=[]
 #        sys=cryst.scan_pressures(-5.0, 5.0, 3)
-#        r=ParCalculate(sys,cryst.calc)
+#        r=ParCalculate(sys,cryst.get_calculator())
 #        print("Pressure scan (GPa):",end=" ")
 #        for s in r :
 #            print(cryst.get_pressure(s.get_stress())/units.GPa, end=" ")

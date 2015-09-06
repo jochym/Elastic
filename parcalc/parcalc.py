@@ -57,12 +57,28 @@ import shutil
 import copy
 from subprocess import check_output
 
-class __NonBlockingRunException(Exception):
+class _NonBlockingRunException(Exception):
     def __str__(self):
         return '''The __NonBlockingRunException should be caught inside 
         the calculator class. If you got it outside it is a bug.
         Contact the author and/or submit a bug ticket at github.'''
 
+
+class _workdir:
+    
+    def __init__(self,wd):
+        self.wd=wd
+
+    def __enter__(self):
+        self.basedir=os.getcwd()
+        os.chdir(self.wd)
+        print('Now in:', self.wd)
+        return self.wd
+        
+    def __exit__(self, xtype, xval, trace):
+        os.chdir(self.basedir)
+        print('Back in:', self.basedir)
+        
 
 class ClusterVasp(Vasp):
     '''
@@ -95,20 +111,24 @@ class ClusterVasp(Vasp):
         #print(self.nodes, self.ppn)
         f.close()
 
-    def __calc_finished(self):
+    def calc_finished(self):
         '''
         Check if the lockfile is in the calculation directory.
         It is removed by the script at the end regardless of the 
         success of the calculation. This is totally tied to
         implementation and you need to implement your own scheme!
         '''
-        if not self.calc_running : return True
+        if not self.calc_running : 
+            print('Calc running:',self.calc_running)
+            return True
         else:
             # The calc is marked as running check if this is still true
             # We do it by external scripts. You need to write these 
             # scripts for your own system. 
             # See examples/scripts directory for examples.
-            o=check_output(['check-job'])
+            with _workdir(self.working_dir) :
+                o=check_output(['check-job'])
+            print('Status',o)
             if o[0] in 'R' :
                 # Still running - we do nothing to preserve the state
                 return False
@@ -116,20 +136,46 @@ class ClusterVasp(Vasp):
                 # The job is not running maybe it finished maybe crashed
                 # We hope for the best at this point ad pass to the 
                 # Standard update function
-                self.calc_running=False
                 return True
    
+    def set(self,**kwargs):
+        if 'block' in kwargs :
+            self.block=kwargs['block']
+            del kwargs['block']
+        else :
+            self.block=True
+        Vasp.set(self, **kwargs)
+        
+    
     def update(self, atoms):
         if self.calc_running :
             # we have started the calculation and have 
             # nothing to read really. But we need to check
             # first if this is still true.
-            if  not __calc_finished():
+            if  self.calc_finished():
+                # We were running but recently finished => read the results
+                # This is a piece of copy-and-paste programming
+                # This is a copy of code from Vasp.calculate
+                with _workdir(self.working_dir) :
+                    atoms_sorted = ase.io.read('CONTCAR', format='vasp') 
+                    if self.int_params['ibrion'] > -1 and self.int_params['nsw'] > 0: 
+                        # Update atomic positions and unit cell with the ones read 
+                        # from CONTCAR. 
+                        atoms.positions = atoms_sorted[self.resort].positions 
+                        atoms.cell = atoms_sorted.cell 
+                    self.converged = self.read_convergence()
+                    Vasp.set_results(self,atoms)
                 return
-        # We are not in the middle of calculation. At least not a
+            else :
+                return
+        # We are not in the middle of calculation. 
         # Update as normal
-        self.update(atoms)
+        with _workdir(self.working_dir) :
+            Vasp.update(self, atoms)
 
+    def set_results(self, atoms):
+        with _workdir(self.working_dir) :
+            Vasp.set_results(self, atoms)
 
     def run(self):
         '''
@@ -140,8 +186,11 @@ class ClusterVasp(Vasp):
         (or any other method in fact) and signal that the data is not 
         ready to b collected.
         '''
-        super.run()
-        if self.block : raise __NonBlockingRunException
+        with _workdir(self.working_dir):
+            Vasp.run(self)
+            if not self.block : 
+                print('Interrupt processing of calculate', os.getcwd())
+                raise _NonBlockingRunException
    
     def calculate(self, atoms):
         '''
@@ -165,14 +214,18 @@ class ClusterVasp(Vasp):
         for results.
         '''
         
-        self.prepare_calc_dir()
-        self.calc_running=True
-        try :
-            Vasp.calculate(self, atoms)
-        except __NonBlockingRunException :
-            # We have nothing else to docs
-            # until the job finishes
-            pass
+        with _workdir(self.working_dir) :
+            self.prepare_calc_dir()
+            self.calc_running=True
+            print('Run VASP.calculate')
+            try :
+                Vasp.calculate(self, atoms)
+                self.calc_running=False
+            except _NonBlockingRunException as e:
+                # We have nothing else to docs
+                # until the job finishes
+                print('Interrupted ', self.working_dir, os.getcwd())
+                pass
 
 
 
@@ -213,27 +266,13 @@ class __PCalcProc(Process):
     results after the run since the files will be removed as soon as the 
     "calculate" function terminates. You can pass False to the cleanup
     argument to prevent the clean-up. This is very usefull for debuging.
-    In the non-blocking mode nothing is removed - since the calculation 
-    is presumably not finished.
     
-    The procedure has two modes of operation: blocking and non-blocking.
-    
-    block=True  [default] the process waits without any time-out for the 
-                calculation to finish. This is great for short and simple 
-                calculations and quick testing. You run the job and get 
-                back your results.
-                
-    block=False the process starts the job and returns immediately. 
-                You need to return to the calculation and check if it
-                is finished and read in the results. Not every calculator 
-                supports this feature. At least VASP does. In this mode
-                the cleanup parameter is obviously ignored. You need to 
-                clean up yourself. This mode is great for the long, problematic,
-                production runs when you need to tweak the calculation
-                to make it converge etc.
+    The process waits without any time-out for the calculation to finish. 
+    This is great for short and simple calculations and quick testing. 
+    You run the job and get back your results.
     '''
     
-    def __init__(self, iq, oq, calc, prefix, cleanup=True, block=True):
+    def __init__(self, iq, oq, calc, prefix, cleanup=True):
         Process.__init__(self)
         self.calc=calc
         self.basedir=os.getcwd()
@@ -241,24 +280,24 @@ class __PCalcProc(Process):
         self.iq=iq
         self.oq=oq
         self.CleanUp=cleanup
-        self.block=block
     
     def run(self):
         wd=os.getcwd()
         os.chdir(self.place)
         n,system=self.iq.get()
         system.set_calculator(copy.deepcopy(self.calc))
-        system.calc.working_dir=self.place
-        #print("Start at :", self.place)
+        system.get_calculator().block=True
+        system.get_calculator().working_dir=self.place
+        print("Start at :", self.place)
         if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
             system.get_potential_energy()
         else:
-            system.calc.calculate(system)
+            system.get_calculator().calculate(system)
         
         #print("Finito: ", os.getcwd(), system.get_volume(), system.get_pressure())
         self.oq.put([n,system])
-        if self.block and self.CleanUp :
-            system.calc.clean()
+        if self.CleanUp :
+            system.get_calculator().clean()
             os.chdir(wd)
             shutil.rmtree(self.place, ignore_errors=True)
 
@@ -271,34 +310,57 @@ def ParCalculate(systems,calc,cleanup=True,block=True,prefix="Calc_"):
     '''
 
     if type(systems) != type([]) :
-        sys=[systems]
+        sysl=[systems]
     else :
-        sys=systems
+        sysl=systems
 
-    iq=Queue(len(sys)+1)
-    oq=Queue(len(sys)+1)
+    if block :
+        iq=Queue(len(sysl)+1)
+        oq=Queue(len(sysl)+1)
+            
+        # Create workers    
+        for s in sysl:
+            __PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup).start()
+
+        # Put jobs into the queue
+        for n,s in enumerate(sysl):
+            iq.put([n,s])
+            # Protection against too quick insertion
+            time.sleep(0.2)
         
-    # Create workers    
-    for s in sys:
-        __PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup, block=block).start()
-
-    # Put jobs into the queue
-    for n,s in enumerate(sys):
-        iq.put([n,s])
-        # Protection against too quick insertion
-        time.sleep(0.2)
-    
-    time.sleep(2)
-    if verbose : 
-        print(len(sys), "Workers started")
-    
-   # Collect the results
-    res=[]
-    while len(res)<len(sys) :
-        n,s=oq.get()
-        res.append([n,s])
-        #print("Got from oq:", n, s.get_volume(), s.get_pressure())
-    return [r for ns,s in enumerate(sys) for nr,r in res if nr==ns]
+        time.sleep(2)
+        if verbose : 
+            print(len(sysl), "Workers started")
+        
+       # Collect the results
+        res=[]
+        while len(res)<len(sysl) :
+            n,s=oq.get()
+            res.append([n,s])
+            #print("Got from oq:", n, s.get_volume(), s.get_pressure())
+    else :
+        # We do not need the multiprocessing complications for non-blocking 
+        # workers. We just run all in sequence.
+        basedir=os.getcwd()
+        res=[]
+        for n,s in enumerate(sysl):
+            s.set_calculator(copy.deepcopy(calc))
+            s.get_calculator().block=block
+            place=tempfile.mkdtemp(prefix=prefix, dir=basedir)
+            os.chdir(place)
+            s.get_calculator().working_dir=place
+            print("Start at :", place)
+            if hasattr(calc, 'name') and calc.name=='Siesta':
+                s.get_potential_energy()
+            else:
+                s.get_calculator().calculate(s)
+            os.chdir(basedir)
+            print("Submited", s.get_calculator().calc_finished(), os.getcwd())
+            # Protection against too quick insertion
+            time.sleep(0.2)
+            res.append([n,s])
+            
+    return [r for ns,s in enumerate(sysl) for nr,r in res if nr==ns]
 
 
 
