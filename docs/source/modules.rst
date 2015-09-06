@@ -16,13 +16,10 @@ I hope it will be incorporated in the main project sometime in the future.
 Modules
 -------
 
-.. automodule:: elastic.parcalc
+.. automodule:: parcalc.parcalc
    :members:
 
-
-
-.. automodule:: elastic
+.. automodule:: elastic.elastic
    :members:
-
 
 
