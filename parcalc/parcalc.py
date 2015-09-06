@@ -74,7 +74,7 @@ class ClusterVasp(Vasp):
     
     def __init__(self, nodes=1, ppn=8, **kwargs):
         if 'block' in kwargs :
-            self.block=block
+            self.block=kwargs['block']
             del kwargs['block']
         else :
             self.block=True
