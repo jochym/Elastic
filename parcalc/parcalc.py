@@ -112,52 +112,53 @@ class ClusterSiesta(Siesta):
 
 verbose=True
 
+
+class __PCalcProc(Process):
+    '''
+    Internal helper class representing the calculation process isolated
+    from the rest of the ASE script. The process (not thread) runs in 
+    the separate, temporary directory, created on-the-fly and removed at
+    the end. It is vital for the calculator to read in all the results 
+    after the run since the files will be removed as soon as the 
+    "calculate" function terminates. You can pass False to the cleanup
+    argument to prevent the clean-up. This is very usefull for debuging.
+    '''
+    
+    def __init__(self, iq, oq, calc, prefix, cleanup=True):
+        Process.__init__(self)
+        self.calc=calc
+        self.basedir=os.getcwd()
+        self.place=tempfile.mkdtemp(prefix=prefix, dir=self.basedir)
+        self.iq=iq
+        self.oq=oq
+        self.CleanUp=cleanup
+    
+    def run(self):
+        wd=os.getcwd()
+        os.chdir(self.place)
+        n,system=self.iq.get()
+        system.set_calculator(copy.deepcopy(self.calc))
+        
+        #print("Start at :", self.place)
+        if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
+            system.get_potential_energy()
+        else:
+            system.calc.calculate(system)
+        
+        #print("Finito: ", os.getcwd(), system.get_volume(), system.get_pressure())
+        self.oq.put([n,system])
+        if self.CleanUp :
+            system.calc.clean()
+            os.chdir(wd)
+            shutil.rmtree(self.place, ignore_errors=True)
+
+
 def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
     '''
     Run calculators in parallel for all systems. 
     Calculators are executed in isolated processes and directories.
     The resulting objects are returned in the list (one per input system).
     '''
-
-    class PCalcProc(Process):
-        '''
-        Internal Class representing the calculation process isolated
-        from the rest of the ASE script. The process (not thread) runs in 
-        the separate, temporary directory, created on-the-fly and removed at
-        the end. It is vital for the calculator to read in all the results 
-        after the run since the files will be removed as soon as the 
-        "calculate" function terminates. You can pass False to the cleanup
-        argument to prevent the clean-up. This is very usefull for debuging.
-        '''
-        
-        def __init__(self, iq, oq, calc, prefix, cleanup=True):
-            Process.__init__(self)
-            self.calc=calc
-            self.basedir=os.getcwd()
-            self.place=tempfile.mkdtemp(prefix=prefix, dir=self.basedir)
-            self.iq=iq
-            self.oq=oq
-            self.CleanUp=cleanup
-        
-        def run(self):
-            wd=os.getcwd()
-            os.chdir(self.place)
-            n,system=self.iq.get()
-            system.set_calculator(copy.deepcopy(self.calc))
-            
-            #print("Start at :", self.place)
-            if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
-                system.get_potential_energy()
-            else:
-                system.calc.calculate(system)
-            
-            #print("Finito: ", os.getcwd(), system.get_volume(), system.get_pressure())
-            self.oq.put([n,system])
-            if self.CleanUp :
-                system.calc.clean()
-                os.chdir(wd)
-                shutil.rmtree(self.place, ignore_errors=True)
-
 
     if type(systems) != type([]) :
         sys=[systems]
@@ -169,7 +170,7 @@ def ParCalculate(systems,calc,cleanup=True,prefix="Calc_"):
         
     # Create workers    
     for s in sys:
-        PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup).start()
+        __PCalcProc(iq, oq, calc, prefix=prefix, cleanup=cleanup).start()
 
     # Put jobs into the queue
     for n,s in enumerate(sys):
