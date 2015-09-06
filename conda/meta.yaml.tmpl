@@ -1,10 +1,10 @@
 package:
   name: elastic
-  version: "4.0.10" 
+  version: XXXX
 
 source:
   git_url: https://github.com/jochym/Elastic.git
-  git_tag: v4.0.10
+  git_branch: master
 
 build:
   #preserve_egg_dir: True
@@ -19,12 +19,13 @@ build:
 
   # If this is a new build for the same version, increment the build
   # number. If you do not include this key, it defaults to 0.
-  number: 0
+  number: 1
 
 requirements:
   build:
     - python
     - future
+    - setuptools_scm
 
   run:
     - python
@@ -47,9 +48,9 @@ test:
   # You can also put a file called run_test.py in the recipe that will be run
   # at test time.
 
-  # requires:
+  requires:
     # Put any additional test requirements here.  For example
-    # - nose
+    # - elastic-dev
 
 about:
   home: https://github.com/jochym/Elastic
