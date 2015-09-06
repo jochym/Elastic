@@ -637,7 +637,11 @@ class ElasticCrystal:
         u=(u+u.T)/2
         return array([u[0,0], u[1,1], u[2,2], u[2,1], u[2,0], u[1,0]])
 
+#=============================================
+#           Test cases for module
+#=============================================
 
+if __name__ == '__main__':
 # Test case for the code. Calculate few well-known crystals
 
     import os
