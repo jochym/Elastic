@@ -7,17 +7,17 @@
 
 jid=`echo $JID|awk -F='.' '{print $1.$2}'`
 
-js=`run-on-tsi "qstat -l -f $jid"|grep job_state|awk '{print $3}'`
+js=`run-on-tsi "qstat -l -f $jid" 2>/dev/null |grep job_state|awk '{print $3}'`
 
 if [ -e $LOCK ]; then 
-   if [ $js = R -o $js = Q -o $js = H ]; then
-	res='RL'
-   else
+    if [ $js = R -o $js = Q -o $js = H ]; then
+        res='RL'
+    else
         # something crashed - inconsistent state
         res='UL'
-   fi
+    fi
 else
-	res='FN'
+    res='FN'
 fi
 
 echo $res

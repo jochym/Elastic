@@ -63,21 +63,21 @@ class _NonBlockingRunException(Exception):
         the calculator class. If you got it outside it is a bug.
         Contact the author and/or submit a bug ticket at github.'''
 
+from traceback import print_stack
 
 class _workdir:
-    
     def __init__(self,wd):
         self.wd=wd
 
     def __enter__(self):
         self.basedir=os.getcwd()
         os.chdir(self.wd)
-        print('Now in:', self.wd)
+        #print('Now in:', self.wd)
         return self.wd
         
     def __exit__(self, xtype, xval, trace):
         os.chdir(self.basedir)
-        print('Back in:', self.basedir)
+        #print('Back in:', self.basedir)
         
 
 class ClusterVasp(Vasp):
@@ -98,6 +98,7 @@ class ClusterVasp(Vasp):
         self.nodes=nodes
         self.ppn=ppn
         self.calc_running=False
+        self.working_dir=os.getcwd()
         
     def prepare_calc_dir(self):
         '''
@@ -118,8 +119,9 @@ class ClusterVasp(Vasp):
         success of the calculation. This is totally tied to
         implementation and you need to implement your own scheme!
         '''
+        #print_stack(limit=5)
         if not self.calc_running : 
-            print('Calc running:',self.calc_running)
+            #print('Calc running:',self.calc_running)
             return True
         else:
             # The calc is marked as running check if this is still true
@@ -128,7 +130,7 @@ class ClusterVasp(Vasp):
             # See examples/scripts directory for examples.
             with _workdir(self.working_dir) :
                 o=check_output(['check-job'])
-            print('Status',o)
+            #print('Status',o)
             if o[0] in 'R' :
                 # Still running - we do nothing to preserve the state
                 return False
@@ -145,6 +147,10 @@ class ClusterVasp(Vasp):
         else :
             self.block=True
         Vasp.set(self, **kwargs)
+    
+    def clean(self):
+        with _workdir(self.working_dir) :
+            Vasp.clean(self)
         
     
     def update(self, atoms):
@@ -156,6 +162,7 @@ class ClusterVasp(Vasp):
                 # We were running but recently finished => read the results
                 # This is a piece of copy-and-paste programming
                 # This is a copy of code from Vasp.calculate
+                self.calc_running=False
                 with _workdir(self.working_dir) :
                     atoms_sorted = ase.io.read('CONTCAR', format='vasp') 
                     if self.int_params['ibrion'] > -1 and self.int_params['nsw'] > 0: 
@@ -170,11 +177,11 @@ class ClusterVasp(Vasp):
                 return
         # We are not in the middle of calculation. 
         # Update as normal
-        with _workdir(self.working_dir) :
-            Vasp.update(self, atoms)
+        Vasp.update(self, atoms)
 
     def set_results(self, atoms):
         with _workdir(self.working_dir) :
+            #print('set_results')
             Vasp.set_results(self, atoms)
 
     def run(self):
@@ -186,11 +193,13 @@ class ClusterVasp(Vasp):
         (or any other method in fact) and signal that the data is not 
         ready to b collected.
         '''
-        with _workdir(self.working_dir):
-            Vasp.run(self)
-            if not self.block : 
-                print('Interrupt processing of calculate', os.getcwd())
-                raise _NonBlockingRunException
+        # This is only called from self.calculate - thus 
+        # we do not need to change to working_dir 
+        # since calculate already did
+        Vasp.run(self)
+        if not self.block : 
+            #print('Interrupt processing of calculate', os.getcwd())
+            raise _NonBlockingRunException
    
     def calculate(self, atoms):
         '''
@@ -217,14 +226,15 @@ class ClusterVasp(Vasp):
         with _workdir(self.working_dir) :
             self.prepare_calc_dir()
             self.calc_running=True
-            print('Run VASP.calculate')
+            #print('Run VASP.calculate')
             try :
                 Vasp.calculate(self, atoms)
                 self.calc_running=False
+                #print('VASP.calculate returned')
             except _NonBlockingRunException as e:
                 # We have nothing else to docs
                 # until the job finishes
-                print('Interrupted ', self.working_dir, os.getcwd())
+                #print('Interrupted ', self.working_dir, os.getcwd())
                 pass
 
 
@@ -282,24 +292,23 @@ class __PCalcProc(Process):
         self.CleanUp=cleanup
     
     def run(self):
-        wd=os.getcwd()
-        os.chdir(self.place)
-        n,system=self.iq.get()
-        system.set_calculator(copy.deepcopy(self.calc))
-        system.get_calculator().block=True
-        system.get_calculator().working_dir=self.place
-        print("Start at :", self.place)
-        if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
-            system.get_potential_energy()
-        else:
-            system.get_calculator().calculate(system)
-        
-        #print("Finito: ", os.getcwd(), system.get_volume(), system.get_pressure())
-        self.oq.put([n,system])
-        if self.CleanUp :
-            system.get_calculator().clean()
-            os.chdir(wd)
-            shutil.rmtree(self.place, ignore_errors=True)
+        with _workdir(self.place) :
+            n,system=self.iq.get()
+            system.set_calculator(copy.deepcopy(self.calc))
+            system.get_calculator().block=True
+            system.get_calculator().working_dir=self.place
+            #print("Start at :", self.place)
+            if hasattr(self.calc, 'name') and self.calc.name=='Siesta':
+                system.get_potential_energy()
+            else:
+                system.get_calculator().calculate(system)
+            
+            #print("Finito: ", os.getcwd(), system.get_volume(), system.get_pressure())
+            self.oq.put([n,system])
+            if self.CleanUp :
+                system.get_calculator().clean()
+                os.chdir(self.basedir)
+                shutil.rmtree(self.place, ignore_errors=True)
 
 
 def ParCalculate(systems,calc,cleanup=True,block=True,prefix="Calc_"):
@@ -328,9 +337,8 @@ def ParCalculate(systems,calc,cleanup=True,block=True,prefix="Calc_"):
             # Protection against too quick insertion
             time.sleep(0.2)
         
-        time.sleep(2)
         if verbose : 
-            print(len(sysl), "Workers started")
+            print("Workers started:", len(sysl))
         
        # Collect the results
         res=[]
@@ -349,16 +357,18 @@ def ParCalculate(systems,calc,cleanup=True,block=True,prefix="Calc_"):
             place=tempfile.mkdtemp(prefix=prefix, dir=basedir)
             os.chdir(place)
             s.get_calculator().working_dir=place
-            print("Start at :", place)
+            #print("Start at :", place)
             if hasattr(calc, 'name') and calc.name=='Siesta':
                 s.get_potential_energy()
             else:
                 s.get_calculator().calculate(s)
             os.chdir(basedir)
-            print("Submited", s.get_calculator().calc_finished(), os.getcwd())
+            #print("Submited", s.get_calculator().calc_finished(), os.getcwd())
             # Protection against too quick insertion
             time.sleep(0.2)
             res.append([n,s])
+        if verbose : 
+            print("Workers started:", len(sysl))
             
     return [r for ns,s in enumerate(sysl) for nr,r in res if nr==ns]
 
