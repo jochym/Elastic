@@ -131,7 +131,7 @@ class ClusterVasp(Vasp):
             with _workdir(self.working_dir) :
                 o=check_output(['check-job'])
             #print('Status',o)
-            if o[0] in 'R' :
+            if o[0] in b'R' :
                 # Still running - we do nothing to preserve the state
                 return False
             else :
