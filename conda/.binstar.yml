@@ -23,6 +23,7 @@ package: elastic
 engine:
   - python=2
   - python=3
+  - python=3.4
 ## The env param is an environment variable list 
 # engine:
 #  - MY_ENV=A CC=gcc
