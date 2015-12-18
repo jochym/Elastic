@@ -36,9 +36,9 @@ engine:
 #===============================================================================
 
 ## Run before the script
-#before_script:
+before_script:
+  - conda config --add channels https://conda.anaconda.org/jochym
 #  - conda update -n root conda conda-build --yes
-#  - conda config --add channels https://conda.anaconda.org/jochym
 #  - conda install setuptools_scm
 #  - bash update_versions.sh
 
