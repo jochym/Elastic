@@ -2,8 +2,18 @@
 
 from setuptools import setup, find_packages
 
+with open("__conda_version__.h") as w:
+    for line in w:
+        version_t=line.strip()
+
+if None in version:
+    print("Failed to get version number in setup.py.")
+    raise
+
+
 setup(
     name='elastic',
+    version=version_t,
     packages=find_packages(),
     license='GPLv3',
     description = 'Extension for ASE to calculate elastic constants',
