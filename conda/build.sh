@@ -1,9 +1,9 @@
 #!/bin/bash
 
-git describe --tags --dirty | sed -e 's/-/_/g' -e 's/^v//g' > __conda_version__.txt
+git describe --tags --dirty | sed -e  's/-/+/' -e 's/-/./' -e 's/^v//'> __conda_version__.txt
 
 $PYTHON setup.py install
-$PYTHON setup.py sdist
+#$PYTHON setup.py sdist
 
 # Add more build steps here, if they are necessary.
 
