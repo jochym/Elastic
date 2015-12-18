@@ -74,7 +74,14 @@ import string
 
 import ase.io
 from ase.atoms import Atoms
-from pyspglib import spglib as spg
+
+try :
+    # Try new release of spglib
+    import spglib as spg
+except ImportError :
+    # Old naming scheme
+    from pyspglib import spglib as spg
+    
 from scipy.linalg import norm, lstsq
 from scipy import optimize
 from numpy.linalg import inv
