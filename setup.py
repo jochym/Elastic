@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 version_t=None
 
-with open("__conda_version__.h") as w:
+with open("__conda_version__.txt") as w:
     for line in w:
         version_t=line.strip()
 
