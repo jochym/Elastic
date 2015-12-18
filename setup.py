@@ -2,11 +2,13 @@
 
 from setuptools import setup, find_packages
 
+version_t=None
+
 with open("__conda_version__.h") as w:
     for line in w:
         version_t=line.strip()
 
-if None in version:
+if version_t is None:
     print("Failed to get version number in setup.py.")
     raise
 
