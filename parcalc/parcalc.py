@@ -45,8 +45,8 @@ Class description
 
 from __future__ import print_function, division
 
-from ase.calculators.vasp import *
-from ase.calculators.siesta import *
+from ase.calculators.vasp import Vasp
+from ase.calculators.siesta import Siesta
 from queue import Empty
 from multiprocessing import Process, Queue
 
@@ -58,6 +58,9 @@ import copy
 from subprocess import check_output
 
 class _NonBlockingRunException(Exception):
+    '''
+    Internal exception. Should never be propagated outside.
+    '''
     def __str__(self):
         return '''The __NonBlockingRunException should be caught inside 
         the calculator class. If you got it outside it is a bug.
@@ -66,6 +69,10 @@ class _NonBlockingRunException(Exception):
 from traceback import print_stack
 
 class _workdir:
+    '''
+    Context menager for executing commands in some working directory.
+    Returns to the previous wd when finished.
+    '''
     def __init__(self,wd):
         self.wd=wd
 
@@ -260,7 +267,7 @@ class ClusterSiesta(Siesta):
         Siesta.get_potential_energy(self, atoms)
 
     def clean(self):
-        Siesta.converged = False
+        self.converged = False
         return
 
 verbose=True
