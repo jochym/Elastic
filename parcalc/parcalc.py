@@ -56,6 +56,7 @@ import tempfile
 import shutil
 import copy
 from subprocess import check_output
+from contextlib import contextmanager
 
 class _NonBlockingRunException(Exception):
     '''
@@ -68,24 +69,24 @@ class _NonBlockingRunException(Exception):
 
 from traceback import print_stack
 
-class _workdir:
+@contextmanager
+def work_dir(path):
     '''
     Context menager for executing commands in some working directory.
     Returns to the previous wd when finished.
-    '''
-    def __init__(self,wd):
-        self.wd=wd
 
-    def __enter__(self):
-        self.basedir=os.getcwd()
-        os.chdir(self.wd)
-        #print('Now in:', self.wd)
-        return self.wd
-        
-    def __exit__(self, xtype, xval, trace):
-        os.chdir(self.basedir)
-        #print('Back in:', self.basedir)
-        
+    Usage:
+    >>> with work_dir(path):
+    ...   subprocess.call('git status')
+
+    '''
+    starting_directory = os.getcwd()
+    try:
+        os.chdir(path)
+        yield
+    finally:
+        os.chdir(starting_directory)
+
 
 class ClusterVasp(Vasp):
     '''
@@ -135,7 +136,7 @@ class ClusterVasp(Vasp):
             # We do it by external scripts. You need to write these 
             # scripts for your own system. 
             # See examples/scripts directory for examples.
-            with _workdir(self.working_dir) :
+            with work_dir(self.working_dir) :
                 o=check_output(['check-job'])
             #print('Status',o)
             if o[0] in b'R' :
@@ -156,7 +157,7 @@ class ClusterVasp(Vasp):
         Vasp.set(self, **kwargs)
     
     def clean(self):
-        with _workdir(self.working_dir) :
+        with work_dir(self.working_dir) :
             Vasp.clean(self)
         
     
@@ -170,7 +171,7 @@ class ClusterVasp(Vasp):
                 # This is a piece of copy-and-paste programming
                 # This is a copy of code from Vasp.calculate
                 self.calc_running=False
-                with _workdir(self.working_dir) :
+                with work_dir(self.working_dir) :
                     atoms_sorted = ase.io.read('CONTCAR', format='vasp') 
                     if self.int_params['ibrion'] > -1 and self.int_params['nsw'] > 0: 
                         # Update atomic positions and unit cell with the ones read 
@@ -187,7 +188,7 @@ class ClusterVasp(Vasp):
         Vasp.update(self, atoms)
 
     def set_results(self, atoms):
-        with _workdir(self.working_dir) :
+        with work_dir(self.working_dir) :
             #print('set_results')
             Vasp.set_results(self, atoms)
 
@@ -230,7 +231,7 @@ class ClusterVasp(Vasp):
         for results.
         '''
         
-        with _workdir(self.working_dir) :
+        with work_dir(self.working_dir) :
             self.prepare_calc_dir()
             self.calc_running=True
             #print('Run VASP.calculate')
@@ -299,7 +300,7 @@ class __PCalcProc(Process):
         self.CleanUp=cleanup
     
     def run(self):
-        with _workdir(self.place) :
+        with work_dir(self.place) :
             n,system=self.iq.get()
             system.set_calculator(copy.deepcopy(self.calc))
             system.get_calculator().block=True
