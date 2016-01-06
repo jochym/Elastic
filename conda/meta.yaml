@@ -1,5 +1,5 @@
 package:
-  name: elastic-dev
+  name: elastic
 
 source:
   git_url: https://github.com/jochym/Elastic.git
