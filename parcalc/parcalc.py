@@ -114,11 +114,10 @@ class ClusterVasp(Vasp):
         This needs to be re-implemented for each local setup.
         The following code reflects just my particular setup.
         '''
-        f=open("vasprun.conf","w")
-        f.write('NODES="nodes=%s:ppn=%d"\n' % (self.nodes, self.ppn))
-        f.write('BLOCK=%d\n' % (self.block,))
-        #print(self.nodes, self.ppn)
-        f.close()
+        with open("vasprun.conf","w") as f:
+            f.write('NODES="nodes=%s:ppn=%d"\n' % (self.nodes, self.ppn))
+            f.write('BLOCK=%d\n' % (self.block,))
+            #print(self.nodes, self.ppn)
 
     def calc_finished(self):
         '''
@@ -258,10 +257,9 @@ class ClusterSiesta(Siesta):
         self.ppn=ppn
     
     def prepare_calc_dir(self):
-        f=open("siestarun.conf","w")
-        f.write('NODES="nodes=%d:ppn=%d"' % (self.nodes, self.ppn))
-        #print(self.nodes, self.ppn)
-        f.close()
+        with open("siestarun.conf","w") as f:
+            f.write('NODES="nodes=%d:ppn=%d"' % (self.nodes, self.ppn))
+            #print(self.nodes, self.ppn)
     
     def get_potential_energy(self, atoms):
         self.prepare_calc_dir()
