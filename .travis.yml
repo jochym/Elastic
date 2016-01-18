@@ -3,7 +3,6 @@ sudo: true
 
 python:
     - "2.7"
-    - "3.5"
     
 virtualenv:
   system_site_packages: true
@@ -11,7 +10,7 @@ virtualenv:
 # command to install dependencies
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -qq python-numpy python-scipy python3-scipy python3-numpy python-matplotlib python3-matplotlib
+    - sudo apt-get install -qq python-numpy python-scipy python-matplotlib
     
 install: 
     - pip install --upgrade pip
