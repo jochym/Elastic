@@ -1,4 +1,5 @@
 spglib
+pyspglib
 numpy
 scipy
 ase
