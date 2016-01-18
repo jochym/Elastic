@@ -5,4 +5,4 @@ ase
 docutils
 sphinx
 setuptools_scm
-nosetests
+nose
