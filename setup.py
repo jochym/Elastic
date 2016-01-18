@@ -2,20 +2,9 @@
 
 from setuptools import setup, find_packages
 
-version_t=None
-
-with open("__conda_version__.txt") as w:
-    for line in w:
-        version_t=line.strip()
-
-if version_t is None:
-    print("Failed to get version number in setup.py.")
-    raise
-
-
 setup(
     name='elastic',
-    version=version_t,
+    use_scm_version=True, 
     packages=find_packages(),
     license='GPLv3',
     description = 'Extension for ASE to calculate elastic constants',
@@ -24,6 +13,7 @@ setup(
     url = 'https://github.com/jochym/Elastic',
     keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals'],
     requires = ['spglib','numpy','scipy','ase','docutils','sphinx'],
+    setup_requires = ['setuptools_scm'],
     provides = ['elastic','parcalc'],
     platforms = ['all'],
     classifiers = [],
