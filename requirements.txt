@@ -1,0 +1,8 @@
+spglib
+numpy
+scipy
+ase
+docutils
+sphinx
+setuptools_scm
+nosetests
