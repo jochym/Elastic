@@ -40,6 +40,7 @@ test:
     - elastic
 
   commands:
+    - ls -l {{SRC_DIR}}
     - python {{SRC_DIR}}/test/test_elastic.py
 
 
