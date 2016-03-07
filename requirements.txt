@@ -1,9 +1,1 @@
-docutils
-sphinx
-setuptools_scm
-nose
-numpy
-scipy
-ase
-spglib
-
+vcversioner
