@@ -50,8 +50,9 @@ copyright = u'2015, Paweł T. Jochym'
 #
 # The short X.Y version.
 version = "4.0.15"
-from setuptools_scm import get_version
-version = release = get_version()
+with open('../../__version__.txt','r') as vf :
+    for line in vf:
+        version=line.strip()
 # The full version, including alpha/beta/rc tags.
 release = version
 

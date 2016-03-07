@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
+from setuptools_scm import get_version
+
+with open('__version__.txt','w') as vf :
+    vf.write(get_version())
 
 setup(
     name='elastic',
