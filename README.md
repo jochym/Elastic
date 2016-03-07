@@ -1,11 +1,10 @@
 Elastic [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg)](http://dx.doi.org/10.5281/zenodo.18759)
 =======
-
+[![Build Status](https://travis-ci.org/jochym/Elastic.svg?branch=master)](https://travis-ci.org/jochym/Elastic)
 [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/version.svg)](https://anaconda.org/jochym/elastic)
 [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/build.svg)](https://anaconda.org/jochym/elastic/builds)
 [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/downloads.svg)](https://anaconda.org/jochym/elastic)
 [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/license.svg)](https://anaconda.org/jochym/elastic)
-[![Binstar Badge](https://anaconda.org/jochym/elastic/badges/installer/conda.svg)](https://conda.anaconda.org/jochym)
 [![Research software impact](http://depsy.org/api/package/pypi/elastic/badge.svg)](http://depsy.org/package/python/elastic)
 
 
