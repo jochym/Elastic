@@ -3,14 +3,14 @@ import unittest
 class TestElastic(unittest.TestCase):
 
     def setUp(self):
-	pass
+	    pass
     
     def tearDown(self):
         pass
     
     def test_basic_import(self):
-	import elastic
-	import parcalc
+	    import elastic
+	    import parcalc
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestElastic)
