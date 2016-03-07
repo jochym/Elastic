@@ -1,9 +1,1 @@
-spglib
-pyspglib
-numpy
-scipy
-ase
-docutils
-sphinx
 setuptools_scm
-nose
