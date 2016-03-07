@@ -1,38 +1,28 @@
 language: python
 sudo: false
 dist: trusty
-
 python:
-    - "2.7"
-    - "3.4"
-    - "3.5"
-    
+- '2.7'
+- '3.4'
+- '3.5'
 before_install:
-    - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
-    - bash miniconda.sh -b -p $HOME/miniconda
-    - export PATH="$HOME/miniconda/bin:$PATH"
-    - conda update --yes conda
-    - conda config --add channels jochym
-
+- wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+- bash miniconda.sh -b -p $HOME/miniconda
+- export PATH="$HOME/miniconda/bin:$PATH"
+- conda update --yes conda
+- conda config --add channels jochym
 install:
-    - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy python-ase spglib
-    - git describe --tags --dirty
-#    - ./get_nanoversion.sh
-#    - cat __nanoversion__.txt
-#    - ln -s ../src .
-    - python setup.py install 
-
+- conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy python-ase spglib
+- git describe --tags --dirty
+- python setup.py install
 script:
-#    - cd test
-#    - python test_spglib.py
-    - true
-
+- true
 deploy:
   skip_cleanup: true
   provider: pypi
   user: jochym
   password:
-    secure: GI6iKqz/Bmxu8IxP442M4FCH3m7thd+lJjHH1aO37ClSzmLm9Y0fAyXkIaN/aW66yMT4yx6cRZ0EgQBrIF6DlY3DvnnA+qM0K3MNz1gMs3BCQ+AO+r9wRF0jnC4WUtgIXgiYbmYDXWPafT8lsQbRgsrcU5daSoK9N9kM7V8kWYZbG/XRdoOQuGn5G3k6WURJC4eI0iwxAgNyYhnmcquBbE6WwgH+Eoi4rOI0cNfLgZtk2mDNbRWC82VBuSSx3x8w/8nagfuWOZYBAb1Z0+vfUZhnrQgIveqIvxgnSSsFIc2TIoSANSwZ+44nIBQwlhK5a3yCm15BtEtq1lbslHFptAO+c9T7PfS0RZOIzBxAEBB1CZ+2vgE3ZBfPM7gxl3PhDWEcwEqktydW+J4sKs/Pz7zFtn4P3lSsHaVInQrTrouuFLn8DO4ZUS8XVLRtkqA1CX6cJHIs8qtG1cVjAku6BNtxGXaf69ZP4aMjphP3t1npWQqPw4Aiv30aF8tFu6KzS2El4ZcQd3Mn5CsKV4Rvq54XsDJeXDvlXHrr0gPT7vRaOi5kdsBvX/a8x+9VP9kG+4Dth7GGAJ4jtvc8M8XnxbT1r7KOX+/KY1VdgC8n6pVRICUsp6ckAvxyKCUhKf3RAJYf4+R+1NQFq/vdVtkfHaMbFRFdIxjk6gRA3zGMKZ8=
+    secure: a0PJM114WOEhzABWNq7ZCIZfmm6h1qv21X3IZ1cSU8fW+8PDN4wmh08qY/BNloE0o/qvifD68TyBDqfdUpQvaEp7Dpm4dWC6MCqv7JqUc5N3rtkgztjsHw7z2LK32npC+KWtq38jZ/4aJVIHOgNPz54sddtgyq/f8OwgTh9Wx2EKmi1m/TRDBBvYTCHoBQX2fU9wqxZHklWUZJjl6DyxJdszWdefk7l7dzlQhyWK43Gw5K9sTJsPGQZhknC8xG1ce2C9bgciWFRKuwuedhcR8ro3cTChbT3bQm9yICQvUO8evOacDHV3TwwRi8k+kbIi4KFsvmGwvM0dYCZJ2FaD5zQ9ztPfnMy5G295Sn6kCVeRedaOoIi1Xj3NGQtIqlsrfIu2cG8XSr+Sv2FINMcYar4bMZtqygXfpv5LQF88iMBQXFFKhDoPKUWywo5mozeIwW+kNsNWx6mQdbXC6nCDd/rakGYNMNXeJJ0203M10GdIga+Ir+UtcFfoLHDoqXQsONrsKcNmpny+tHC5u1x6j1WczhkNKzhxl5w54+x0BmE2SlKPS5WgDdmh1OKPlRy5tzIHm2Q8CFBdkwfaKF4mcwYAkHKG8keP2qVW0qQkbI8uinQeSbV/1+pUBkFNxYqp2Csi2tVf9cllIEb13WCCqYgjNElhJR1SJ90Oom8X2ts=
   on:
     branch: master
     python: 2.7
