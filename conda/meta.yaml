@@ -40,7 +40,8 @@ test:
     - elastic
 
   commands:
-    - python test/test_elastic.py
+    - pwd
+    - cd .. ; python test/test_elastic.py
 
 
   # You can also put a file called run_test.py in the recipe that will be run
