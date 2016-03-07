@@ -31,8 +31,8 @@ it properly as a PyPi package (elastic).
 
 The on-line documentation is placed on [ReadTheDocs](http://elastic.rtfd.org/) 
 or [Elastic website](http://wolf.ifj.edu.pl/elastic/). You can obtain the 
-[documentation as a PDF file](http://wolf.ifj.edu.pl/~jochym/Elastic.pdf) as 
-well.
+[documentation as a PDF file](https://media.readthedocs.org/pdf/elastic/stable/elastic.pdf) 
+as well.
 
 Installation [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/installer/conda.svg)](https://conda.anaconda.org/jochym)
 -------------
