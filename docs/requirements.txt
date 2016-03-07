@@ -1,1 +1,1 @@
-vcversioner
+setuptools_scm

@@ -50,11 +50,8 @@ copyright = u'2015, Paweł T. Jochym'
 #
 # The short X.Y version.
 version = "4.0.15"
-import vcversioner, os
-
-version = release = vcversioner.find_version(
-    root=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).version
-
+from setuptools_scm import get_version
+version = release = get_version()
 # The full version, including alpha/beta/rc tags.
 release = version
 
