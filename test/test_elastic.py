@@ -18,6 +18,6 @@ class TestElastic(unittest.TestCase):
 	    print('Imported:',parcalc.__package__)
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestElastic)
-    unittest.TextTestRunner(verbosity=2).run(suite)
-    # unittest.main()
+#    suite = unittest.TestLoader().loadTestsFromTestCase(TestElastic)
+#    unittest.TextTestRunner(verbosity=2).run(suite)
+     unittest.main()
