@@ -6,7 +6,7 @@ Elastic [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg)](http://d
 [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/downloads.svg)](https://anaconda.org/jochym/elastic)
 [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/license.svg)](https://anaconda.org/jochym/elastic)
 [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/installer/conda.svg)](https://conda.anaconda.org/jochym)
-
+[![Research software impact](http://depsy.org/api/package/pypi/elastic/badge.svg)](http://depsy.org/package/python/elastic)
 
 
 Elastic is a set of python routines for calculation of elastic properties of 

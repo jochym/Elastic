@@ -25,6 +25,7 @@ __pycache__
 # Installer logs
 pip-log.txt
 MANIFEST
+__conda_version__.txt
 
 # Unit test / coverage reports
 .coverage
