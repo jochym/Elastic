@@ -101,15 +101,12 @@ class ClusterVasp(Vasp):
     use this as a template for other type of calculator.
     '''
     
-    def __init__(self, nodes=1, ppn=8, **kwargs):
-        if 'block' in kwargs :
-            self.block=kwargs['block']
-            del kwargs['block']
-        else :
-            self.block=True
+    def __init__(self, nodes=1, ppn=8, block=True, ncl=False, **kwargs):
         Vasp.__init__(self, **kwargs)
         self.nodes=nodes
         self.ppn=ppn
+        self.block=block
+        self.ncl=ncl
         self.calc_running=False
         self.working_dir=os.getcwd()
         
@@ -122,6 +119,8 @@ class ClusterVasp(Vasp):
         with open("vasprun.conf","w") as f:
             f.write('NODES="nodes=%s:ppn=%d"\n' % (self.nodes, self.ppn))
             f.write('BLOCK=%d\n' % (self.block,))
+            if self.ncl :
+                f.write('NCL=%d\n' % (1,))
             #print(self.nodes, self.ppn)
 
     def calc_finished(self):
@@ -151,20 +150,25 @@ class ClusterVasp(Vasp):
                 # We hope for the best at this point ad pass to the 
                 # Standard update function
                 return True
-   
+
     def set(self,**kwargs):
         if 'block' in kwargs :
             self.block=kwargs['block']
             del kwargs['block']
         else :
             self.block=True
+
+        if 'ncl' in kwargs :
+            self.ncl=kwargs['ncl']
+            del kwargs['ncl']
+        else :
+            self.ncl=False
         Vasp.set(self, **kwargs)
-    
+
     def clean(self):
         with work_dir(self.working_dir) :
             Vasp.clean(self)
-        
-    
+
     def update(self, atoms):
         if self.calc_running :
             # we have started the calculation and have 
