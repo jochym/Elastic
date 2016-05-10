@@ -45,6 +45,7 @@ Class description
 
 from __future__ import print_function, division
 
+import ase
 from ase.calculators.vasp import Vasp
 from ase.calculators.siesta import Siesta
 
