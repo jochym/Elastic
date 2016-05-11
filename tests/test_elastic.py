@@ -6,6 +6,7 @@ if __name__ == '__main__':
 # Test case for the code. Calculate few well-known crystals
 
     import os
+    import sys
     from numpy import linspace, array, arange
     import numpy
     from math import pow
@@ -13,8 +14,11 @@ if __name__ == '__main__':
     from matplotlib.pyplot import plot, show, figure, draw, axvline, axhline
     from ase.lattice.spacegroup import crystal
     from ase.visualize import view
+    import ase.units as units
     from parcalc import ClusterVasp
-
+    import elastic
+    from elastic import Crystal, BMEOS
+    from parcalc import ClusterVasp, ClusterSiesta, ParCalculate
 
 # You can specify the directory with prepared VASP crystal for the test run
 # or run through all prepared cases.
