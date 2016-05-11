@@ -28,7 +28,7 @@ requirements:
 
   run:
     - python
-    - python-ase
+    - ase
     - numpy
     - scipy
     - spglib
