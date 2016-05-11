@@ -60,7 +60,7 @@ import time
 import os
 import tempfile
 import shutil
-import copy
+from copy import deepcopy
 from subprocess import check_output
 from contextlib import contextmanager
 
@@ -310,7 +310,7 @@ class __PCalcProc(Process):
     def run(self):
         with work_dir(self.place) :
             n,system=self.iq.get()
-            system.set_calculator(copy.deepcopy(self.calc))
+            system.set_calculator(deepcopy(self.calc))
             system.get_calculator().block=True
             system.get_calculator().working_dir=self.place
             #print("Start at :", self.place)
@@ -368,7 +368,7 @@ def ParCalculate(systems,calc,cleanup=True,block=True,prefix="Calc_"):
         basedir=os.getcwd()
         res=[]
         for n,s in enumerate(sysl):
-            s.set_calculator(copy.deepcopy(calc))
+            s.set_calculator(deepcopy(calc))
             s.get_calculator().block=block
             place=tempfile.mkdtemp(prefix=prefix, dir=basedir)
             os.chdir(place)
@@ -396,7 +396,6 @@ if __name__ == '__main__':
     from ase.lattice.spacegroup import crystal
     from ase.units import GPa
     import elastic
-    from elastic.parcalc import ParCalculate, ClusterVasp
     import numpy
     from pylab import *
 
