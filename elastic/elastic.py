@@ -722,7 +722,7 @@ if __name__ == '__main__':
         
         # Run the internal optimizer
         print("Residual pressure: %.3f GPa" % (
-                    cryst.get_pressure()/units.GPa))
+                    (cryst.get_stress()[:3]).mean()/units.GPa))
         print("Residual stress (GPa):", cryst.get_stress()/units.GPa)
 
         calc.clean()
