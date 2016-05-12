@@ -2,6 +2,16 @@
 
 from setuptools import setup, find_packages
 
+def scm_config():
+    from setuptools_scm.version import (
+        postrelease_version,
+        get_local_node_and_date,
+    )
+    return dict(
+        version_scheme=postrelease_version,
+        local_scheme=get_local_node_and_date,
+    )
+
 setup(
     name='elastic',
     use_scm_version=True, 
