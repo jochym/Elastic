@@ -3,7 +3,7 @@ package:
 
 source:
   git_url: https://github.com/jochym/Elastic.git
-  git_branch: git_branch: {{ environ.get('GIT_BRANCH','master') }}
+  git_branch: {{ environ.get('GIT_BRANCH','master') }}
 
 build:
   script_env:
