@@ -2,19 +2,14 @@
 
 from setuptools import setup, find_packages
 
-def scm_config():
-    from setuptools_scm.version import (
-        postrelease_version,
-        get_local_node_and_date,
-    )
-    return dict(
-        version_scheme=postrelease_version,
-        local_scheme=get_local_node_and_date,
-    )
+with open("__version__.txt") as w:
+    for line in w:
+        version = line.strip()
+        break
 
 setup(
     name='elastic',
-    use_scm_version=True, 
+    version=version, 
     packages=find_packages(),
     license='GPLv3',
     description = 'Extension for ASE to calculate elastic constants',
@@ -23,7 +18,6 @@ setup(
     url = 'https://github.com/jochym/Elastic',
     keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals'],
     requires = ['spglib','numpy','scipy','ase','docutils','sphinx'],
-    setup_requires = ['setuptools_scm'],
     provides = ['elastic','parcalc'],
     platforms = ['all'],
     classifiers = [],
