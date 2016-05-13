@@ -25,6 +25,7 @@ password:$TESTPASSWORD
 
 EOF
 
+cat ~/.pypirc
 
 python setup.py register -r $srv
 python setup.py $* upload -r $srv
