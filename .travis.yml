@@ -55,25 +55,6 @@ deploy:
       branch: rc
       tags: false
       python: 2.7
-  # Testing master testpypi
-  - provider: pypi
-    skip_cleanup: true
-    server: https://testpypi.python.org/pypi
-    user: jochym
-    password:
-      secure: "kwdS9crh4V2VwpuyFLJuquOeNVkHvVWvn6YbyqaUF3vvFSirHHvwzzrKgWSEJAvWseeg1KaPgi6Zsvi1CXSbHge9yC4fZfmXVn2z09KWg/m9xorZu/MkV8AG60lvtxAceFo5FE+sZws9mJW4Df0EBSY4iX7mhxOSFsE5M7Am3J9Ij3H5dNubtvUYstzeExnf6CueQZ7YE3j1bTsymglwfJ1I3pFMakRuJWqyaYAWm4ry9XX233dSL/cAD9SFwQZ+p2a0CIRcyNSjq4j2jwD79HcW69xL7oWB/z56wGyLzNkkWFac5CxW/gPYVC7Nf48An9dfryDqbT9xrwT4wK1AD5tHpb4+dHZP6GTVK58Sc/DCRfn7bNb7kdb2ftmehxw9+JTVvfDck9/msQ2QNsrRkAE5aPghgaJfVQagyIqOPjYvqJAAubfzMEvqow2TcVM0BIgcX151JD9rdSkNm94euZafzaLbJ0/+YrjzWe9sZzwxjDNtUMPLe5062GPNjuFTDYC16spMotJGGvXn3jCK1J44+pgQ53ZOhlkDfwrByyWNnmTbwjGTWuxTzrGQTHQS7enxcLuwEtTO/XYDqAnMC7H/a8m+l3k8XmCq+D94BOigEJwKtHIrADZEAwpuOx9FLiMXFwcZRhax/HsYmVOf/arDZEBwEbArsGl2ecpoSKQ="
-    on:
-      branch: master
-      tags: false
-      python: 2.7
-  # Testing master anaconda
-  - provider: script
-    skip_cleanup: true
-    script: anaconda -t $ANACONDA_TOKEN build trigger --test-only --branch master jochym/Elastic
-    on:
-      branch: master
-      tags: false
-      python: 2.7
   # Production pypi
   - provider: pypi
     skip_cleanup: true
@@ -82,7 +63,7 @@ deploy:
       secure: "kwdS9crh4V2VwpuyFLJuquOeNVkHvVWvn6YbyqaUF3vvFSirHHvwzzrKgWSEJAvWseeg1KaPgi6Zsvi1CXSbHge9yC4fZfmXVn2z09KWg/m9xorZu/MkV8AG60lvtxAceFo5FE+sZws9mJW4Df0EBSY4iX7mhxOSFsE5M7Am3J9Ij3H5dNubtvUYstzeExnf6CueQZ7YE3j1bTsymglwfJ1I3pFMakRuJWqyaYAWm4ry9XX233dSL/cAD9SFwQZ+p2a0CIRcyNSjq4j2jwD79HcW69xL7oWB/z56wGyLzNkkWFac5CxW/gPYVC7Nf48An9dfryDqbT9xrwT4wK1AD5tHpb4+dHZP6GTVK58Sc/DCRfn7bNb7kdb2ftmehxw9+JTVvfDck9/msQ2QNsrRkAE5aPghgaJfVQagyIqOPjYvqJAAubfzMEvqow2TcVM0BIgcX151JD9rdSkNm94euZafzaLbJ0/+YrjzWe9sZzwxjDNtUMPLe5062GPNjuFTDYC16spMotJGGvXn3jCK1J44+pgQ53ZOhlkDfwrByyWNnmTbwjGTWuxTzrGQTHQS7enxcLuwEtTO/XYDqAnMC7H/a8m+l3k8XmCq+D94BOigEJwKtHIrADZEAwpuOx9FLiMXFwcZRhax/HsYmVOf/arDZEBwEbArsGl2ecpoSKQ="
     on:
       branch: master
-      tags: true
+      tags: false
       python: 2.7
   # production anaconda
   - provider: script
@@ -90,7 +71,7 @@ deploy:
     script: anaconda -t $ANACONDA_TOKEN build trigger --branch master jochym/Elastic
     on:
       branch: master
-      tags: true
+      tags: false
       python: 2.7
 
 
