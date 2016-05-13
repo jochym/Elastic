@@ -18,7 +18,7 @@ setup(
     url = 'https://github.com/jochym/Elastic',
     keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals'],
     requires = ['spglib','numpy','scipy','ase','docutils','sphinx'],
-    setup_requires = ['docutils','sphinx'],
+    setup_requires = ['docutils','sphinx','setuptools_scm'],
     provides = ['elastic','parcalc'],
     platforms = ['all'],
     classifiers = [],

@@ -1,1 +1,2 @@
 spglib
+setuptools_scm
