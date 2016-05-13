@@ -10,7 +10,7 @@ with open("__version__.txt") as w:
 setup(
     name='elastic',
     version=version, 
-    packages=find_packages(),
+    packages=find_packages(exclude=['docs']),
     license='GPLv3',
     description = 'Extension for ASE to calculate elastic constants',
     author = 'Paweł T. Jochym',
