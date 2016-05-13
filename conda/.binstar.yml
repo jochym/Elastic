@@ -47,6 +47,7 @@ before_script:
 script:
   - conda update -n root conda conda-build --yes
   - GIT_BRANCH=`git branch |grep '^*'|sed -e 's/^*\s\?//' -e 's/(HEAD [a-z ]* \(.*\))$/\1/'`
+  - echo "Building branch $GIT_BRANCH"
   - conda build .
 ## This will run after the script regardless of the result of script
 ## BINSTAR_BUILD_RESULT=[succcess|failure] 
