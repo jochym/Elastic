@@ -27,5 +27,7 @@ EOF
 
 cat ~/.pypirc
 
+echo $TESTPASSWORD
+
 python setup.py register -r $srv
 python setup.py $* upload -r $srv
