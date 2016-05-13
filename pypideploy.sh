@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -x
+
+echo 'PyPI deploynment script'
+
 srv=$1
 shift
 

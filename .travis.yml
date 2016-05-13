@@ -58,7 +58,7 @@ deploy:
     #custom pypitest
   - provider: script
     skip_cleanup: true
-    script: ./pypideploy.sh sdist https://testpypi.python.org/pypi
+    script: bash ./pypideploy.sh sdist https://testpypi.python.org/pypi
     on:
         branch: rc
         tags: false
