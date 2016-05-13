@@ -8,21 +8,20 @@ srv=$1
 shift
 
 cat  >~/.pypirc <<-EOF 
+[distutils]
+index-servers =
+    pypi
+    pypitest
 
-    [distutils]
-    index-servers =
-        pypi
-        pypitest
+[pypi]
+repository = https://pypi.python.org/pypi
+username:$USER
+password:$PASSWORD
 
-    [pypi]
-    repository = https://pypi.python.org/pypi
-    username:$USER
-    password:$PASSWORD
-
-    [pypitest]
-    repository = https://testpypi.python.org/pypi
-    username:$USER
-    password:$TESTPASSWORD
+[pypitest]
+repository = https://testpypi.python.org/pypi
+username:$USER
+password:$TESTPASSWORD
 
 EOF
 
