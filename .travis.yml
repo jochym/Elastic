@@ -60,7 +60,7 @@ deploy:
     on:
         branch: master
         tags: false
-        python: 2.7
+        python: 3.5
   # production anaconda
   - provider: script
     skip_cleanup: true
