@@ -1,2 +1,4 @@
+ase
 spglib
-setuptools_scm
+numpy
+scipy
