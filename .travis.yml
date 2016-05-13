@@ -31,10 +31,6 @@ install:
 
 script: python test/test_elastic.py
 
-env :
-    global:
-        - secure: "tvVgCqPES4Kif3x2VjKPbE4d+G/3U6ROkOd2aga4g3dOLe6OpuimI9zV7WartQ2y0nhxSc0j6k5OaTF8qAYPVyCK/8T0o02EAI+avxlt/F+Vi+NtaTCJQJmle7WF6/4NVa1tr1lss7abg8s29kSDvw2fwPLbTWlV7xaarfPL1Dpyq0+QLuum3Dn3Xc+Jc19IYMxAdr8oVyWIbn3BLg5av/3QkTaEwXuFYQSHPmpiJfUEUdj+kGxmf+KW9GpcOLSiNlhHfZwRi2rG8WqH6Mm4bI4BCs2eYk4JJmFjd0LWwL3XM3uqpigg3mf/6MVJfiwCvS+74tlfl2+RoFqOYVKBhy9trxKG0orvGXKgbamqSMBKc27aR4Xa6yH2MkaYcsLltApUTCJdwTqDoncQT9UmOhy6aCWStkNRkui0D+a631UIcBQ+y/hrF75EURu5v8BEC5KhmbdUvFNifK5Z+9rcdS/kK4OfkDnKe7I9W9W4vo22B7Sp9hnZVVhERv8J+HY6wxbamEz/UknRhAkObOn6kcMtnrysd0bjsXbXBKEaDcLAiSU7Kte2heKisaWGLn2Fs+bkcH4nOCjGuxStcLhzy/Ad+NqGeEyP/ZL5wyddSQf9qcEvj2ztqi52fvyAAuhnGg421oCy3VuZTktDP2YkCBQq9aDfuJ1LSIuz2MFixrQ="
-
 
 deploy:
   # testing testpypi
@@ -51,7 +47,7 @@ deploy:
   #custom pypitest
   - provider: script
     skip_cleanup: true
-    script: bash ./pypideploy.sh https://testpypi.python.org/pypi "$TESTPASSWORD" sdist
+    script: bash ./pypideploy.sh https://testpypi.python.org/pypi $TESTPASSWORD sdist
     on:
         branch: rc
         tags: false
