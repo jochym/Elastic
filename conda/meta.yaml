@@ -26,6 +26,9 @@ requirements:
   build:
     - python
     - future
+    - setuptools
+    - sphinx
+    - docutils
 
   run:
     - python
