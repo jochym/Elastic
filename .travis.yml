@@ -47,18 +47,18 @@ deploy:
         branch: rc_no
         tags: false
         python: 2.7
-  # testing anaconda
+  #custom pypitest
   - provider: script
     skip_cleanup: true
-    script: anaconda -t $ANACONDA_TOKEN build trigger --test-only --branch rc jochym/Elastic
+    script: bash ./pypideploy.sh https://testpypi.python.org/pypi sdist
     on:
         branch: rc
         tags: false
         python: 2.7
-    #custom pypitest
+  # testing anaconda
   - provider: script
     skip_cleanup: true
-    script: bash ./pypideploy.sh sdist https://testpypi.python.org/pypi
+    script: anaconda -t $ANACONDA_TOKEN build trigger --test-only --branch rc jochym/Elastic
     on:
         branch: rc
         tags: false
