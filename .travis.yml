@@ -51,7 +51,7 @@ deploy:
   #custom pypitest
   - provider: script
     skip_cleanup: true
-    script: bash ./pypideploy.sh https://testpypi.python.org/pypi sdist
+    script: bash ./pypideploy.sh https://testpypi.python.org/pypi "$TESTPASSWORD" sdist
     on:
         branch: rc
         tags: false

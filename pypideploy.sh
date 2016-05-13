@@ -5,6 +5,8 @@ set -x
 echo 'PyPI deploynment script'
 
 srv=$1
+PW=$2
+shift
 shift
 
 cat  >~/.pypirc <<-EOF 
@@ -16,18 +18,18 @@ index-servers =
 [pypi]
 repository = https://pypi.python.org/pypi
 username:jochym
-password:$PASSWORD
+password:$PW
 
 [pypitest]
 repository = https://testpypi.python.org/pypi
 username:jochym
-password:$TESTPASSWORD
+password:$PW
 
 EOF
 
 cat ~/.pypirc
 
-echo $TESTPASSWORD
+echo $PW
 
 python setup.py register -r $srv
 python setup.py $* upload -r $srv
