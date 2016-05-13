@@ -72,13 +72,4 @@ deploy:
       tags: false
       python: 2.7
 
-#  #custom pypitest
-#  - provider: script
-#    skip_cleanup: true
-#    script: bash ./pypideploy.sh https://testpypi.python.org/pypi $ANACONDA_TOKEN sdist
-#    on:
-#        branch: rc
-#        tags: false
-#        python: 2.7
-
 

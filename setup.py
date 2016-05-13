@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from sys import argv
+#from sys import argv
 
-if 'upload_docs' in argv :
-    print('upload_docs is not supported by this package.')
-else :
+#if 'upload_docs' in argv :
+#    print('upload_docs is not supported by this package.')
+#else :
+if True :
     from setuptools import setup, find_packages
 
     with open("__version__.txt") as w:
