@@ -36,6 +36,7 @@ deploy:
   - provider: pypi
     skip_cleanup: true
     upload_docs: false
+    docs_dir: dummy
     server: https://testpypi.python.org/pypi
     user: jochym
     password:
