@@ -15,12 +15,12 @@ index-servers =
 
 [pypi]
 repository = https://pypi.python.org/pypi
-username:$USER
+username:jochym
 password:$PASSWORD
 
 [pypitest]
 repository = https://testpypi.python.org/pypi
-username:$USER
+username:jochym
 password:$TESTPASSWORD
 
 EOF
