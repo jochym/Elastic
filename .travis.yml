@@ -37,7 +37,6 @@ deploy:
   # testing testpypi
   - provider: pypi
     skip_cleanup: true
-    upload_docs: no
     server: https://testpypi.python.org/pypi
     user: jochym
     password:
