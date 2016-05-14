@@ -27,7 +27,7 @@ before_install:
 
 install:
 - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy ase spglib scipy
-- git describe --tags --dirty| sed -e 's/-g.*$//' -e 's/-/./' -e 's/^[vr]//' > __version__.txt
+- git describe --tags --always| sed -e 's/-g.*$//' -e 's/-/./' -e 's/^[vr]//' > __version__.txt
 - python setup.py install
 
 script: python test/test_elastic.py
