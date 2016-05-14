@@ -2,9 +2,14 @@
 
 from setuptools import setup, find_packages
 
+with open("__version__.txt") as w:
+    for line in w:
+        version = line.strip()
+        break
+
 setup(
     name='elastic',
-    use_scm_version=True, 
+    version=version, 
     packages=find_packages(),
     license='GPLv3',
     description = 'Extension for ASE to calculate elastic constants',
@@ -12,8 +17,8 @@ setup(
     author_email = 'Pawel.Jochym@ifj.edu.pl',
     url = 'https://github.com/jochym/Elastic',
     keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals'],
-    requires = ['spglib','numpy','scipy','ase','docutils','sphinx'],
-    setup_requires = ['setuptools_scm'],
+    requires = ['spglib','numpy','scipy','ase'],
+    setup_requires = ['docutils','sphinx'],
     provides = ['elastic','parcalc'],
     platforms = ['all'],
     classifiers = [],
