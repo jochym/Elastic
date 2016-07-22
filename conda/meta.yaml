@@ -27,6 +27,7 @@ requirements:
     - python
     - future
     - setuptools
+    - setuptools_scm
     - sphinx
     - docutils
 
