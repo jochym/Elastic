@@ -39,13 +39,13 @@ env:
 ## Run before the script
 before_script:
   - conda config --add channels https://conda.anaconda.org/jochym
-#  - conda update -n root conda conda-build --yes
-#  - conda install setuptools_scm
+#  - conda install setuptools_scm --yes
 #  - bash update_versions.sh
 
 ## Put your main computations here!  
 script:
   - conda update -n root conda conda-build --yes
+  - conda install anaconda-client --yes
   - GIT_BRANCH=`git branch |grep '^*'|sed -e 's/^*\s\?//' -e 's/(HEAD [a-z ]* \(.*\))$/\1/'`
   - echo "Building branch $GIT_BRANCH"
   - conda build .
