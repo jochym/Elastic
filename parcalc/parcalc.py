@@ -48,6 +48,7 @@ from __future__ import print_function, division
 import ase
 from ase.calculators.vasp import Vasp
 from ase.calculators.siesta import Siesta
+from ase.calculators.aims import Aims
 
 try :  # Python3
     from queue import Empty
@@ -208,7 +209,7 @@ class ClusterVasp(Vasp):
         In non-blocking mode it raises the __NonBlockingRunException
         to bail out of the processing of standard calculate method 
         (or any other method in fact) and signal that the data is not 
-        ready to b collected.
+        ready to be collected.
         '''
         # This is only called from self.calculate - thus 
         # we do not need to change to working_dir 
@@ -278,6 +279,25 @@ class ClusterSiesta(Siesta):
     def clean(self):
         self.converged = False
         return
+
+class ClusterAims(Aims):
+    '''
+    Encapsulating Aims calculator for the cluster environment.
+    '''
+    def __init__(self, nodes=1, ppn=8, **kwargs):
+        Aims.__init__(self, **kwargs)
+        self.nodes=nodes
+        self.ppn=ppn
+
+    def prepare_calc_dir(self):
+        with open("siestarun.conf","w") as f:
+            f.write('NODES="nodes=%d:ppn=%d"' % (self.nodes, self.ppn))
+            #print(self.nodes, self.ppn)
+
+    def run(self):
+        self.prepare_calc_dir()
+        Aims.run(self)
+
 
 verbose=True
 
