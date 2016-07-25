@@ -225,10 +225,10 @@ def triclinic(u):
     The ordering of constants is:
     
     .. math::
-       C_{11}, C_{22}, C_{33}, 
-       C_{12}, C_{13}, C_{23}, 
-       C_{44}, C_{55}, C_{66}, 
-       C_{16}, C_{26}, C_{36}, C_{46}, C_{56}, 
+       C_{11}, C_{22}, C_{33},
+       C_{12}, C_{13}, C_{23},
+       C_{44}, C_{55}, C_{66},
+       C_{16}, C_{26}, C_{36}, C_{46}, C_{56},
        C_{14}, C_{15}, C_{25}, C_{45}
     '''
     # Based on the monoclinic matrix and not tested on real case.
@@ -437,13 +437,13 @@ class ElasticCrystal:
     def get_elastic_tensor(self, n=5, d=2, mode='full', systems=None):
         '''
         Calculate elastic tensor of the crystal.
-        It is assumed that the crystal is converged and optimized 
+        It is assumed that the crystal is converged and optimized
         under intended pressure/stress.
         The geometry and stress at the call point is taken as
         the reference point. No additional optimization will be run.
         It is also assumed that the calculator is set to pure IDOF optimization.
-        The size of used finite deformation is passed in d parameter as a 
-        percentage relative deformation. The n parameter defines number of 
+        The size of used finite deformation is passed in d parameter as a
+        percentage relative deformation. The n parameter defines number of
         deformed structures used in the calculation.
         '''
         # TODO: Provide API to enforce calculator selection

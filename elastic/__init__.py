@@ -25,18 +25,18 @@
 Elastic Module
 ^^^^^^^^^^^^^^
 
-This module depends on :ref:`par-calc-mod` for parallelisation of 
+This module depends on :ref:`par-calc-mod` for parallelisation of
 independent calculations.
 
-Elastic is a module for calculation of :math:`C_{ij}` components of elastic 
+Elastic is a module for calculation of :math:`C_{ij}` components of elastic
 tensor from the strain-stress relation.
- 
+
 The strain components here are ordered in standard way which is different
 to ordering in previous versions of the code.
 
 The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
 
-The general ordering of :math:`C_{ij}` components is (except for triclinic symmetry and taking into account customary names of constants - e.g. 
+The general ordering of :math:`C_{ij}` components is (except for triclinic symmetry and taking into account customary names of constants - e.g.
 :math:`C_{16} \\rightarrow C_{14}`):
 
 .. math::
@@ -58,7 +58,7 @@ of elastic constants.
 
 See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 
-There is some usefull summary also at: 
+There is some usefull summary also at:
 `ScienceWorld <http://scienceworld.wolfram.com/physics/Elasticity.html>`_
 
 '''
