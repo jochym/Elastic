@@ -584,6 +584,7 @@ class ElasticCrystal:
         size percent or size degrees (axis/angles).
         '''
         cryst=Crystal(self)
+        uc=self.get_cell()
         if axis < 3 :
             uc[axis,:]=(1+size/100.0)*uc[axis,:]
         else :
