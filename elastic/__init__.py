@@ -40,7 +40,7 @@ The general ordering of :math:`C_{ij}` components is (except for triclinic symme
 :math:`C_{16} \\rightarrow C_{14}`):
 
 .. math::
-   C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
+   C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
    C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
 
 The functions outside of the Crystal class define the symmetry of the
@@ -49,11 +49,11 @@ corespond to independent elastic constants of the given crystal, while the rows
 corespond to the canonical deformations of a crystal. The elements are the
 second partial derivatives of the free energy formula for the crystal written
 down as a quadratic form of the deformations with respect to elastic constant
-and deformation. 
+and deformation.
 
 *Note:*
 The elements for deformations :math:`u_{xy}, u_{xz}, u_{yz}`
-have to be divided by 2 to properly match the usual definition 
+have to be divided by 2 to properly match the usual definition
 of elastic constants.
 
 See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
