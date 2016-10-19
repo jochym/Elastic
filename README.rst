@@ -1,7 +1,7 @@
 Elastic |DOI|
 =============
 
-|Build Status| |Version Badge| |Build Badge| |Downloads Badge| 
+|Build Status| |Version Badge| |Downloads Badge| 
 |License Badge| |Research software impact|
 
 Elastic is a set of python routines for calculation of elastic
