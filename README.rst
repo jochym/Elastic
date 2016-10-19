@@ -10,10 +10,9 @@ velocities, etc.). It is a third version of the in-house code I have
 written over few years and is implemented as a extension to the
 `ASE <https://wiki.fysik.dtu.dk/ase/>`__ system. The code was a basis
 for some of my publications and was described briefly in these papers.
-The code was available to anyone, presented at the `Workshop on ab
-initio Calculations in
-Geosciences <http://wolf.ifj.edu.pl/workshop/work2008/>`__ and used by
-some of my co-workers. Nevertheless it was never properly published with
+The code was available to anyone, presented at the 
+`Workshop on ab initio Calculations in Geosciences <http://wolf.ifj.edu.pl/workshop/work2008/>`__ 
+and used by some of my co-workers. Nevertheless it was never properly published with
 full documentation, project page etc. The old code is still available to
 anyone as `Elastic 2 <http://wolf.ifj.edu.pl/~jochym/elastic2/elastic2.tgz>`__.
 I just do not recommend to use it without my help - which I am happy to
@@ -28,10 +27,9 @@ interface to the QuantumEspresso code and publish it properly as a PyPi
 package (elastic).
 
 The on-line documentation is placed on
-`ReadTheDocs <http://elastic.rtfd.org/>`__ or `Elastic
-website <http://wolf.ifj.edu.pl/elastic/>`__. You can obtain the
-`documentation as a PDF
-file <https://media.readthedocs.org/pdf/elastic/stable/elastic.pdf>`__
+`ReadTheDocs <http://elastic.rtfd.org/>`__ or 
+`Elastic website <http://wolf.ifj.edu.pl/elastic/>`__. You can obtain the
+`documentation as a PDF file <https://media.readthedocs.org/pdf/elastic/stable/elastic.pdf>`__
 as well.
 
 Installation |Downloads Badge|
@@ -43,8 +41,8 @@ The installation is simple if you are using conda package menager:
 
     conda install -c jochym elastic
 
-If you need a more elaborate `installation
-instruction <http://nbviewer.ipython.org/github/jochym/qe-doc/blob/master/Installation.ipynb>`__
+If you need a more elaborate 
+`installation instruction <http://nbviewer.ipython.org/github/jochym/qe-doc/blob/master/Installation.ipynb>`__
 for computing environment to work with ASE - I have written just such a
 document. It is a first in the series of tutorials of this subject and
 you can find it under nbviewer link above.
