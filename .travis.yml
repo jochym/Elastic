@@ -18,7 +18,7 @@ addons:
 
 
 before_install:
-- wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+- wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
 - bash miniconda.sh -b -p $HOME/miniconda
 - export PATH="$HOME/miniconda/bin:$PATH"
 - conda update --yes conda
@@ -42,6 +42,7 @@ deploy:
       secure: "y41PLkvV2+LpSmDWkaVBQyA8BE1p3mPLSaSzKn+8cZ+1hmeukqXQczum9hKfXbiIamkYc+Ri5PvWzrT1g1k4OHkOTj2m3y7HUnk50XDZ4uNvdtfmWIlOauYqXryGmDEpZN3pPE3yLIxTc4wpF8AaLnrRH7NqW0Lj/WYMJeX2fPkujY/ufBDYt4bRzFtiQISBvNJ6ZAkAVh7PH0L6kMvKYs9lZpDjs/jL8SJn9QmwIRVGZo8fwCk4Okv6bA5mLYu8CgxRDNcjMX5b6JLvKk4LG2SX9RZ3ynGBsESDf9AWoB9nJCmC4Lx5/fPZGRnyBsjMxxYuIOgqaiKIc6fKvExHFqM8c4CkItQgN/e42t6KLW3R9/JKhQrHj1rr1O1CWETWlTwv+/3zgmMddigiEdPEoCMjmIe6yUnTjGfEiUVzaOEQh+ckcuOTh0vzV4KYNBxCFLDEz2rzH+ewOjTCNhW8inCX1E9wRAhQt8mzyhq9u/IGjLZHTjQVIhEHUkQ8NB2r3ABqglM1IFhn51XsrmRSkLULZZq3Trhz0dMpZDx+XrLiQZbGqFWRgbpPbaNYLAhXHsFidarWAHUOsSzbOQy1JmkJUMDZQY0pzGTaYQeK423GkEtmQCUVjSKp4h/kvXLR597a0koruWfK006l+BQtrkrLAo4oHZw0GWbnwdsWHz4="
     on:
       branch: rc
+      repo: jochym/Elastic
       python: 2.7
 
   # testing anaconda
