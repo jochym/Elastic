@@ -48,10 +48,11 @@ deploy:
   # testing anaconda
   - provider: script
     skip_cleanup: true
-    script: anaconda -t $ANACONDA_TOKEN build trigger --test-only --branch rc jochym/Elastic
+    script: conda/anaconda_deploy.sh rc $ANACONDA_TOKEN $TRAVIS_BRANCH
     on:
       branch: rc
-      python: 2.7
+      repo: jochym/Elastic
+#      python: 2.7
 
   # Production pypi
   - provider: pypi
