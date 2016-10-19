@@ -11,7 +11,6 @@ build:
     - GIT_BRANCH
     - GIT_DESCRIBE_TAG
     - GIT_DESCRIBE_NUMBER
-    
   preserve_egg_dir: True
   #entry_points:
     # Put any entry points (scripts to be generated automatically) here. The
@@ -25,6 +24,7 @@ build:
   # If this is a new build for the same version, increment the build
   # number. If you do not include this key, it defaults to 0.
   number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
+  script: python setup.py install
 
 requirements:
   build:
