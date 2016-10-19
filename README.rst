@@ -37,13 +37,11 @@ you can find it under nbviewer link above.
 
 The project is open and I welcome patches, ideas and other feedback.
 
-You can also support the project and motivate me to work on it even more
-by donating using bitcoin address: 1Geq8khANDueVt1QdCS5GU2oNCtdc1uSMv .
-
 Acknowledgments
 ---------------
 
 In the past the project was partially supported by:
+
     - Department of Computational Material Science, Institute of Nuclear Physics, PAN, Poland
     - Department of Engineering, University of Saskatchewan, Canada
 
