@@ -60,13 +60,9 @@ by donating using bitcoin address: 1Geq8khANDueVt1QdCS5GU2oNCtdc1uSMv .
    :target: https://travis-ci.org/jochym/Elastic
 .. |Version Badge| image:: https://anaconda.org/jochym/elastic/badges/version.svg
    :target: https://anaconda.org/jochym/elastic
-.. |Build Badge| image:: https://anaconda.org/jochym/elastic/badges/build.svg
-   :target: https://anaconda.org/jochym/elastic/builds
 .. |Downloads Badge| image:: https://anaconda.org/jochym/elastic/badges/downloads.svg
    :target: https://anaconda.org/jochym/elastic
 .. |License Badge| image:: https://anaconda.org/jochym/elastic/badges/license.svg
    :target: https://anaconda.org/jochym/elastic
 .. |Research software impact| image:: http://depsy.org/api/package/pypi/elastic/badge.svg
    :target: http://depsy.org/package/python/elastic
-.. |Binstar Badge| image:: https://anaconda.org/jochym/elastic/badges/installer/conda.svg
-   :target: https://conda.anaconda.org/jochym
