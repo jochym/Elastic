@@ -23,6 +23,7 @@ before_install:
 - export PATH="$HOME/miniconda/bin:$PATH"
 - conda update --yes conda
 - conda config --add channels jochym
+- conda config --add channels atztogo
 - conda install --yes anaconda-client anaconda-build
 
 install:
@@ -43,7 +44,6 @@ deploy:
     on:
       branch: rc
       repo: jochym/Elastic
-#      python: 2.7
 
   # testing anaconda
   - provider: script
@@ -52,7 +52,6 @@ deploy:
     on:
       branch: rc
       repo: jochym/Elastic
-#      python: 2.7
 
   # Production pypi
   - provider: pypi
@@ -62,13 +61,13 @@ deploy:
       secure: "MkalwXVlwqjAaz9opJWANGEabTcRM7FdcSk3Z6ezQUqnfqoea7+viOVsHkbfb1l+pWyLb88yfkji4oBlUD0kVQkB9yiBrLBNeMX21n2WzymYukMnDsI/y6vVRocqLO0CUIqGaMBFBitum8e6wim04zkFWfYszJ/Ul5cgBep1pQN15Z3VnjbYJHWvomYOJyjiTfc84I4ui/flUbkmbmjwuosevY0D/DHZIgSjHlhmBf8cR986nGZuzaMLuErpxm5D/a27tiXx4SEE8deDfajkdXZylA0/nfOulRKt+HfRKW+YjbvSUdKUj3W9xiIuf27TQf01bcIXzIULJiueo/cqyFXXIvjUy744TW8HWjrWzIVVFBviaU/hDO8i4t8ToOOwzo4pfWPKABxmpHDECDHGHT61E9fyaVPM1v0YJhRIC8rTw2AINK/Chm90FpxVejkV1d3JHlKJQtwpT2f8Y/HpcfS9hJ4Ibw+axWEEceDKaGa5dT/Z9fJFRsXX65e8H71vvgqq/H3R5nakrzdo9t7I06XqQC8UGMYMS45wEbi+GaJ14Gj92Z2Sseo54WkTlJmVSOPqj8P2oDqrcwl3yuadwvPR8sZ0MMxH4OHsXSniSt9UNtX7WcYn+KNopHsUWlN6m57JrR7It7NquOeUa9ivz32fm3QeByDggBnkpOpqAeo="
     on:
       branch: master
-      python: 2.7
+      repo: jochym/Elastic
 
   # production anaconda
   - provider: script
     skip_cleanup: true
-    script: anaconda -t $ANACONDA_TOKEN build trigger --branch master jochym/Elastic
+    script: conda/anaconda_deploy.sh master $ANACONDA_TOKEN $TRAVIS_BRANCH
     on:
       branch: master
-      python: 2.7
+      repo: jochym/Elastic
 
