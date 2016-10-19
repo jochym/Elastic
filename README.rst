@@ -1,8 +1,7 @@
-Elastic |DOI|
-=============
+Elastic
+=======
 
-|Build Status| |Version Badge| |Downloads Badge| 
-|License Badge| |Research software impact|
+|Build Status| |Version Badge| |Downloads Badge| |License Badge| |Research software impact| |DOI|
 
 Elastic is a set of python routines for calculation of elastic
 properties of crystals (elastic constants, equation of state, sound
@@ -32,8 +31,8 @@ The on-line documentation is placed on
 `documentation as a PDF file <https://media.readthedocs.org/pdf/elastic/stable/elastic.pdf>`__
 as well.
 
-Installation |Downloads Badge|
-----------------------------
+Installation 
+-------------
 
 The installation is simple if you are using conda package menager:
 
