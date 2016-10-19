@@ -7,10 +7,10 @@ source:
   git_branch: {{ environ.get('GIT_BRANCH','master') }}
 
 build:
-  script_env:
-    - GIT_BRANCH
-    - GIT_DESCRIBE_TAG
-    - GIT_DESCRIBE_NUMBER
+#  script_env:
+#    - GIT_BRANCH
+#    - GIT_DESCRIBE_TAG
+#    - GIT_DESCRIBE_NUMBER
   preserve_egg_dir: True
   #entry_points:
     # Put any entry points (scripts to be generated automatically) here. The
