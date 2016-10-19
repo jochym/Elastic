@@ -11,18 +11,8 @@ written over few years and is implemented as a extension to the
 for some of my publications and was described briefly in these papers.
 The code was available to anyone, presented at the 
 `Workshop on ab initio Calculations in Geosciences <http://wolf.ifj.edu.pl/workshop/work2008/>`__ 
-and used by some of my co-workers. Nevertheless it was never properly published with
-full documentation, project page etc. The old code is still available to
-anyone as `Elastic 2 <http://wolf.ifj.edu.pl/~jochym/elastic2/elastic2.tgz>`__.
-I just do not recommend to use it without my help - which I am happy to
-provide.
-
-Recently, thanks to generous support of: *Department of Computational
-Material Science, Institute of Nuclear Physics, PAN, Poland* and
-*Department of Engineering, University of Saskatchewan, Canada*
-I was able re-implemented elastic as a module for the ASE, integrate
-interface to the QuantumEspresso code and publish it properly as a PyPi
-package (elastic).
+and used by some of my co-workers. This code is a re-implementation
+of elastic as a module for the ASE.
 
 The on-line documentation is placed on
 `ReadTheDocs <http://elastic.rtfd.org/>`__ or 
@@ -49,6 +39,13 @@ The project is open and I welcome patches, ideas and other feedback.
 
 You can also support the project and motivate me to work on it even more
 by donating using bitcoin address: 1Geq8khANDueVt1QdCS5GU2oNCtdc1uSMv .
+
+Acknowledgments
+---------------
+
+In the past the project was partially supported by:
+    - Department of Computational Material Science, Institute of Nuclear Physics, PAN, Poland
+    - Department of Engineering, University of Saskatchewan, Canada
 
 .. |DOI| image:: https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg
    :target: http://dx.doi.org/10.5281/zenodo.18759
