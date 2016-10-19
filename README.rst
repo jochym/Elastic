@@ -42,8 +42,8 @@ Acknowledgments
 
 In the past the project was partially supported by:
 
-    - Department of Computational Material Science, Institute of Nuclear Physics, PAN, Poland
-    - Department of Engineering, University of Saskatchewan, Canada
+- Department of Computational Material Science, Institute of Nuclear Physics, PAN, Poland
+- Department of Engineering, University of Saskatchewan, Canada
 
 .. |DOI| image:: https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg
    :target: http://dx.doi.org/10.5281/zenodo.18759
