@@ -1,8 +1,8 @@
 Elastic |DOI|
 =============
 
-|Build Status| |Binstar Badge| |Binstar Badge| |Binstar Badge| |Binstar
-Badge| |Research software impact|
+|Build Status| |Version Badge| |Build Badge| |Downloads Badge| 
+|License Badge| |Research software impact|
 
 Elastic is a set of python routines for calculation of elastic
 properties of crystals (elastic constants, equation of state, sound
@@ -15,9 +15,8 @@ initio Calculations in
 Geosciences <http://wolf.ifj.edu.pl/workshop/work2008/>`__ and used by
 some of my co-workers. Nevertheless it was never properly published with
 full documentation, project page etc. The old code is still available to
-anyone as `Elastic
-2 <http://wolf.ifj.edu.pl/~jochym/elastic2/elastic2.tgz%3E>`__. I just
-do not recommend to use it without my help - which I am happy to
+anyone as `Elastic 2 <http://wolf.ifj.edu.pl/~jochym/elastic2/elastic2.tgz>`__.
+I just do not recommend to use it without my help - which I am happy to
 provide.
 
 Recently, thanks to generous support of: \* Department of Computational
@@ -35,7 +34,7 @@ website <http://wolf.ifj.edu.pl/elastic/>`__. You can obtain the
 file <https://media.readthedocs.org/pdf/elastic/stable/elastic.pdf>`__
 as well.
 
-Installation |Binstar Badge|
+Installation |Downloads Badge|
 ----------------------------
 
 The installation is simple if you are using conda package menager:
@@ -59,13 +58,13 @@ by donating using bitcoin address: 1Geq8khANDueVt1QdCS5GU2oNCtdc1uSMv .
    :target: http://dx.doi.org/10.5281/zenodo.18759
 .. |Build Status| image:: https://travis-ci.org/jochym/Elastic.svg?branch=master
    :target: https://travis-ci.org/jochym/Elastic
-.. |Binstar Badge| image:: https://anaconda.org/jochym/elastic/badges/version.svg
+.. |Version Badge| image:: https://anaconda.org/jochym/elastic/badges/version.svg
    :target: https://anaconda.org/jochym/elastic
-.. |Binstar Badge| image:: https://anaconda.org/jochym/elastic/badges/build.svg
+.. |Build Badge| image:: https://anaconda.org/jochym/elastic/badges/build.svg
    :target: https://anaconda.org/jochym/elastic/builds
-.. |Binstar Badge| image:: https://anaconda.org/jochym/elastic/badges/downloads.svg
+.. |Downloads Badge| image:: https://anaconda.org/jochym/elastic/badges/downloads.svg
    :target: https://anaconda.org/jochym/elastic
-.. |Binstar Badge| image:: https://anaconda.org/jochym/elastic/badges/license.svg
+.. |License Badge| image:: https://anaconda.org/jochym/elastic/badges/license.svg
    :target: https://anaconda.org/jochym/elastic
 .. |Research software impact| image:: http://depsy.org/api/package/pypi/elastic/badge.svg
    :target: http://depsy.org/package/python/elastic
