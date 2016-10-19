@@ -7,11 +7,9 @@ source:
   git_branch: {{ environ.get('GIT_BRANCH','master') }}
 
 build:
-#  script_env:
-#    - GIT_BRANCH
-#    - GIT_DESCRIBE_TAG
-#    - GIT_DESCRIBE_NUMBER
   preserve_egg_dir: True
+  number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
+  script: python setup.py install
   #entry_points:
     # Put any entry points (scripts to be generated automatically) here. The
     # syntax is module:function.  For example
@@ -19,12 +17,6 @@ build:
     # - elastic = elastic:main
     #
     # Would create an entry point called elastic that calls elastic.main()
-
-
-  # If this is a new build for the same version, increment the build
-  # number. If you do not include this key, it defaults to 0.
-  number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
-  script: python setup.py install
 
 requirements:
   build:
@@ -65,6 +57,3 @@ about:
   license: GPLv3
   summary: 'Extension for ASE to calculate elastic constants'
 
-# See
-# http://docs.continuum.io/conda/build.html for
-# more information about meta.yaml
