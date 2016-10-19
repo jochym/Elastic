@@ -43,7 +43,7 @@ deploy:
     on:
       branch: rc
       repo: jochym/Elastic
-      python: 2.7
+#      python: 2.7
 
   # testing anaconda
   - provider: script
