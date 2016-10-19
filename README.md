@@ -39,7 +39,7 @@ Installation [![Binstar Badge](https://anaconda.org/jochym/elastic/badges/instal
 
 The installation is simple if you are using conda package menager:
 
-    conda install -c https://conda.binstar.org/jochym elastic
+    conda install -c jochym elastic
 
 If you need a more elaborate 
 [installation instruction](http://nbviewer.ipython.org/github/jochym/qe-doc/blob/master/Installation.ipynb) 
