@@ -17,10 +17,9 @@ anyone as `Elastic 2 <http://wolf.ifj.edu.pl/~jochym/elastic2/elastic2.tgz>`__.
 I just do not recommend to use it without my help - which I am happy to
 provide.
 
-Recently, thanks to generous support of: \* Department of Computational
-Material Science, Institute of Nuclear Physics, PAN, Poland \*
-Department of Engineering, University of Saskatchewan, Canada,
-
+Recently, thanks to generous support of: *Department of Computational
+Material Science, Institute of Nuclear Physics, PAN, Poland* and
+*Department of Engineering, University of Saskatchewan, Canada*
 I was able re-implemented elastic as a module for the ASE, integrate
 interface to the QuantumEspresso code and publish it properly as a PyPi
 package (elastic).
