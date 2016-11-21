@@ -20,7 +20,9 @@ The on-line documentation is placed on
 `documentation as a PDF file <https://media.readthedocs.org/pdf/elastic/stable/elastic.pdf>`__
 as well.
 
-The docs are also published over IPFS: `Elastic over IPFS <https://ipfs.io/ipns/QmSHUr59SLvWEZq7URTDGgouVaq7vFJYG7HqtBgL4s6M2u/>`.
+The docs are also published at: 
+`Elastic over IPFS <https://ipfs.io/ipns/QmSHUr59SLvWEZq7URTDGgouVaq7vFJYG7HqtBgL4s6M2u/>`__
+
 The stable site hash is: /ipns/QmSHUr59SLvWEZq7URTDGgouVaq7vFJYG7HqtBgL4s6M2u/
 
 Installation 
