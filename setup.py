@@ -8,6 +8,7 @@ if len(ver)>3 :
     # Post release version:
     #  - add patchlevel at the end
     #  - decrease back last number
+    print('Version from SCM:',ver)
     pl=int(ver[3].split('+')[0][3:])
     ver[2]=str(int(ver[2])-1)
     ver=ver[:3]
