@@ -36,13 +36,17 @@ requirements:
     - future
 
 test:
-  # Python imports
+  source_files: 
+    - test
+
+  requires:
+    - hypothesis
+
   imports:
     - elastic
 
   commands:
-    - ls -l {{SRC_DIR}}
-    - python {{SRC_DIR}}/test/test_elastic.py
+    - python test/test_elastic.py
 
 
   # You can also put a file called run_test.py in the recipe that will be run
