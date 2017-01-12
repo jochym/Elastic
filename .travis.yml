@@ -28,7 +28,7 @@ before_install:
 
 install:
 - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy ase spglib scipy setuptools_scm 
-- conda install --yes python=$TRAVIS_PYTHON_VERSION -c conda-forge hypothesis
+- conda install -c conda-forge --yes python=$TRAVIS_PYTHON_VERSION hypothesis
 - python setup.py install
 
 script: python -m unittest discover -s test -b 
