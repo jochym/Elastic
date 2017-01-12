@@ -24,10 +24,11 @@ before_install:
 - conda update --yes conda
 - conda config --add channels jochym
 - conda config --add channels atztogo
-- conda install --yes anaconda-client anaconda-build
+- conda install --yes anaconda-client anaconda-build conda-build
 
 install:
-- conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy ase spglib scipy setuptools_scm hypothesis
+- conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy ase spglib scipy setuptools_scm 
+- conda install --yes python=$TRAVIS_PYTHON_VERSION -c conda-forge hypothesis
 - python setup.py install
 
 script: python -m unittest discover -s test -b 
