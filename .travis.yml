@@ -3,14 +3,15 @@ language: python
 python:
 - '2.7'
 - '3.5'
+- '3.6'
 
 before_install:
 - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
 - bash miniconda.sh -b -p $HOME/miniconda
 - export PATH="$HOME/miniconda/bin:$PATH"
 - conda config --add channels conda-forge
-- conda update --yes conda
-- conda install --yes anaconda-client anaconda-build conda-build
+- conda update --yes python=$TRAVIS_PYTHON_VERSION conda
+- conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client anaconda-build conda-build
 
 install:
 - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
