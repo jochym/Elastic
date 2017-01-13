@@ -86,7 +86,7 @@ from scipy.linalg import norm, lstsq
 from scipy import optimize
 from numpy.linalg import inv
 from numpy import dot, diag, ones, reshape, linspace, array, mean
-from math import acos, pi, cos, sin, tan
+from math import acos, pi, cos, sin, tan, sqrt
 import ase.units as units
 
 
