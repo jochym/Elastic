@@ -550,13 +550,16 @@ class ElasticCrystal:
         return sys
         
         
-    def scan_volumes(self, lo, hi, n):
+    def scan_volumes(self, lo, hi, n, scale_volumes=False):
         '''
         Provide set of crystals along volume axis from lo to hi (inclusive).
         No volume cell optimization is performed. Bounds are specified as 
-        fractions (1.10 = 10% increase).
+        fractions (1.10 = 10% increase). If scale_volumes==True the scalling
+        is applied to volumes instead of lattice vectors.
         '''
         scale=linspace(lo,hi,num=n)
+        if scale_volumes :
+            scale**=(1.0/3.0)
         uc=self.get_cell()
         sys=[Atoms(self) for s in scale]
         for n, s in enumerate(scale):
