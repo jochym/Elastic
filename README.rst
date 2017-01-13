@@ -1,7 +1,7 @@
 Elastic
 =======
 
-|Build Status| |Version Badge| |Downloads Badge| |License Badge| |Research software impact| |DOI|
+|Build Status| |PVersion Badge| |CVersion Badge| |Downloads Badge| |License Badge| |Research software impact| |DOI|
 
 Elastic is a set of python routines for calculation of elastic
 properties of crystals (elastic constants, equation of state, sound
@@ -54,8 +54,10 @@ In the past the project was partially supported by:
    :target: http://dx.doi.org/10.5281/zenodo.18759
 .. |Build Status| image:: https://travis-ci.org/jochym/Elastic.svg?branch=master
    :target: https://travis-ci.org/jochym/Elastic
-.. |Version Badge| image:: https://anaconda.org/jochym/elastic/badges/version.svg
-   :target: https://anaconda.org/jochym/elastic
+.. |PVersion Badge| image:: https://img.shields.io/pypi/v/elastic.svg   
+   :target: https://pypi.org/project/elastic/
+.. |CVersion Badge| image:: https://anaconda.org/conda-forge/elastic/badges/version.svg
+   :target: https://anaconda.org/conda-forge/elastic
 .. |Downloads Badge| image:: https://anaconda.org/jochym/elastic/badges/downloads.svg
    :target: https://anaconda.org/jochym/elastic
 .. |License Badge| image:: https://anaconda.org/jochym/elastic/badges/license.svg
