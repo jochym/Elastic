@@ -14,7 +14,6 @@ before_install:
 - conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client
 
 install:
-- source activate bld
 - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
 - conda install --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis
 - python setup.py install
