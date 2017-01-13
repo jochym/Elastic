@@ -10,7 +10,7 @@ before_install:
 - bash miniconda.sh -b -p $HOME/miniconda
 - export PATH="$HOME/miniconda/bin:$PATH"
 - conda config --add channels conda-forge
-- conda update --yes python=$TRAVIS_PYTHON_VERSION conda
+- conda install --yes python=$TRAVIS_PYTHON_VERSION conda
 - conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client anaconda-build conda-build
 
 install:
