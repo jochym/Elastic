@@ -1,21 +1,24 @@
 language: python
-sudo: false
-dist: trusty
+#sudo: false
+#dist: trusty
 
 python:
 - '2.7'
 - '3.5'
 - '3.6'
 
-cache: apt
+#cache: apt
 
-addons:
-  apt:
-    packages:
-    - libopenblas-dev
-    - liblapack-dev
-    - gfortran
+  #addons:
+  #apt:
+  #  packages:
+  #  - libopenblas-dev
+  #  - liblapack-dev
+  #  - gfortran
 
+os:
+- linux
+- osx
 
 before_install:
 - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
