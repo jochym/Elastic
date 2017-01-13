@@ -11,7 +11,7 @@ before_install:
 - conda config --add channels conda-forge
 - conda update --yes conda
 - conda install --yes conda-build
-- conda create  --yes python=$TRAVIS_PYTHON_VERSION anaconda-client
+- conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client
 
 install:
 - source activate bld
