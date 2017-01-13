@@ -38,23 +38,13 @@ requirements:
 test:
   source_files: 
     - test
-
   requires:
     - hypothesis
-
   imports:
     - elastic
-
   commands:
-    - python test/test_elastic.py
+    - python -m unittest discover -s test
 
-
-  # You can also put a file called run_test.py in the recipe that will be run
-  # at test time.
-
-  requires:
-    # Put any additional test requirements here.  For example
-    # - elastic-dev
 
 about:
   home: https://github.com/jochym/Elastic
