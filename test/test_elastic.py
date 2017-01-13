@@ -15,7 +15,7 @@ def build_crystal(a,b,c,al,be,ga):
     
     return Atoms('Mg', positions=[(0,0,0)], cell=[a,b,c,al,be,ga],pbc=True)
 
-Crystals = builds(build_crystal,
+crystals = builds(build_crystal,
                    a=floats(min_value=1.0, max_value=20.0),
                    b=floats(min_value=1.0, max_value=20.0),
                    c=floats(min_value=1.0, max_value=20.0),
@@ -46,12 +46,12 @@ class TestElastic(unittest.TestCase):
             if not s.startswith('__'):
                 assert (s in ase.atoms.Atoms.__dict__)
 
-    @given(cr=Crystals)
+    @given(cr=crystals)
     def test_lattice_type(self, cr):
         assume(cr is not None)
         assert cr.get_lattice_type() in (1,2,3,4,5,6,7)
         
-    @given(cr=Crystals,
+    @given(cr=crystals,
             lo=floats(min_value=0.1, max_value=1.0),
             hi=floats(min_value=1.0, max_value=2.0),
             n=integers(min_value=2, max_value=20),
