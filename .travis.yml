@@ -11,14 +11,13 @@ before_install:
 - export PATH="$HOME/miniconda/bin:$PATH"
 - conda config --add channels conda-forge
 - conda update --yes conda
-- conda install --yes conda-build
+- conda install --yes conda-build anaconda-client
 - conda create -n bld --yes python=$TRAVIS_PYTHON_VERSION 
-  #- conda install -n bld --yes python=$TRAVIS_PYTHON_VERSION anaconda-client anaconda-build 
 
 install:
-- conda install -n bld --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
-- conda install -n bld --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis
 - source activate bld
+- conda install --yes pip numpy scipy setuptools_scm
+- conda install --yes ase spglib hypothesis
 - python setup.py install
 
 script: python -m unittest discover -s test -b 
