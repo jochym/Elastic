@@ -55,7 +55,7 @@ In the past the project was partially supported by:
 .. |Build Status| image:: https://travis-ci.org/jochym/Elastic.svg?branch=master
    :target: https://travis-ci.org/jochym/Elastic
 .. |PVersion Badge| image:: https://img.shields.io/pypi/v/elastic.svg   
-   :target: https://pypi.io/jochym/elastic/badges/version.svg
+   :target: https://pypi.org/project/elastic/
 .. |CVersion Badge| image:: https://anaconda.org/conda-forge/elastic/badges/version.svg
    :target: https://anaconda.org/conda-forge/elastic
 .. |Downloads Badge| image:: https://anaconda.org/jochym/elastic/badges/downloads.svg
