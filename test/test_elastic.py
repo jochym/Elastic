@@ -4,6 +4,7 @@ import hypothesis
 from hypothesis import given, example, assume
 from hypothesis.strategies import integers, floats, builds
 from numpy import pi, allclose, cos, sin, tan, array, zeros
+from numpy.linalg import norm
 
 import elastic
 
@@ -70,7 +71,7 @@ class TestElastic(unittest.TestCase):
             ax=integers(min_value=0,max_value=2),
             prc=floats(min_value=-90,max_value=90),
             )
-    def test_deform_shrink(self,cr,ax,prc):
+    def test_deform_shrink(self, cr, ax, prc):
         assume(cr is not None)
         dc=cr.get_deformed_cell(axis=ax, size=prc)
         assert allclose((dc.get_volume()/cr.get_volume()-1)*100 , prc)
@@ -80,7 +81,7 @@ class TestElastic(unittest.TestCase):
             ax=integers(min_value=0,max_value=2),
             size=floats(min_value=-10,max_value=10),
             )
-    def test_deform_angels(self,cr,ax,size):
+    def test_deform_angels(self, cr, ax, size):
         assume(cr is not None)
         delta = zeros(3)
         delta[ax]= pi*size/180
@@ -92,6 +93,25 @@ class TestElastic(unittest.TestCase):
         assert allclose(pi*dc.get_cell_lengths_and_angles()[ax+3]/180,
                         cr._test_data[ax+3] + pi*size/180, atol=pi*1e-3/180)
 
+    @given(cr=crystals,
+            ax=integers(min_value=0,max_value=2),
+            prc=floats(min_value=-10,max_value=10),
+            )
+    def test_cart_deform_axis(self, cr, ax, prc):
+        assume(cr is not None)
+        dc=cr.get_cart_deformed_cell(axis=ax, size=prc)
+        assert allclose((dc.get_volume()/cr.get_volume()-1)*100 , prc)
+        assert allclose((norm(dc.get_cell()[:,ax])/norm(cr.get_cell()[:,ax]) - 1)*100, prc)
+
+    @given(cr=crystals,
+            ax=integers(min_value=0,max_value=2),
+            prc=floats(min_value=-10,max_value=10),
+            )
+    def test_cart_deform_sheer(self, cr, ax, prc):
+        assume(cr is not None)
+        dc=cr.get_cart_deformed_cell(axis=ax+3, size=prc)
+        assert allclose(dc.get_volume(),cr.get_volume())
+        
     @given(cr=crystals,
             lo=floats(min_value=0.1, max_value=1.0),
             hi=floats(min_value=1.0, max_value=2.0),
