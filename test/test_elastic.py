@@ -102,6 +102,13 @@ class TestElastic(unittest.TestCase):
         dc=cr.get_cart_deformed_cell(axis=ax, size=prc)
         assert allclose((dc.get_volume()/cr.get_volume()-1)*100 , prc)
         assert allclose((norm(dc.get_cell()[:,ax])/norm(cr.get_cell()[:,ax]) - 1)*100, prc)
+        strain=zeros(6)
+        strain[ax]=prc/200
+        try: 
+            assert allclose(dc.get_strain(cr),strain, atol=10-8)
+        except AssertionError:
+            print('Error:', ax,prc,strain,dc.get_strain(cr))
+            raise
 
     @given(cr=crystals,
             ax=integers(min_value=0,max_value=2),
@@ -111,7 +118,14 @@ class TestElastic(unittest.TestCase):
         assume(cr is not None)
         dc=cr.get_cart_deformed_cell(axis=ax+3, size=prc)
         assert allclose(dc.get_volume(),cr.get_volume())
-        
+        strain=zeros(6)
+        strain[3+ax]=prc/200
+        try: 
+            assert allclose(dc.get_strain(cr),strain, atol=10-8)
+        except AssertionError:
+            print('Error:', ax,prc,strain,dc.get_strain(cr))
+            raise
+
     @given(cr=crystals,
             lo=floats(min_value=0.1, max_value=1.0),
             hi=floats(min_value=1.0, max_value=2.0),
