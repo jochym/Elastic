@@ -1,6 +1,10 @@
 Elastic
 =======
 
+.. image:: https://api.codacy.com/project/badge/Grade/9f348d724d564ce399beb009ab9a3654
+   :alt: Codacy Badge
+   :target: https://www.codacy.com/app/jochym/Elastic?utm_source=github.com&utm_medium=referral&utm_content=jochym/Elastic&utm_campaign=badger
+
 |Build Status| |PVersion Badge| |CVersion Badge| |Downloads Badge| |License Badge| |Research software impact| |DOI|
 
 Elastic is a set of python routines for calculation of elastic
