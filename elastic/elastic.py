@@ -25,22 +25,22 @@
 Elastic Module
 ^^^^^^^^^^^^^^
 
-This module depends on :ref:`par-calc-mod` for parallelisation of 
+This module depends on :ref:`par-calc-mod` for parallelisation of
 independent calculations.
 
-Elastic is a module for calculation of :math:`C_{ij}` components of elastic 
+Elastic is a module for calculation of :math:`C_{ij}` components of elastic
 tensor from the strain-stress relation.
- 
+
 The strain components here are ordered in standard way which is different
 to ordering in previous versions of the code.
 
 The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
 
-The general ordering of :math:`C_{ij}` components is (except for triclinic symmetry and taking into account customary names of constants - e.g. 
+The general ordering of :math:`C_{ij}` components is (except for triclinic symmetry and taking into account customary names of constants - e.g.
 :math:`C_{16} \\rightarrow C_{14}`):
 
 .. math::
-   C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
+   C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
    C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
 
 The functions outside of the Crystal class define the symmetry of the
@@ -49,16 +49,16 @@ corespond to independent elastic constants of the given crystal, while the rows
 corespond to the canonical deformations of a crystal. The elements are the
 second partial derivatives of the free energy formula for the crystal written
 down as a quadratic form of the deformations with respect to elastic constant
-and deformation. 
+and deformation.
 
 *Note:*
 The elements for deformations :math:`u_{xy}, u_{xz}, u_{yz}`
-have to be divided by 2 to properly match the usual definition 
+have to be divided by 2 to properly match the usual definition
 of elastic constants.
 
 See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 
-There is some usefull summary also at: 
+There is some usefull summary also at:
 `ScienceWorld <http://scienceworld.wolfram.com/physics/Elasticity.html>`_
 
 Class description
@@ -81,7 +81,7 @@ try :
 except ImportError :
     # Old naming scheme
     from pyspglib import spglib as spg
-    
+
 from scipy.linalg import norm, lstsq
 from scipy import optimize
 from numpy.linalg import inv
@@ -133,7 +133,7 @@ def tetragonal(u):
      [0,     0,    0,    0,        0,      2*uxy],
      [0,     0,    0,    0,        2*uxz,  0],
      [0,     0,    0,    0,        2*uyz,  0]])
- 
+
 
 def orthorombic(u):
     '''
@@ -141,7 +141,7 @@ def orthorombic(u):
     The order of constants is as follows:
 
     .. math::
-       C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
+       C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
        C_{44}, C_{55}, C_{66}
     '''
     uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
@@ -152,21 +152,21 @@ def orthorombic(u):
     [0,       0,    0,    0,    0,    0,2*uyz,    0,    0],
     [0,       0,    0,    0,    0,    0,    0,2*uxz,    0],
     [0,       0,    0,    0,    0,    0,    0,    0,2*uxy]])
- 
+
 
 def trigonal(u):
     '''
     The matrix is constructed based on the approach from L&L
     using auxiliary coordinates: :math:`\\xi=x+iy`, :math:`\\eta=x-iy`.
-    The components are calculated from free energy using formula 
+    The components are calculated from free energy using formula
     introduced in :ref:`symmetry` with appropriate coordinate changes.
     The order of constants is as follows:
 
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
     '''
-    #TODO: Not tested yet. 
-    #TODO: There is still some doubt about the :math:`C_{14}` constant. 
+    #TODO: Not tested yet.
+    #TODO: There is still some doubt about the :math:`C_{14}` constant.
     uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[   uxx,   0,    uyy,     uzz,     0,   2*uxz],
@@ -180,10 +180,10 @@ def hexagonal(u):
     '''
     The matrix is constructed based on the approach from L&L
     using auxiliary coordinates: :math:`\\xi=x+iy`, :math:`\\eta=x-iy`.
-    The components are calculated from free energy using formula 
+    The components are calculated from free energy using formula
     introduced in :ref:`symmetry` with appropriate coordinate changes.
     The order of constants is as follows:
-    
+
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}
     '''
@@ -200,12 +200,12 @@ def hexagonal(u):
 def monoclinic(u):
     '''
     Monoclinic group, the ordering of constants is:
-    
+
     .. math::
-       C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23}, 
+       C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
        C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
     '''
-    
+
     uxx, uyy, uzz, uyz, uxz, uxy = u[0],u[1],u[2],u[3],u[4],u[5]
     return array(
     [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0],
@@ -218,12 +218,12 @@ def monoclinic(u):
 
 def triclinic(u):
     '''
-    Triclinic crystals. 
-    
+    Triclinic crystals.
+
     *Note*: This was never tested on the real case. Beware!
-    
+
     The ordering of constants is:
-    
+
     .. math::
        C_{11}, C_{22}, C_{33},
        C_{12}, C_{13}, C_{23},
@@ -241,7 +241,7 @@ def triclinic(u):
      [  0,  0,  0,  0,  0,  0,2*uyz,    0,    0,  0,  0,  0,uxy,  0,uxx,  0,  0,uxz],
      [  0,  0,  0,  0,  0,  0,    0,2*uxz,    0,  0,  0,  0,  0,uxy,  0,uxx,uyy,uyz],
      [  0,  0,  0,  0,  0,  0,    0,    0,2*uxy,uxx,uyy,uzz,uyz,uxz,  0,  0,  0,  0]])
-    
+
 
 
 #def ParCalculate(systems,calc):
@@ -251,12 +251,12 @@ def triclinic(u):
 #    return systems
 
 from parcalc import ParCalculate
-    
+
 
 class CrystalInitError(Exception):
     def __str__(self):
-        return '''The Crystal class should NEVER be created by itself - it is intended as 
-        a mix-in base class for the Atoms class. Thus this constructor 
+        return '''The Crystal class should NEVER be created by itself - it is intended as
+        a mix-in base class for the Atoms class. Thus this constructor
         just prints the error message and bails out.'''
 
 class Crystal(Atoms):
@@ -266,27 +266,27 @@ class Crystal(Atoms):
 class ElasticCrystal:
     '''
     Mixin extension of standard ASE Atoms class designed to handle specifics of the
-    crystalline materials. This code should, in principle, be folded into the 
+    crystalline materials. This code should, in principle, be folded into the
     Atoms class in the future. At this moment it is too early to think about it.
     Additionally there are some aspects of this code which may be difficult to
     harmonize with the principles of the Atoms class. I am sure it is better,
     for now to leave this as a separate extension class.
 
-    Basically, this class provides set of functions concerned with derivation 
-    of elastic properties using "finite deformation approach" 
+    Basically, this class provides set of functions concerned with derivation
+    of elastic properties using "finite deformation approach"
     (see the documentation for physics background information).
     '''
 
     def __init__(self):
         '''
         Dummy constructor for the Crystal class.
-        The class should NEVER be created by itself - it is intended as 
-        a mix-in base class for the Atoms class. Thus this constructor 
+        The class should NEVER be created by itself - it is intended as
+        a mix-in base class for the Atoms class. Thus this constructor
         just prints the error message and bails out.
         '''
-        print('''Crystal class is not intended to be used directly! 
-            You should never call it constructor. Read the docs or just 
-            import elastic module and enjoy the new functionality of 
+        print('''Crystal class is not intended to be used directly!
+            You should never call it constructor. Read the docs or just
+            import elastic module and enjoy the new functionality of
             the Atoms class!. Since this program is not going to work
             anyway I am bailing out right now.
             ''')
@@ -300,9 +300,9 @@ class ElasticCrystal:
         identify also the lattice type (assigned to sg_type member) and
         the Bravais lattice of the crystal (assigned to bravais member).
         The returned value is the lattice type number.
-        The lattice type numbers are 
-        (see also Crystal.ls, the numbering starts from 1): 
-        
+        The lattice type numbers are
+        (see also Crystal.ls, the numbering starts from 1):
+
         Triclinic (1), Monoclinic (2), Orthorombic (3), Tetragonal (4)
         Trigonal (5), Hexagonal (6), Cubic (7)
         '''
@@ -323,7 +323,7 @@ class ElasticCrystal:
         m=re.match('([A-Z].*\\b)\s*\(([0-9]*)\)',sg)
         self.sg_name=m.group(1)
         self.sg_nr=int(m.group(2))
-        
+
         for n,l in enumerate(lattice_types) :
             if self.sg_nr < l[0] :
                 lattice=l[1]
@@ -332,11 +332,11 @@ class ElasticCrystal:
         self.sg_type=lattype
         self.bravais=lattice
         return lattype
-        
+
     def get_bulk_modulus(self,n=5, lo=0.98, hi=1.02, recalc=False):
         '''
         Calculate bulk modulus using the Birch-Murnaghan equation of state
-        data calculated by get_BM_EOS routine (see). 
+        data calculated by get_BM_EOS routine (see).
         The returned bulk modulus is a :math:`B_0` coefficient of the B-M EOS.
         The arguments are the same as in BM EOS function.
         '''
@@ -347,7 +347,7 @@ class ElasticCrystal:
             self.get_BM_EOS(n,lo,hi,recalc)
         self.bulk_modulus=self.bm_eos[1]
         return self.bulk_modulus
-        
+
     def get_pressure(self,s=None):
         '''
         Return *external* isotropic (hydrostatic) pressure in ASE units.
@@ -357,28 +357,28 @@ class ElasticCrystal:
         if s is None :
             s=self.get_stress()
         return -mean(s[:3])
-        
+
     def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False, cleanup=True, mode='full', data=None):
         """
         Calculate Birch-Murnaghan Equation of State for the crystal:
-        
+
         .. math::
            P(V)= \\frac{B_0}{B'_0}\\left[
            \\left({\\frac{V}{V_0}}\\right)^{-B'_0} - 1
            \\right]
-        
-        using n single-point structures ganerated from the 
-        crystal (self) by the scan_volumes method between lo and hi 
-        relative volumes. The BM EOS is fitted to the computed points by 
-        least squares method. The returned value is a list of fitted 
-        parameters: :math:`V_0, B_0, B_0'` if the fit succeded. 
+
+        using n single-point structures ganerated from the
+        crystal (self) by the scan_volumes method between lo and hi
+        relative volumes. The BM EOS is fitted to the computed points by
+        least squares method. The returned value is a list of fitted
+        parameters: :math:`V_0, B_0, B_0'` if the fit succeded.
         If the fitting fails the RuntimeError('Calculation failed') is reised.
         The data from the calculation and fit is stored in the bm_eos and pv
         members for future reference.
-        
-        *Note:* For now you have to set up the calculator to properly 
+
+        *Note:* For now you have to set up the calculator to properly
         optimize the structure without changing the volume at each point.
-        There will be a way to specify basic types of the calculator 
+        There will be a way to specify basic types of the calculator
         minimization at the later stage.
         """
         if self._calc is None:
@@ -388,7 +388,7 @@ class ElasticCrystal:
             # NOTE: The calculator should properly minimize the energy
             # at each volume by optimizing the internal degrees of freedom
             # in the cell and/or cell shape without touching the volume.
-            # TODO: Provide api for specifying IDOF and Full optimization 
+            # TODO: Provide api for specifying IDOF and Full optimization
             #       calculators. Maybe just calc_idof and calc_full members?
             if data is not None : # analyse results of previous calc
                 res=data
@@ -399,7 +399,7 @@ class ElasticCrystal:
             else :
                 print('Error: Unrecognized mode and no data. Read the docs!')
                 return
-            
+
         #for r in res :
         #print(r.get_volume(), self.get_pressure(), r.get_cell())
 
@@ -447,9 +447,9 @@ class ElasticCrystal:
         deformed structures used in the calculation.
         '''
         # TODO: Provide API to enforce calculator selection
-        
+
         # Deformation look-up table
-        # Perhaps the number of deformations for trigonal 
+        # Perhaps the number of deformations for trigonal
         # system could be reduced to [0,3] but better safe then sorry
         deform={
             "Cubic": [[0,3], regular],
@@ -460,11 +460,11 @@ class ElasticCrystal:
             "Monoclinic": [[0,1,2,3,4,5], monoclinic],
             "Triclinic": [[0,1,2,3,4,5], triclinic]
         }
-        
+
         self.get_lattice_type()
         # Decide which deformations should be used
         axis, symm=deform[self.bravais]
-        
+
         if mode!='restart':
             # Generate deformations if we are not in restart mode
             systems=[]
@@ -475,17 +475,17 @@ class ElasticCrystal:
                 elif a<6 : # sheer deformation (skip the zero angle)
                     for dx in linspace(d/10.0,d,n):
                         systems.append(self.get_cart_deformed_cell(axis=a, size=dx))
-        
+
         # Just generate deformations for manual calculation
         if mode=='deformations' :
             return systems
-            
+
         if mode!='restart' :
             # Run the calculation if we are not restarting
             r=ParCalculate(systems,self.get_calculator())
         else :
             r=systems
-        
+
         ul=[]
         sl=[]
         p=self.get_pressure()
@@ -524,7 +524,7 @@ class ElasticCrystal:
 
     def scan_pressures(self, lo, hi, n=5):
         '''
-        Scan the pressure axis from lo to hi (inclusive) 
+        Scan the pressure axis from lo to hi (inclusive)
         using B-M EOS as the volume predictor.
         Pressure (lo, hi) in GPa
         '''
@@ -532,28 +532,28 @@ class ElasticCrystal:
         # This will work only in limited pressure range p>-B/B'.
         # Warning! Relative, the V0 prefactor is removed.
         invbmeos = lambda b, bp, x: array([pow(b/(bp*xv+b),1/(3*bp)) for xv in x])
-        
+
         eos=self.get_BM_EOS()
-        
+
         # Limit negative pressures to 90% of the singularity value.
         # Beyond this B-M EOS is bound to be wrong anyway.
         lo=max(lo,-0.9*eos[1]/eos[2])
-        
-        scale=(eos[0]/self.get_volume())*invbmeos(eos[1], eos[2], 
+
+        scale=(eos[0]/self.get_volume())*invbmeos(eos[1], eos[2],
                                                     linspace(lo,hi,num=n))
         #print(scale)
         uc=self.get_cell()
         sys=[Atoms(self) for s in scale]
         for n, s in enumerate(scale):
             sys[n].set_cell(s*uc,scale_atoms=True)
-        
+
         return sys
-        
-        
+
+
     def scan_volumes(self, lo, hi, n, scale_volumes=False):
         '''
         Provide set of crystals along volume axis from lo to hi (inclusive).
-        No volume cell optimization is performed. Bounds are specified as 
+        No volume cell optimization is performed. Bounds are specified as
         fractions (1.10 = 10% increase). If scale_volumes==True the scalling
         is applied to volumes instead of lattice vectors.
         '''
@@ -564,10 +564,10 @@ class ElasticCrystal:
         sys=[Atoms(self) for s in scale]
         for n, s in enumerate(scale):
             sys[n].set_cell(s*uc,scale_atoms=True)
-        
+
         return sys
 
-        
+
     def get_vecang_cell(self, uc=None):
         '''
         Compute A,B,C, alpha,beta,gamma cell params
@@ -579,7 +579,7 @@ class ElasticCrystal:
         ucv=[uc[i,:]/norm(uc[i,:]) for i in range(3)]
         uca=[acos(dot(ucv[(i+1)%3],ucv[(i+2)%3])) for i in range(3)]
         return [norm(uc[i,:]) for i in range(3)] + uca
-        
+
     def get_deformed_cell(self, axis=0, size=1):
         '''
         Return the cell (with atoms) deformed along one
@@ -598,16 +598,16 @@ class ElasticCrystal:
             t=1 - (ctg(bet)*ctg(gam)-cos(alp)*csc(bet)*csc(gam))**2;
             if t<0.0 :
                 print('''
-                The parameters (alpha,beta,gamma)=(%f,%f,%f) are probably 
-                incorrect and lead to imaginary coordinates. 
-                This range of parameters is unsupported by this program 
+                The parameters (alpha,beta,gamma)=(%f,%f,%f) are probably
+                incorrect and lead to imaginary coordinates.
+                This range of parameters is unsupported by this program
                 (and is, let me say, very strange for a crystal).
                 Cennot continue, bye.''' % (alp,bet,gam))
                 raise ValueError
             else :
                 uc=[[a,0.0,0.0],
                     [b*cos(gam), b*sin(gam), 0],
-                    [c*cos(bet), 
+                    [c*cos(bet),
                         c*(cos(alp)/sin(gam) - cos(bet)*ctg(gam)),
                         c*sin(bet)*sqrt(t)]]
         cryst.set_cell(uc, scale_atoms=True)
@@ -617,8 +617,8 @@ class ElasticCrystal:
 
     def get_cart_deformed_cell(self, axis=0, size=1):
         '''
-        Return the cell (with atoms) deformed along one 
-        of the cartesian directions 
+        Return the cell (with atoms) deformed along one
+        of the cartesian directions
         (0,1,2 = x,y,z ; sheers: 3,4,5 = yz, xz, xy) by
         size percent.
         '''
@@ -640,11 +640,11 @@ class ElasticCrystal:
         #print(cryst.get_cell())
         #print(uc)
         return cryst
-        
+
     def get_strain(self,refcell=None):
         '''
-        Return the strain tensor in the Voight notation as a conventional 
-        6-vector. The calculation is done with respect to the crystal 
+        Return the strain tensor in the Voight notation as a conventional
+        6-vector. The calculation is done with respect to the crystal
         geometry passed in refcell parameter.
         '''
         if refcell is None :
