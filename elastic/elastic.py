@@ -68,11 +68,8 @@ Class description
 from __future__ import print_function, division, absolute_import
 
 import re
-import sys
 import string
 
-
-import ase.io
 from ase.atoms import Atoms
 
 try :
@@ -87,7 +84,7 @@ from scipy import optimize
 from numpy.linalg import inv
 from numpy import dot, diag, ones, reshape, linspace, array, mean
 from math import acos, pi, cos, sin, tan, sqrt
-import ase.units as units
+#import ase.units as units
 
 
 def BMEOS(v,v0,b0,b0p):

@@ -3,7 +3,7 @@ import unittest
 import hypothesis
 from hypothesis import given, example, assume
 from hypothesis.strategies import integers, floats, builds
-from numpy import pi, allclose, cos, sin, tan, array, zeros
+from numpy import pi, allclose, cos, sin, array, zeros
 
 import elastic
 
