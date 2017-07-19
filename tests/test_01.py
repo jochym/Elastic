@@ -36,7 +36,7 @@ banner('Structure optimization on MgO')
 a = 4.291
 MgO = crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], spacegroup=225,
                cellpar=[a, a, a, 90, 90, 90])
-               
+
 ##################################
 # Provide your own calculator here
 ##################################
@@ -70,7 +70,7 @@ for s in res :
 
 plot(v,p,'o')
 show()
-    
+
 
 
 # You can specify the directory with prepared VASP crystal for the test run
@@ -80,7 +80,7 @@ if len(sys.argv)>1 :
 else :
     # Pre-cooked test cases
     crystals=[]
-    
+
     # Cubic
     a = 4.194
     crystals.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)],
@@ -101,32 +101,32 @@ else :
 
 
 banner("Running tests for Elastic")
-# Iterate over all crystals. 
+# Iterate over all crystals.
 # We do not paralelize over test cases for clarity.
 for cryst in crystals[:] :
 
     cryst.get_lattice_type()
-    banner('Calculating: %s, %s, %s' % 
+    banner('Calculating: %s, %s, %s' %
             (cryst.get_chemical_formula(), cryst.bravais, cryst.sg_name))
     # Setup the calculator
     calc=ClusterVasp(nodes=1,ppn=8)
     cryst.set_calculator(calc)
-    calc.set(prec = 'Accurate', 
-                xc = 'PBE', 
-                lreal = False, 
-                isif=4, 
+    calc.set(prec = 'Accurate',
+                xc = 'PBE',
+                lreal = False,
+                isif=4,
                 nsw=30,
-                ediff=1e-8, 
+                ediff=1e-8,
                 ibrion=2)
     calc.set(kpts=[3,3,3])
-    
+
     # Run the calculations
-    
+
     # Optimize the structure first
     calc.set(isif=3)
-    
+
     secban('Structure optimization')
-    
+
     # Run the internal optimizer
     print("Residual pressure: %.3f GPa" % (
                 cryst.get_pressure()/GPa))
@@ -139,7 +139,7 @@ for cryst in crystals[:] :
 
     print(cryst.get_vecang_cell())
     print(cryst.bravais, cryst.sg_type, cryst.sg_name, cryst.sg_nr)
-    
+
     #view(cryst)
 
     # Switch to cell shape+IDOF optimizer
@@ -150,17 +150,17 @@ for cryst in crystals[:] :
     # Calculate few volumes and fit B-M EOS to the result
     # Use +/-3% volume deformation and 5 data points
     fit=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
-    
+
     # Get the P(V) data points just calculated
     pv=array(cryst.pv)
-    
+
     # Sort data on the first column (V)
     pv=pv[pv[:,0].argsort()]
-    
+
     # Print the fitted parameters
-    print("V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
+    print("V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % (
             fit[0], fit[1]/GPa, fit[2], pow(fit[0],1./3)))
-            
+
     v0=fit[0]
 
     # B-M EOS for plotting
@@ -171,7 +171,7 @@ for cryst in crystals[:] :
     x=array([min(pv[:,0]),max(pv[:,0])])
     y=array([min(pv[:,1]),max(pv[:,1])])
 
-    
+
     # Plot b/a and c/a as a function of v/v0
     figure(1)
     plot(pv[:,0]/v0,pv[:,3]/pv[:,2],'o')
@@ -180,12 +180,12 @@ for cryst in crystals[:] :
     axvline(1,ls='--')
     title('b/a and c/a as a function of v/v0')
     draw()
-    
+
     # Plot the P(V) curves and points for the crystal
     figure(2)
     # Plot the points
     plot(pv[:,0]/v0,pv[:,1],'o')
-    
+
     # Mark the center P=0 V=V0
     axvline(1,ls='--')
     axhline(0,ls='--')
@@ -196,9 +196,9 @@ for cryst in crystals[:] :
     plot(xa/v0,fitfunc(fit,xa),'-')
     title('Birch-Murnaghan Equation of state')
     draw()
-    
+
     # Scan over deformations
-    
+
     # Switch to IDOF optimizer
     calc.set(isif=2)
 
@@ -207,11 +207,11 @@ for cryst in crystals[:] :
     # Elastic tensor by internal routine
     Cij, Bij=cryst.get_elastic_tensor(n=5,d=0.33)
     print("Cij (GPa):", Cij/GPa)
-    
+
     calc.clean()
-    
+
     secban('C11 and C12 by hand')
-    
+
     # Now let us do it (only c11 and c12) by hand
     sys=[]
     for d in linspace(-0.5,0.5,6):
@@ -234,12 +234,12 @@ for cryst in crystals[:] :
     xa=linspace(mi-1.1*wi,mi+1.1*wi, 50)
     plot(ss[:,0,0],ss[:,1,0],'k.')
     plot(ss[:,0,0],ss[:,1,1],'r.')
-    
+
     # C11 component
     f=numpy.polyfit(ss[:,0,0],ss[:,1,0],3)
     c11=f[-2]/GPa
     plot(xa,numpy.polyval(f,xa),'b-')
-    
+
     # C12 component
     f=numpy.polyfit(ss[:,0,0],ss[:,1,1],3)
     c12=f[-2]/GPa
@@ -251,7 +251,7 @@ for cryst in crystals[:] :
     draw()
 
 #        # Now make a short scan over pressures
-#        
+#
 #        # Switch just shape+IDOF optimization
 #        calc.set(isif=4)
 #        sys=[]
@@ -265,7 +265,7 @@ for cryst in crystals[:] :
 #        pl=array([cryst.get_pressure(s.get_stress())/GPa for s in r])
 #        figure(2)
 #        plot(vl/v0,pl,'+')
-#        
+#
 #        # Check for proper inverse eos
 #        invbmeos = lambda b, bp, x: array([pow(b/(bp*xv+b),1/bp) for xv in x])
 #        xa=linspace(max(-8,-0.9*fit[1]/fit[2]),8,20)
