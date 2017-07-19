@@ -19,7 +19,7 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
-Example of Birch-Murnaghan EOS calculation using VASP calculator and 
+Example of Birch-Murnaghan EOS calculation using VASP calculator and
 elastic module.
 '''
 
@@ -31,8 +31,8 @@ from numpy import array, linspace
 import matplotlib.pyplot as plt
 
 a = 4.194
-cryst = Crystal(crystal(['Mg', 'O'], 
-                [(0, 0, 0), (0.5, 0.5, 0.5)], 
+cryst = Crystal(crystal(['Mg', 'O'],
+                [(0, 0, 0), (0.5, 0.5, 0.5)],
                 spacegroup=225,
                 cellpar=[a, a, a, 90, 90, 90]))
 
@@ -45,11 +45,11 @@ calc=ClusterVasp(nodes=1,ppn=8)
 cryst.set_calculator(calc)
 
 # Set the calculation parameters
-calc.set(prec = 'Accurate', 
-            xc = 'PBE', 
-            lreal = False, 
+calc.set(prec = 'Accurate',
+            xc = 'PBE',
+            lreal = False,
             nsw=30,
-            ediff=1e-8, 
+            ediff=1e-8,
             ibrion=2,
             kpts=[3,3,3])
 
@@ -82,9 +82,9 @@ pv=array(cryst.pv)
 pv=pv[pv[:,0].argsort()]
 
 # Print just fitted parameters
-print "V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
+print "V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % (
         fit[0], fit[1]/units.GPa, fit[2], pow(fit[0],1./3))
-        
+
 v0=fit[0]
 
 # B-M EOS for plotting
