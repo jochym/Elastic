@@ -1,11 +1,7 @@
 Elastic
 =======
 
-.. image:: https://api.codacy.com/project/badge/Grade/9f348d724d564ce399beb009ab9a3654
-   :alt: Codacy Badge
-   :target: https://www.codacy.com/app/jochym/Elastic?utm_source=github.com&utm_medium=referral&utm_content=jochym/Elastic&utm_campaign=badger
-
-|Build Status| |PVersion Badge| |CVersion Badge| |Downloads Badge| |License Badge| |Research software impact| |DOI|
+|Build Status| |PVersion Badge| |CVersion Badge| |Downloads Badge| |License Badge| |Research software impact| |DOI| |Codacy Badge|
 
 Elastic is a set of python routines for calculation of elastic
 properties of crystals (elastic constants, equation of state, sound
@@ -68,3 +64,6 @@ In the past the project was partially supported by:
    :target: https://anaconda.org/jochym/elastic
 .. |Research software impact| image:: http://depsy.org/api/package/pypi/elastic/badge.svg
    :target: http://depsy.org/package/python/elastic
+.. |Codacy Badge| image:: https://api.codacy.com/project/badge/Grade/9f348d724d564ce399beb009ab9a3654
+   :alt: Codacy Badge
+   :target: https://www.codacy.com/app/jochym/Elastic?utm_source=github.com&utm_medium=referral&utm_content=jochym/Elastic&utm_campaign=badger
