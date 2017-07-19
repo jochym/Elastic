@@ -5,15 +5,12 @@
 if __name__ == '__main__':
 # Test case for the code. Calculate few well-known crystals
 
-    import os
     import sys
-    from numpy import linspace, array, arange
     import numpy
     from math import pow
 
     from matplotlib.pyplot import plot, show, figure, draw, axvline, axhline
     from ase.lattice.spacegroup import crystal
-    from ase.visualize import view
     import ase.units as units
     from parcalc import ClusterVasp
     import elastic
