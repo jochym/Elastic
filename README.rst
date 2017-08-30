@@ -32,7 +32,7 @@ The installation is simple if you are using conda package menager:
 
 ::
 
-    conda install -c jochym elastic
+    conda install -c conda-forge elastic
 
 If you need a more elaborate 
 `installation instruction <http://nbviewer.ipython.org/github/jochym/qe-doc/blob/master/Installation.ipynb>`__
