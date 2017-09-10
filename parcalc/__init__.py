@@ -40,6 +40,6 @@ Not fully tested after merge.
 
 '''
 
-from .parcalc import ClusterVasp, ClusterSiesta, ParCalculate
+from .parcalc import ClusterVasp, ClusterSiesta, ParCalculate, RemoteCalculator
 
 
