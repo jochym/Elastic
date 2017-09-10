@@ -657,3 +657,16 @@ if __name__ == '__main__':
     
     print()
     
+    sl = cryst.get_elastic_tensor()
+    print('Structures: ')
+    print('   Vol             A       B       C          alph    bet     gam')
+    for n, c in enumerate(sl):
+        print('%.4f (%5.1f%%)' % (c.get_volume(), 
+                                 100*c.get_volume()/cryst.get_volume()), 
+                end='')
+        print((3*' %7.4f' + '  ' + 3*' %7.2f') % 
+              tuple(c.get_cell_lengths_and_angles()))
+    
+    
+    
+    
