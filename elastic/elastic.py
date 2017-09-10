@@ -354,7 +354,7 @@ class ElasticCrystal:
             s=self.get_stress()
         return -mean(s[:3])
 
-    def get_BM_EOS(self,n=5, lo=0.98, hi=1.02, recalc=False, cleanup=True, mode='full', data=None):
+    def get_BM_EOS(self, n=5, lo=0.98, hi=1.02, data=None, scale_volumes=True):
         """
         Calculate Birch-Murnaghan Equation of State for the crystal:
 
@@ -377,60 +377,47 @@ class ElasticCrystal:
         There will be a way to specify basic types of the calculator
         minimization at the later stage.
         """
-        if self._calc is None:
-            raise RuntimeError('Crystal object has no calculator.')
 
-        if getattr(self,'bm_eos',None) is None or recalc :
-            # NOTE: The calculator should properly minimize the energy
-            # at each volume by optimizing the internal degrees of freedom
-            # in the cell and/or cell shape without touching the volume.
-            # TODO: Provide api for specifying IDOF and Full optimization
-            #       calculators. Maybe just calc_idof and calc_full members?
-            if data is not None : # analyse results of previous calc
-                res=data
-            elif mode=='full' : # Make blocking calc of everything
-                res=ParCalculate(self.scan_volumes(lo,hi,n),self.get_calculator(),cleanup=cleanup)
-            elif mode=='gener' : # generate data for separate calc
-                return self.scan_volumes(lo,hi,n)
-            else :
-                print('Error: Unrecognized mode and no data. Read the docs!')
-                return
+        if data is None : # generate data for separate calc
+            return self.scan_volumes(lo, hi, n, scale_volumes=scale_volumes)
+        else : # analyse results of previous calc
+            res=data
 
-        #for r in res :
-        #print(r.get_volume(), self.get_pressure(), r.get_cell())
+        pvdat=array([[r.get_volume(),
+                        self.get_pressure(r.get_stress()),
+                        norm(r.get_cell()[:,0]),
+                        norm(r.get_cell()[:,1]),
+                        norm(r.get_cell()[:,2])] for r in res])
 
-            pvdat=array([[r.get_volume(),
-                            self.get_pressure(r.get_stress()),
-                            norm(r.get_cell()[:,0]),
-                            norm(r.get_cell()[:,1]),
-                            norm(r.get_cell()[:,2])] for r in res])
-            #print(pvdat)
+        # Fitting functions
+        fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
+        errfunc = lambda p, x, y: fitfunc(p, x) - y
 
-            # Fitting functions
-            fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
-            errfunc = lambda p, x, y: fitfunc(p, x) - y
+        # Estimate the initial guess assuming b0p=1
+        # Limiting volumes
+        v1=min(pvdat[:,0])
+        v2=max(pvdat[:,0])
 
-            # Estimate the initial guess assuming b0p=1
-            # Limiting volumes
-            v1=min(pvdat[:,0])
-            v2=max(pvdat[:,0])
-            # The pressure is falling with the growing volume
-            p2=min(pvdat[:,1])
-            p1=max(pvdat[:,1])
-            b0=(p1*v1-p2*v2)/(v2-v1)
-            v0=v1*(p1+b0)/b0
-            # Initial guess
-            p0=[v0,b0,1]
-            #Fitting
-            #print(p0)
-            p1, succ = optimize.leastsq(errfunc, p0[:], args=(pvdat[:,0],pvdat[:,1]))
-            if not succ :
-                raise RuntimeError('Calculation failed')
-            self.bm_eos=p1
-            self.pv=pvdat
+        # The pressure is falling with the growing volume
+        p2=min(pvdat[:,1])
+        p1=max(pvdat[:,1])
+        b0=(p1*v1-p2*v2)/(v2-v1)
+        v0=v1*(p1+b0)/b0
+
+        # Initial guess
+        p0=[v0,b0,1]
+
+        #Fitting
+        p1, succ = optimize.leastsq(errfunc, p0[:], args=(pvdat[:,0],pvdat[:,1]))
+
+        if not succ :
+            raise RuntimeError('Calculation failed')
+
+        self.bm_eos=p1
+        self.pv=pvdat
         return self.bm_eos
 
-    def get_elastic_tensor(self, n=5, d=2, mode='full', systems=None):
+    def get_elastic_tensor(self, n=5, d=2, systems=None):
         '''
         Calculate elastic tensor of the crystal.
         It is assumed that the crystal is converged and optimized
@@ -461,8 +448,8 @@ class ElasticCrystal:
         # Decide which deformations should be used
         axis, symm=deform[self.bravais]
 
-        if mode!='restart':
-            # Generate deformations if we are not in restart mode
+        if systems is None:
+            # Generate deformations if there are no input data
             systems=[]
             for a in axis :
                 if a <3 : # tetragonal deformation
@@ -471,15 +458,10 @@ class ElasticCrystal:
                 elif a<6 : # sheer deformation (skip the zero angle)
                     for dx in linspace(d/10.0,d,n):
                         systems.append(self.get_cart_deformed_cell(axis=a, size=dx))
-
-        # Just generate deformations for manual calculation
-        if mode=='deformations' :
+            
             return systems
-
-        if mode!='restart' :
-            # Run the calculation if we are not restarting
-            r=ParCalculate(systems,self.get_calculator())
         else :
+            # We got systems presumably calculated - process the data
             r=systems
 
         ul=[]
@@ -518,7 +500,7 @@ class ElasticCrystal:
             Cij = Bij[0] - array([-p,-p,-p, p, p, p,-p,-p,-p, p, p, p, p, p, p, p, p, p])
         return Cij, Bij
 
-    def scan_pressures(self, lo, hi, n=5):
+    def scan_pressures(self, lo, hi, n=5, eos=None):
         '''
         Scan the pressure axis from lo to hi (inclusive)
         using B-M EOS as the volume predictor.
@@ -529,7 +511,8 @@ class ElasticCrystal:
         # Warning! Relative, the V0 prefactor is removed.
         invbmeos = lambda b, bp, x: array([pow(b/(bp*xv+b),1/(3*bp)) for xv in x])
 
-        eos=self.get_BM_EOS()
+        if eos is None:
+            raise RuntimeError('Required EOS data missing')
 
         # Limit negative pressures to 90% of the singularity value.
         # Beyond this B-M EOS is bound to be wrong anyway.
@@ -655,3 +638,22 @@ class ElasticCrystal:
 
 
 
+if __name__ == '__main__':
+    from ase.spacegroup import crystal
+    import elastic
+    
+    a = 4.194
+    cryst = crystal(['Mg', 'O'],
+                    [(0, 0, 0), (0.5, 0.5, 0.5)],
+                    spacegroup=225,
+                    cellpar=[a, a, a, 90, 90, 90])
+    
+    sl = cryst.get_BM_EOS()
+    print('Volumes: ', end='')
+    for c in sl:
+        print('%.2f (%.1f%%)' % (c.get_volume(), 
+                                 100*c.get_volume()/cryst.get_volume()), 
+                end=' ')
+    
+    print()
+    
