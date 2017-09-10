@@ -2,3 +2,4 @@ ase
 spglib
 numpy
 scipy
+setuptools_scm

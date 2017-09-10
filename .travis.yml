@@ -1,38 +1,27 @@
 language: python
-sudo: false
-dist: trusty
 
 python:
-- '2.7'
-- '3.5'
-
-
-cache: apt
-
-addons:
-  apt:
-    packages:
-    - libopenblas-dev
-    - liblapack-dev
-    - gfortran
-
+    - '2.7'
+    - '3.5'
+    - '3.6'
 
 before_install:
-- wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
-- bash miniconda.sh -b -p $HOME/miniconda
-- export PATH="$HOME/miniconda/bin:$PATH"
-- conda update --yes conda
-- conda config --add channels jochym
-- conda install --yes anaconda-client anaconda-build
+    - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - export PATH="$HOME/miniconda/bin:$PATH"
+    - conda config --add channels conda-forge
+    - conda update --yes conda
+    - conda install --yes conda-build
+    - conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client
 
 install:
-- conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy ase spglib scipy setuptools_scm
-- python setup.py install
+    - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
+    - conda install --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis
+    - python setup.py install
 
-script: python test/test_elastic.py
+script: python -m unittest discover -s test -b 
 
 deploy:
-
   # testing testpypi
   - provider: pypi
     skip_cleanup: true
@@ -42,15 +31,15 @@ deploy:
       secure: "y41PLkvV2+LpSmDWkaVBQyA8BE1p3mPLSaSzKn+8cZ+1hmeukqXQczum9hKfXbiIamkYc+Ri5PvWzrT1g1k4OHkOTj2m3y7HUnk50XDZ4uNvdtfmWIlOauYqXryGmDEpZN3pPE3yLIxTc4wpF8AaLnrRH7NqW0Lj/WYMJeX2fPkujY/ufBDYt4bRzFtiQISBvNJ6ZAkAVh7PH0L6kMvKYs9lZpDjs/jL8SJn9QmwIRVGZo8fwCk4Okv6bA5mLYu8CgxRDNcjMX5b6JLvKk4LG2SX9RZ3ynGBsESDf9AWoB9nJCmC4Lx5/fPZGRnyBsjMxxYuIOgqaiKIc6fKvExHFqM8c4CkItQgN/e42t6KLW3R9/JKhQrHj1rr1O1CWETWlTwv+/3zgmMddigiEdPEoCMjmIe6yUnTjGfEiUVzaOEQh+ckcuOTh0vzV4KYNBxCFLDEz2rzH+ewOjTCNhW8inCX1E9wRAhQt8mzyhq9u/IGjLZHTjQVIhEHUkQ8NB2r3ABqglM1IFhn51XsrmRSkLULZZq3Trhz0dMpZDx+XrLiQZbGqFWRgbpPbaNYLAhXHsFidarWAHUOsSzbOQy1JmkJUMDZQY0pzGTaYQeK423GkEtmQCUVjSKp4h/kvXLR597a0koruWfK006l+BQtrkrLAo4oHZw0GWbnwdsWHz4="
     on:
       branch: rc
-      python: 2.7
+      repo: jochym/Elastic
 
   # testing anaconda
   - provider: script
     skip_cleanup: true
-    script: anaconda -t $ANACONDA_TOKEN build trigger --test-only --branch rc jochym/Elastic
+    script: conda/anaconda_deploy.sh rc $ANACONDA_TOKEN $TRAVIS_BRANCH
     on:
-      branch: rc
-      python: 2.7
+      branch: rc-block
+      repo: jochym/Elastic
 
   # Production pypi
   - provider: pypi
@@ -60,13 +49,13 @@ deploy:
       secure: "MkalwXVlwqjAaz9opJWANGEabTcRM7FdcSk3Z6ezQUqnfqoea7+viOVsHkbfb1l+pWyLb88yfkji4oBlUD0kVQkB9yiBrLBNeMX21n2WzymYukMnDsI/y6vVRocqLO0CUIqGaMBFBitum8e6wim04zkFWfYszJ/Ul5cgBep1pQN15Z3VnjbYJHWvomYOJyjiTfc84I4ui/flUbkmbmjwuosevY0D/DHZIgSjHlhmBf8cR986nGZuzaMLuErpxm5D/a27tiXx4SEE8deDfajkdXZylA0/nfOulRKt+HfRKW+YjbvSUdKUj3W9xiIuf27TQf01bcIXzIULJiueo/cqyFXXIvjUy744TW8HWjrWzIVVFBviaU/hDO8i4t8ToOOwzo4pfWPKABxmpHDECDHGHT61E9fyaVPM1v0YJhRIC8rTw2AINK/Chm90FpxVejkV1d3JHlKJQtwpT2f8Y/HpcfS9hJ4Ibw+axWEEceDKaGa5dT/Z9fJFRsXX65e8H71vvgqq/H3R5nakrzdo9t7I06XqQC8UGMYMS45wEbi+GaJ14Gj92Z2Sseo54WkTlJmVSOPqj8P2oDqrcwl3yuadwvPR8sZ0MMxH4OHsXSniSt9UNtX7WcYn+KNopHsUWlN6m57JrR7It7NquOeUa9ivz32fm3QeByDggBnkpOpqAeo="
     on:
       branch: master
-      python: 2.7
+      repo: jochym/Elastic
 
   # production anaconda
   - provider: script
     skip_cleanup: true
-    script: anaconda -t $ANACONDA_TOKEN build trigger --branch master jochym/Elastic
+    script: conda/anaconda_deploy.sh main $ANACONDA_TOKEN $TRAVIS_BRANCH
     on:
-      branch: master
-      python: 2.7
+      branch: master-block
+      repo: jochym/Elastic
 
