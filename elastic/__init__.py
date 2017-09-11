@@ -66,3 +66,4 @@ There is some usefull summary also at:
 
 from __future__ import print_function, division, absolute_import
 from .elastic import get_BM_EOS, get_elastic_tensor
+from .elastic import get_pressure, get_strain, BMEOS

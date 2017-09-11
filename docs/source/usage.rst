@@ -43,6 +43,13 @@ which may help you with manual process could be find at the
 Testing
 -------
 
+The whole package has a set unittests based on hypothesis package.
+The tests are self-contained and do not require any external packages
+like DFT programs (e.g. VASP). You can run these tests by executing
+following command in the source directory::
+
+    python -m unittest discover -s test -b
+
 All modules have small testing sets at the end. You can run these test by 
 simply running each module as a python script::
 
@@ -85,8 +92,9 @@ calculation. The testing code at the end of the parcalc.py may be used as
 an example how to do it. The first step is to import the modules to your 
 program (the examples here use VASP calculator)::
 
-    from ase.lattice.spacegroup import crystal
+    from ase.spacegroup import crystal
     from parcalc import ClusterVasp, ParCalculate
+    from elastic import get_pressure
     import ase.units as units
     import numpy
     import matplotlib.pyplot as plt
@@ -123,8 +131,8 @@ calculator but this was not tested yet. Thus let us define the calculator::
 Finally, run our first calculation. Obtain relaxed structure and 
 residual pressure after optimization::
 
-    print "Residual pressure: %.3f bar" % (
-                cryst.get_isotropic_pressure(cryst.get_stress()))
+    print("Residual pressure: %.3f bar" % (
+                get_pressure(cryst.get_stress())))
 
 If this returns proper pressure (close to zero) we can use the obtained 
 structure for further calculations. For example we can scan the volume axis to
@@ -159,7 +167,7 @@ machines at your disposal this will speed up the calculation considerably::
     p=[]
     for s in res :
         v.append(s.get_volume())
-        p.append(s.get_isotropic_pressure(s.get_stress()))
+        p.append(get_pressure(s.get_stress()))
 
     # Plot the result (you need matplotlib for this
     plt.plot(v,p,'o')
@@ -196,8 +204,8 @@ but this time we will use a new functionality imported from the elastic
 module. This module acts as a plug-in for the Atoms class - extending their
 range of quantities accessible for the user::
 
-    import elastic
-    from elastic import BMEOS
+    from elastic import BMEOS, get_strain
+    from elastic import get_BM_EOS
 
     a = 4.194
     cryst = crystal(['Mg', 'O'], 
@@ -214,23 +222,23 @@ Then comes a new part (IDOF - Internal Degrees of Freedom)::
 
     # Calculate few volumes and fit B-M EOS to the result
     # Use +/-3% volume deformation and 5 data points
-    deform=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
+    deform=get_BM_EOS(cryst, n=5,lo=0.97,hi=1.03)
     
     # Run the calculations - here with Cluster VASP
     res=ParCalculate(deform,calc)
     
     # Post-process the results
-    fit=cryst.get_BM_EOS(data=res)
+    fit=get_BM_EOS(cryst, data=res)
     
     # Get the P(V) data points just calculated
     pv=numpy.array(cryst.pv)
     
     # Sort data on the first column (V)
-    pv=pv[pv[:,0].argsort()]
+    pv=pv[pv[:, 0].argsort()]
     
     # Print just fitted parameters
-    print "V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
-            fit[0], fit[1]/units.GPa, fit[2], pow(fit[0],1./3))
+    print("V0=%.3f A^3 ; B0=%.2f GPa ; B0'=%.3f ; a0=%.5f A" % ( 
+            fit[0], fit[1]/units.GPa, fit[2], pow(fit[0],1./3)))
             
     v0=fit[0]
 
@@ -289,31 +297,31 @@ calculate the elastic tensor::
     calc.set(isif=2)
 
     # Create elementary deformations
-    systems=cryst.get_elastic_tensor(n=5,d=0.33)
+    systems = get_elastic_tensor(cryst, n=5, d=0.33)
 
     # Run the stress calculations on deformed cells
-    res=ParCalculate(systems,calc)
+    res = ParCalculate(systems, calc)
 
     # Elastic tensor by internal routine
-    Cij, Bij=cryst.get_elastic_tensor(systems=res)
-    print "Cij (GPa):", Cij/units.GPa
+    Cij, Bij = get_elastic_tensor(cryst, systems=res)
+    print("Cij (GPa):", Cij/units.GPa)
     
 
 To make sure we are getting the correct answer let us make the calculation 
 for :math:`C_{11}, C{12}` by hand. We will deform the cell along a (x) axis
-by +/-0.2% and fit the 3:math:`^{rd}` order polynomial to the stress-strain 
+by +/-0.2% and fit the :math:`3^{rd}` order polynomial to the stress-strain 
 data. The linear component of the fit is the element of the elastic tensor::
 
     # Create 10 deformation points on the a axis
-    sys=[]
+    systems = []
     for d in linspace(-0.2,0.2,10):
-        sys.append(cryst.get_cart_deformed_cell(axis=0,size=d))
+        systems.append(get_cart_deformed_cell(cryst.axis=0,size=d))
     
     # Calculate the systems and collect the stress tensor for each system
-    r=ParCalculate(sys,cryst.calc)
+    r = ParCalculate(systems, cryst.calc)
     ss=[]
     for s in r:
-        ss.append([s.get_strain(cryst), s.get_stress()])
+        ss.append([get_strain(cryst), s.get_stress()])
 
     # Plot strain-stress relation
     ss=[]

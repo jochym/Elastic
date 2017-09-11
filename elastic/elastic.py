@@ -554,11 +554,18 @@ def get_deformed_cell(base_cryst, axis=0, size=1):
 
 
 def get_cart_deformed_cell(base_cryst, axis=0, size=1):
-    '''
-    Return the cell (with atoms) deformed along one
-    of the cartesian directions
-    (0,1,2 = x,y,z ; sheers: 3,4,5 = yz, xz, xy) by
-    size percent.
+    '''Return the cell deformed along one of the cartesian directions
+
+    Creates new deformed structure. The deformation is based on the
+    base structure and is performed along single axis. The axis is
+    specified as follows: 0,1,2 = x,y,z ; sheers: 3,4,5 = yz, xz, xy.
+    The size of the deformation is in percent and degrees, respectively.
+
+    :param base_cryst: structure to be deformed
+    :param axis: direction of deformation
+    :param size: size of the deformation
+
+    :returns: new, deformed structure
     '''
     cryst = Atoms(base_cryst)
     uc = base_cryst.get_cell()
@@ -581,10 +588,16 @@ def get_cart_deformed_cell(base_cryst, axis=0, size=1):
 
 
 def get_strain(cryst, refcell=None):
-    '''
-    Return the strain tensor in the Voight notation as a conventional
+    '''Calculate strain tensor in the Voight notation
+
+    Computes the strain tensor in the Voight notation as a conventional
     6-vector. The calculation is done with respect to the crystal
     geometry passed in refcell parameter.
+
+    :param cryst: deformed structure
+    :param refcell: reference, undeformed structure
+
+    :returns: 6-vector of strain tensor in the Voight notation
     '''
     if refcell is None:
         refcell = cryst
