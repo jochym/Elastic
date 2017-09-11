@@ -423,10 +423,12 @@ def get_elastic_tensor(cryst, n=5, d=2, systems=None):
     sl = []
     p = get_pressure(cryst.get_stress())
     for g in r:
-        ul.append(g.get_strain(cryst))
+        ul.append(get_strain(g, refcell=cryst))
         # Remove the pressure from the stress tensor
         sl.append(g.get_stress()-array([p, p, p, 0, 0, 0]))
-    eqm = array(map(symm, ul))
+    # print(symm, ul)
+    eqm = array([symm(u) for u in ul])
+    # print(eqm)
     # print(eqm[0].shape, eqm.shape)
     eqm = reshape(eqm, (eqm.shape[0]*eqm.shape[1], eqm.shape[2]))
     # print(eqm)
