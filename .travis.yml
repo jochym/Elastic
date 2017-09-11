@@ -16,10 +16,12 @@ before_install:
 
 install:
     - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
-    - conda install --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis
+    - conda install --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis doctest
     - python setup.py install
 
-script: python -m unittest discover -s test -b 
+script: 
+    - python -m unittest discover -s test -b 
+    - python -m doctest -v docs/source/usage.rst
 
 deploy:
   # testing testpypi
