@@ -9,13 +9,13 @@ Installation
 The installation procedure is quite simple if you use, *highly recommended*
 `conda package manager <http://conda.pydata.org/miniconda.html>`_
 
-    conda install -c jochym elastic
+    conda install -c conda-forge elastic
 
 The above command installs elastic with all dependencies into your current
 conda environment. If you want to add my anaconda.org channel into your conda
 installation you need to run following command:
 
-    conda config --add channels jochym
+    conda config --add channels conda-forge
 
 The above method has additional benefit of providing current installation of
 ASE and spglib libraries.
@@ -139,11 +139,11 @@ machines at your disposal this will speed up the calculation considerably::
     # Clean up the directory
     calc.clean()
 
-    sys=[]
+    systems=[]
     # Iterate over lattice constant in the +/-5% range
     for av in numpy.linspace(a*0.95,a*1.05,5):
-        sys.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], 
-                    spacegroup=225, cellpar=[av, av, av, 90, 90, 90]))
+        systems.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], 
+                        spacegroup=225, cellpar=[av, av, av, 90, 90, 90]))
                        
     # Define the template calculator for this run
     # We can use the calc from above. It is only used as a template.
@@ -152,7 +152,7 @@ machines at your disposal this will speed up the calculation considerably::
 
     # Run the calculation for all systems in sys in parallel
     # The result will be returned as list of systems res
-    res=ParCalculate(sys,calc)
+    res=ParCalculate(systems,calc)
     
     # Collect the results
     v=[]
@@ -214,7 +214,13 @@ Then comes a new part (IDOF - Internal Degrees of Freedom)::
 
     # Calculate few volumes and fit B-M EOS to the result
     # Use +/-3% volume deformation and 5 data points
-    fit=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
+    deform=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
+    
+    # Run the calculations - here with Cluster VASP
+    res=ParCalculate(systems,calc)
+    
+    # Post-process the results
+    fit=cryst.get_BM_EOS(data=res)
     
     # Get the P(V) data points just calculated
     pv=numpy.array(cryst.pv)
@@ -282,8 +288,14 @@ calculate the elastic tensor::
     # Switch to IDOF optimizer
     calc.set(isif=2)
 
+    # Create elementary deformations
+    systems=cryst.get_elastic_tensor(n=5,d=0.33)
+
+    # Run the stress calculations on deformed cells
+    res=ParCalculate(systems,calc)
+
     # Elastic tensor by internal routine
-    Cij, Bij=cryst.get_elastic_tensor(n=5,d=0.33)
+    Cij, Bij=cryst.get_elastic_tensor(systems=res)
     print "Cij (GPa):", Cij/units.GPa
     
 
