@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 #    Copyright 1998-2011 by Paweł T. Jochym <pawel.jochym@ifj.edu.pl>
@@ -36,7 +36,8 @@ to ordering in previous versions of the code.
 
 The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
 
-The general ordering of :math:`C_{ij}` components is (except for triclinic symmetry and taking into account customary names of constants - e.g.
+The general ordering of :math:`C_{ij}` components is (except for triclinic
+symmetry and taking into account customary names of constants - e.g.
 :math:`C_{16} \\rightarrow C_{14}`):
 
 .. math::
@@ -64,19 +65,4 @@ There is some usefull summary also at:
 '''
 
 from __future__ import print_function, division, absolute_import
-
-
-from ase.atoms import Atoms
-from .elastic import BMEOS, Crystal, ElasticCrystal
-
-
-# Enhance the Atoms class by adding new capabilities
-for k in ElasticCrystal.__dict__ :
-    if k[:2]!='__' and k[-2:]!='__' :
-        #print('Implanting', k)
-        setattr(Atoms, k, ElasticCrystal.__dict__[k])
-#    Atoms.__atoms_init__=Atoms.__init__
-#    Atoms.__init__=__Crystal.__crystal_init__
-
-
-
+from .elastic import get_BM_EOS, get_elastic_tensor
