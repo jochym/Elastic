@@ -217,7 +217,7 @@ Then comes a new part (IDOF - Internal Degrees of Freedom)::
     deform=cryst.get_BM_EOS(n=5,lo=0.97,hi=1.03)
     
     # Run the calculations - here with Cluster VASP
-    res=ParCalculate(systems,calc)
+    res=ParCalculate(deform,calc)
     
     # Post-process the results
     fit=cryst.get_BM_EOS(data=res)
