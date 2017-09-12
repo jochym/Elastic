@@ -25,7 +25,7 @@ of elastic library for direct use - without writing any python code.
 
 import click
 import ase.io
-from elastic import get_BM_EOS, get_elastic_tensor
+import elastic
 import pkg_resources
 from click import echo
 
@@ -86,9 +86,9 @@ def gen(struct, format, action):
         echo('%s lattice (%s): %s' % (brav, sg, cryst.get_chemical_formula()))
 
     if action == 'cij':
-        systems = get_elastic_tensor(cryst)
+        systems = elastic.get_elastic_tensor(cryst)
     elif action == 'eos':
-        systems = get_BM_EOS(cryst)
+        systems = elastic.get_BM_EOS(cryst)
 
     if verbose:
         echo('Writing %d deformation files.' % len(systems))
