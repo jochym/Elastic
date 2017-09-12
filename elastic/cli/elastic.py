@@ -49,9 +49,9 @@ def process_calc(fn):
 
 
 @click.group()
-@click.option('--vasp', 'format', flag_value='vasp',
+@click.option('--vasp', 'frmt', flag_value='vasp',
               help='Use VASP formats (default)', default=True)
-@click.option('--abinit', 'format', flag_value='abinit',
+@click.option('--abinit', 'frmt', flag_value='abinit',
               help='Use AbInit formats')
 @click.option('--cij', 'action', flag_value='cij',
               help='Generate deformations for Cij (default)', default=True)
@@ -60,7 +60,7 @@ def process_calc(fn):
 @click.option('-v', '--verbose', count=True, help='Increase verbosity')
 @click.version_option()
 @click.pass_context
-def cli(ctx, format, action, verbose):
+def cli(ctx, frmt, action, verbose):
     '''Command-line interface to the elastic library.'''
 
     if verbose:
@@ -74,14 +74,14 @@ def cli(ctx, format, action, verbose):
 def gen(ctx, struct):
     '''Generate deformed structures'''
 
-    format = ctx.parent.params['format']
+    frmt = ctx.parent.params['frmt']
     action = ctx.parent.params['action']
-    cryst = ase.io.read(struct, format=format)
+    cryst = ase.io.read(struct, format=frmt)
     fn_tmpl = action
-    if format == 'vasp':
+    if frmt == 'vasp':
         fn_tmpl += '_%03d.POSCAR'
         kwargs = {'vasp5': True, 'direct': True}
-    elif format == 'abinit':
+    elif frmt == 'abinit':
         fn_tmpl += '_%03d.abinit'
         kwargs = {}
 
@@ -95,23 +95,28 @@ def gen(ctx, struct):
     elif action == 'eos':
         systems = elastic.get_BM_EOS(cryst)
 
+    systems.insert(0, cryst)
     if verbose:
         echo('Writing %d deformation files.' % len(systems))
     for n, s in enumerate(systems):
-        ase.io.write(fn_tmpl % n, s, format=format, **kwargs)
+        ase.io.write(fn_tmpl % n, s, format=frmt, **kwargs)
 
 
 @cli.command()
-@click.argument('files', nargs=-1)
+@click.argument('files', type=click.Path(exists=True), nargs=-1)
 @click.pass_context
 def proc(ctx, files):
     '''Process calculated structures'''
 
-    format = ctx.parent.params['format']
     action = ctx.parent.params['action']
     with click.progressbar(files) as bar:
-        for calc in bar:
-            process_calc(calc)
+        systems = [ase.io.read(calc) for calc in bar]
+    if action == 'cij':
+        cij = elastic.get_elastic_tensor(systems[0], systems=systems[1:])
+        echo(cij)
+    elif action == 'eos':
+        eos = elastic.get_BM_EOS(systems[0], systems=systems[1:])
+        echo(eos)
 
 
 if __name__ == '__main__':

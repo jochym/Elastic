@@ -304,7 +304,7 @@ def get_pressure(s):
     return -mean(s[:3])
 
 
-def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, data=None, scale_volumes=True):
+def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, systems=None, scale_volumes=True):
     """
     Calculate Birch-Murnaghan Equation of State for the crystal:
 
@@ -327,10 +327,10 @@ def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, data=None, scale_volumes=True):
     You are responsible for calculating the structures properly.
     """
 
-    if data is None:  # generate data for separate calc
+    if systems is None:  # generate data for separate calc
         return scan_volumes(cryst, lo, hi, n, scale_volumes=scale_volumes)
     else:  # analyse results of previous calc
-        res = data
+        res = systems
 
     pvdat = array([[r.get_volume(),
                     get_pressure(r.get_stress()),
