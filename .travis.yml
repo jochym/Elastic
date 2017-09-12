@@ -22,6 +22,7 @@ install:
 script: 
     - python -m unittest discover -s test -b 
     - python -m doctest -v docs/source/usage.rst
+    - elastic -v --help
 
 deploy:
   # testing testpypi
