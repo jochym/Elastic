@@ -109,8 +109,7 @@ def proc(ctx, files):
     '''Process calculated structures'''
 
     action = ctx.parent.params['action']
-    with click.progressbar(files) as bar:
-        systems = [ase.io.read(calc) for calc in bar]
+    systems = [ase.io.read(calc) for calc in files]
     if action == 'cij':
         cij = elastic.get_elastic_tensor(systems[0], systems=systems[1:])
         echo(cij)
