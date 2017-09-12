@@ -26,20 +26,20 @@ setup(
     version=ver,
     packages=find_packages(),
     license='GPLv3',
-    description = 'Extension for ASE to calculate elastic constants',
-    author = 'Paweł T. Jochym',
-    author_email = 'Pawel.Jochym@ifj.edu.pl',
-    url = 'https://github.com/jochym/Elastic',
-    keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals'],
-    requires = ['click','spglib','numpy','scipy','ase'],
-    setup_requires = ['docutils','sphinx','setuptools_scm'],
-    provides = ['elastic','parcalc'],
-    platforms = ['all'],
-    classifiers = [],
+    description='Extension for ASE to calculate elastic constants',
+    author='Paweł T. Jochym',
+    author_email='Pawel.Jochym@ifj.edu.pl',
+    url='https://github.com/jochym/Elastic',
+    keywords=['science', 'physics', 'ase', 'elastic constants', 'crystals'],
+    requires=['click', 'spglib', 'numpy', 'scipy', 'ase'],
+    setup_requires=['docutils', 'sphinx', 'setuptools_scm'],
+    provides=['elastic', 'parcalc'],
+    platforms=['all'],
+    classifiers=[],
     include_package_data=True,
-    install_requires=['Click',],
+    install_requires=['Click', ],
     entry_points='''
         [console_scripts]
-        elstic=elastic.cli.elastic:cli
+        elastic=elastic.cli.elastic:cli
         '''
 )

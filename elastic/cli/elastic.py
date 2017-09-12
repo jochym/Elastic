@@ -50,11 +50,11 @@ def log(verbose):
 
 
 @click.command()
-def main():
+def cli():
     '''Command-line interface to the elastic library.'''
 
     banner()
 
 
 if __name__ == '__main__':
-    main()
+    cli()
