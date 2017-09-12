@@ -49,16 +49,6 @@ def process_calc(fn):
 
 
 @click.group()
-@click.option('-v', '--verbose', count=True, help='Increase verbosity')
-@click.version_option()
-def cli(verbose):
-    '''Command-line interface to the elastic library.'''
-    if verbose:
-        set_verbosity(verbose)
-    banner()
-
-
-@cli.command()
 @click.option('--vasp', 'format', flag_value='vasp',
               help='Use VASP formats (default)', default=True)
 @click.option('--abinit', 'format', flag_value='abinit',
@@ -67,10 +57,25 @@ def cli(verbose):
               help='Generate deformations for Cij (default)', default=True)
 @click.option('--eos', 'action', flag_value='eos',
               help='Generate deformations for Equation of State')
+@click.option('-v', '--verbose', count=True, help='Increase verbosity')
+@click.version_option()
+@click.pass_context
+def cli(ctx, format, action, verbose):
+    '''Command-line interface to the elastic library.'''
+
+    if verbose:
+        set_verbosity(verbose)
+    banner()
+
+
+@cli.command()
 @click.argument('struct', type=click.Path(exists=True))
-def gen(struct, format, action):
+@click.pass_context
+def gen(ctx, struct):
     '''Generate deformed structures'''
 
+    format = ctx.parent.params['format']
+    action = ctx.parent.params['action']
     cryst = ase.io.read(struct, format=format)
     fn_tmpl = action
     if format == 'vasp':
@@ -98,8 +103,12 @@ def gen(struct, format, action):
 
 @cli.command()
 @click.argument('files', nargs=-1)
-def proc(files):
+@click.pass_context
+def proc(ctx, files):
     '''Process calculated structures'''
+
+    format = ctx.parent.params['format']
+    action = ctx.parent.params['action']
     with click.progressbar(files) as bar:
         for calc in bar:
             process_calc(calc)
