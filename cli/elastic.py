@@ -24,10 +24,37 @@ of elastic library for direct use - without writing any python code.
 '''
 
 import click
+import ase.io
+from elastic import get_BM_EOS, get_elastic_tensor
+import pkg_resources
+
+verbose = 0
+
+
+def banner():
+    if verbose > 0:
+        print('Elastic ver.',
+              pkg_resources.get_distribution("elastic").version)
+
+
+def set_verbosity(v):
+    global verbose
+    verbose = v
+
+
+@click.command()
+@click.option('-v', '--verbose', count=True)
+def log(verbose):
+    click.echo('Verbosity: %s' % verbose)
+    set_verbosity(verbose)
+
 
 @click.command()
 def main():
     '''Command-line interface to the elastic library.'''
+
+    banner()
+
 
 if __name__ == '__main__':
     main()
