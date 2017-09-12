@@ -42,18 +42,26 @@ def set_verbosity(v):
     verbose = v
 
 
-@click.command()
-@click.option('-v', '--verbose', count=True)
-def log(verbose):
-    click.echo('Verbosity: %s' % verbose)
-    set_verbosity(verbose)
-
-
-@click.command()
-def cli():
+@click.group()
+@click.option('-v', '--verbose', count=True, help='Increase verbosity')
+@click.version_option()
+def cli(verbose):
     '''Command-line interface to the elastic library.'''
-
+    if verbose:
+        set_verbosity(verbose)
     banner()
+
+
+@cli.command()
+def gen():
+    '''Generate deformed structures'''
+    click.echo('Generate')
+
+
+@cli.command()
+def proc():
+    '''Process calculated structures'''
+    click.echo('Process')
 
 
 if __name__ == '__main__':
