@@ -27,19 +27,25 @@ import click
 import ase.io
 from elastic import get_BM_EOS, get_elastic_tensor
 import pkg_resources
+from click import echo
 
 verbose = 0
 
 
 def banner():
     if verbose > 0:
-        print('Elastic ver.',
-              pkg_resources.get_distribution("elastic").version)
+        echo('Elastic ver. %s\n----------------------' %
+             pkg_resources.get_distribution("elastic").version)
 
 
 def set_verbosity(v):
     global verbose
     verbose = v
+
+
+def process_calc(fn):
+    from time import sleep
+    sleep(1)
 
 
 @click.group()
@@ -53,15 +59,50 @@ def cli(verbose):
 
 
 @cli.command()
-def gen():
+@click.option('--vasp', 'format', flag_value='vasp',
+              help='Use VASP formats (default)', default=True)
+@click.option('--abinit', 'format', flag_value='abinit',
+              help='Use AbInit formats')
+@click.option('--cij', 'action', flag_value='cij',
+              help='Generate deformations for Cij (default)', default=True)
+@click.option('--eos', 'action', flag_value='eos',
+              help='Generate deformations for Equation of State')
+@click.argument('struct', type=click.Path(exists=True))
+def gen(struct, format, action):
     '''Generate deformed structures'''
-    click.echo('Generate')
+
+    cryst = ase.io.read(struct, format=format)
+    fn_tmpl = action
+    if format == 'vasp':
+        fn_tmpl += '_%03d.POSCAR'
+        kwargs = {'vasp5': True, 'direct': True}
+    elif format == 'abinit':
+        fn_tmpl += '_%03d.abinit'
+        kwargs = {}
+
+    if verbose:
+        from elastic.elastic import get_lattice_type
+        nr, brav, sg, sgn = get_lattice_type(cryst)
+        echo('%s lattice (%s): %s' % (brav, sg, cryst.get_chemical_formula()))
+
+    if action == 'cij':
+        systems = get_elastic_tensor(cryst)
+    elif action == 'eos':
+        systems = get_BM_EOS(cryst)
+
+    if verbose:
+        echo('Writing %d deformation files.' % len(systems))
+    for n, s in enumerate(systems):
+        ase.io.write(fn_tmpl % n, s, format=format, **kwargs)
 
 
 @cli.command()
-def proc():
+@click.argument('files', nargs=-1)
+def proc(files):
     '''Process calculated structures'''
-    click.echo('Process')
+    with click.progressbar(files) as bar:
+        for calc in bar:
+            process_calc(calc)
 
 
 if __name__ == '__main__':
