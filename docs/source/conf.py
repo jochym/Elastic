@@ -227,7 +227,7 @@ man_pages = [
 epub_title = u'Elastic'
 epub_author = u'Paweł T. Jochym'
 epub_publisher = u'Paweł T. Jochym'
-epub_copyright = u'2015, Paweł T. Jochym'
+epub_copyright = u'2017, Paweł T. Jochym'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
