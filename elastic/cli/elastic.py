@@ -112,10 +112,14 @@ def proc(ctx, files):
     systems = [ase.io.read(calc) for calc in files]
     if action == 'cij':
         cij = elastic.get_elastic_tensor(systems[0], systems=systems[1:])
+        if verbose:
+            
         echo(cij)
     elif action == 'eos':
         eos = elastic.get_BM_EOS(systems[0], systems=systems[1:])
-        echo(eos)
+        if verbose:
+            echo('# %7s (A^3)  %7s (GPa)  %7s' % ("V0", "B0", "B0'"))
+        echo('  %7.2 (A^3)  %7.2f (GPa)  %7.2f' % tuple(eos))
 
 
 if __name__ == '__main__':
