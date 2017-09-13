@@ -119,7 +119,7 @@ def proc(ctx, files):
         eos = elastic.get_BM_EOS(systems[0], systems=systems[1:])
         if verbose:
             echo('# %7s (A^3)  %7s (GPa)  %7s' % ("V0", "B0", "B0'"))
-        echo('  %7.2 (A^3)  %7.2f (GPa)  %7.2f' % tuple(eos))
+        echo('  %7.2f (A^3)  %7.2f (GPa)  %7.2f' % tuple(eos))
 
 
 if __name__ == '__main__':
