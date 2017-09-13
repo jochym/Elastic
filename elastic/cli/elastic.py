@@ -145,10 +145,11 @@ def proc(ctx, files):
             echo('\n'+30*'-')
         for c, sv in zip(cij[0], cij[1][3]/msv):
             echo('{:7.2f}{}'.format(
-                    c, '* ' if sv < eps else '  '), nl=False)
+                    c/ase.units.GPa, '* ' if sv < eps else '  '), nl=False)
         echo()
     elif action == 'eos':
         eos = elastic.get_BM_EOS(systems[0], systems=systems[1:])
+        eos[1] /= ase.units.GPa
         if verbose:
             echo('# %7s (A^3)  %7s (GPa)   %7s' % ("V0", "B0", "B0'"))
         echo('    %7.2f        %7.2f        %7.2f' % tuple(eos))
