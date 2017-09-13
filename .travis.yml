@@ -22,7 +22,7 @@ install:
 script: 
     - python -m unittest discover -s test -b 
     - python -m doctest -v docs/source/usage.rst
-    - elastic --version
+    - cd tests/data elastic -v --cij proc calc-cij_*/vasprun.xml
 
 deploy:
   # testing testpypi
