@@ -114,21 +114,22 @@ def proc(ctx, files):
     if action == 'cij':
         cij = elastic.get_elastic_tensor(systems[0], systems=systems[1:])
         msv = cij[1][3].max()
+        eps = 1e-4
         if verbose:
-            echo('Cij solution:\n'+30*'-')
+            echo('Cij solution\n'+30*'-')
             echo(' Solution rank: {:2d}{}'.format(
                     cij[1][2],
                     ' (undetermined)' if cij[1][2] < len(cij[0]) else ''))
             if cij[1][2] == len(cij[0]):
-                echo(' Square of residuals: {:7.2f}'.format(cij[1][1]))
-            echo(' Solution quality (relative singular values):')
+                echo(' Square of residuals: {:7.2g}'.format(cij[1][1]))
+            echo(' Relative singular values:')
             for sv in cij[1][3]/msv:
-                echo('  {:7.2}{}'.format(
-                        sv, '* ' if (sv) < 1e-4 else '  '), nl=False)
-            echo('Elastic tensor:\n'+30*'-')
+                echo('{:7.4f}{}'.format(
+                        sv, '* ' if (sv) < eps else '  '), nl=False)
+            echo('\n\nElastic tensor (GPa):\n'+30*'-')
         for c, sv in zip(cij[0], cij[1][3]/msv):
-            echo('  {:7.2f}'.format(
-                    c, '* ' if sv < 1e-4 else '  '), nl=False)
+            echo('{:7.2f}{}'.format(
+                    c, '* ' if sv < eps else '  '), nl=False)
         echo()
     elif action == 'eos':
         eos = elastic.get_BM_EOS(systems[0], systems=systems[1:])
