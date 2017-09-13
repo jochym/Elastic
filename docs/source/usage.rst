@@ -144,6 +144,8 @@ The basic calculation scheme can be summarized with the following list:
 
     elastic -v --cij proc calc-cij_000/vasprun.xml calc-cij_*/vasprun.xml
 
+.. highlight:: console
+
 You can test this procedure using data provided as a reference in the 
 ``tests/data`` directory. If you run the script on the provided data you
 should get following output::
