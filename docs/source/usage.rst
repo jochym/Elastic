@@ -9,6 +9,8 @@ Installation
 Conda
 -------
 
+.. highlight:: bash
+
 The installation procedure is quite simple if you use, *highly recommended*
 `conda package manager <http://conda.pydata.org/miniconda.html>`_::
 
@@ -114,9 +116,8 @@ The basic calculation scheme can be summarized with the following list:
   on your particular system, and you need to handle it yourself. You need to 
   make sure that for each system the internal degrees of freedom are 
   optimized and full stress tensor gets calculated. Example 
-  bash script handling this task on my cluster looks like this:
+  bash script handling this task on my cluster looks like this::
 
-.. code-block:: bash
     #!/bin/bash
     
     # Command to run vasp in current directory
@@ -145,9 +146,8 @@ The basic calculation scheme can be summarized with the following list:
 
 You can test this procedure using data provided as a reference in the 
 ``tests/data`` directory. If you run the script on the provided data you
-should get following output:
+should get following output::
 
-.. code-block:: bash
     elastic -v --cij proc calc-cij_000/vasprun.xml calc-cij_*/vasprun.xml
     
     Cij solution
@@ -169,6 +169,8 @@ calculation setup for your system.
 
 Library usage
 =============
+
+.. highlight:: python
 
 *Following text is not fully updated for 5.0 release yet.* 
 *Better read the code for now.*
