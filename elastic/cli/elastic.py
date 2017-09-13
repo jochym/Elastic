@@ -23,6 +23,7 @@ The elastic command is a command-line tool exposing the functionality
 of elastic library for direct use - without writing any python code.
 '''
 
+from __future__ import print_function, absolute_import, division
 import click
 import ase.io
 import elastic
