@@ -113,7 +113,7 @@ def proc(ctx, files):
     if action == 'cij':
         cij = elastic.get_elastic_tensor(systems[0], systems=systems[1:])
         if verbose:
-            
+            pass
         echo(cij)
     elif action == 'eos':
         eos = elastic.get_BM_EOS(systems[0], systems=systems[1:])
