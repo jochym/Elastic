@@ -3,21 +3,11 @@
 from setuptools import setup, find_packages
 from setuptools_scm import get_version
 
-ver = get_version().split('.')
-if len(ver) > 3:
-    # Post release version:
-    #  - add patchlevel at the end
-    #  - decrease back last number
-    print('Version from SCM:', ver)
-    try:
-        pl = int(ver[3].split('+')[0][3:])
-        ver[2] = str(int(ver[2])-1)
-        ver = ver[:3]
-        ver.append(str(pl))
-    except ValueError:
-        # This is probably build from pypi source
-        # Just keep the version from setuptools_scm and hope for the best
-        pass
+ver = get_version().split('+')[0].split('.')
+
+if ver[-1].startswith('dev'):
+    ver[-1] = ver[-1][3:]
+    ver[-2] = str(int(ver[-2])-1)
 
 ver = '.'.join(ver)
 
