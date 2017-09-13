@@ -167,6 +167,9 @@ calculation setup for your system.
 Library usage
 =============
 
+*Following text is not fully updated for 5.0 release yet.* 
+*Better read the code for now.*
+
 In this section we assume that you have all parts of ASE properly installed and 
 the elastic is installed and working properly. The examples are available in the 
 `example subdirectory <http://bazaar.launchpad.net/~jochym/elastic/trunk/files/head:/example/>`_. 
