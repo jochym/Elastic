@@ -52,7 +52,8 @@ test:
     - elastic
   commands:
     - python -m unittest discover -s test
-    - elastic 
+    - elastic --version
+    - elastic -v --cij proc tests/data/calc-*_*/vasprun.xml
 
 
 about:
