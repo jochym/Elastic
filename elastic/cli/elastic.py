@@ -73,7 +73,7 @@ def cli(ctx, frmt, action, verbose):
               help='Number of generated deformations per axis (default: 5)')
 @click.option('-l', '--lo', 'lo', default=0.98, type=float,
               help='Lower relative volume for EOS scan (default: 0.98)')
-@click.option('-h', '--hi', 'hi', default=0.98, type=float,
+@click.option('-h', '--hi', 'hi', default=1.02, type=float,
               help='Upper relative volume for EOS scan (default: 1.02)')
 @click.option('-s', '--size', 'size', default=2.0, type=float,
               help='Deformation size for Cij scan (% or deg., default: 2.0)')
@@ -97,6 +97,13 @@ def gen(ctx, num, lo, hi, size, struct):
         from elastic.elastic import get_lattice_type
         nr, brav, sg, sgn = get_lattice_type(cryst)
         echo('%s lattice (%s): %s' % (brav, sg, cryst.get_chemical_formula()))
+        if action == 'cij':
+            echo('Generating {:d} deformations of {:.1f}(%/degs.) per axis'.format(
+                    num, size))
+        elif action == 'eos':
+            echo('Generating {:d} deformations from {:.3f} to {:.3f} of V0'.format(
+                    num, lo, hi))
+
 
     if action == 'cij':
         systems = elastic.get_elastic_tensor(cryst, n=num, d=size)
