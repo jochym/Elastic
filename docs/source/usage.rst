@@ -6,6 +6,9 @@ Installation
 .. image:: https://anaconda.org/jochym/elastic/badges/installer/conda.svg
    :target: https://conda.anaconda.org/jochym
 
+Conda
+-------
+
 The installation procedure is quite simple if you use, *highly recommended*
 `conda package manager <http://conda.pydata.org/miniconda.html>`_
 
@@ -20,18 +23,36 @@ installation you need to run following command:
 The above method has additional benefit of providing current installation of
 ASE and spglib libraries.
 
+PyPi
+------
+
+The package is published simultaneously on conda and pypi. The second 
+recommended way to install elastic is with pip::
+
+    pip install elastic
+
+which should install the package and all its dependencies. 
+Note that the number of dependencies is rather large and some of them are
+fairly large. Most of them, however, are just standard scientific python
+packages - almost all are present in standard anaconda install.
+
+
+Manual
+--------
+
 To install the code *pedestrian way* you need to install following python 
 packages (most, if not all, are available in major linux distributions):
 
 * `SciPy and NumPy <http://www.scipy.org/>`_ libraries
-* `matplotlib <http://matplotlib.sourceforge.net/>`_ (not strictly required,
+* `matplotlib <http://matplotlib.org/>`_ (not strictly required,
   but needed for testing and plotting)
 * `ASE <https://wiki.fysik.dtu.dk/ase/>`_ system
-* Some ASE calculator (VASP, GPAW, abinit, ...), but be warned that for now 
-  the code was developed using VASP only. I will be happy to help you extending
-  it to other calculators.
-* `spglib <http://spglib.sourceforge.net/>`_ space group library 
-* `pyspglib <http://spglib.sourceforge.net/pyspglibForASE/>`_ python space group module
+* `spglib <https://atztogo.github.io/spglib/>`_ space group library 
+* Some ASE calculator (VASP, GPAW, abinit, ...), but be warned 
+  that for now the code was developed using VASP only. I will be happy to 
+  help you extending it to other calculators. The code can be used without
+  supported ASE calculator using command line interface and external, 
+  independent calculation tool.
 
 This is highly system-dependent and I am unable to provide detailed support for
 this type of install - I use conda install of ASE/elastic myself!
@@ -39,6 +60,13 @@ this type of install - I use conda install of ASE/elastic myself!
 Some legacy `installation guides <https://github.com/jochym/qe-doc/blob/master/Installation.ipynb>`_ 
 which may help you with manual process could be find at the 
 `QE-doc project pages <https://jochym.github.io/qe-doc/>`_.
+
+Essentially, you need to clone the repository and run::
+
+    python setup.py install
+
+in the main directory. But this is really not recommended way to install.
+Use it at your own risk and if you know what you are doing.
 
 Testing
 -------
