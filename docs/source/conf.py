@@ -42,7 +42,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Elastic'
-copyright = u'2015, Paweł T. Jochym'
+copyright = u'2017, Paweł T. Jochym'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -92,7 +92,8 @@ exclude_patterns = []
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'bizstyle'
+# html_theme = 'bizstyle'
+html_theme = 'sphinxdoc'
 
 #jsmath_path = 'jsmath/easy/load.js'
 
