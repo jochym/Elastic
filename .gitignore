@@ -32,6 +32,7 @@ __conda_version__.txt
 .coverage
 .tox
 nosetests.xml
+tests/data/calc-*_*/
 
 # Translations
 *.mo
