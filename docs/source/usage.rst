@@ -10,13 +10,13 @@ Conda
 -------
 
 The installation procedure is quite simple if you use, *highly recommended*
-`conda package manager <http://conda.pydata.org/miniconda.html>`_
+`conda package manager <http://conda.pydata.org/miniconda.html>`_::
 
     conda install -c conda-forge elastic
 
 The above command installs elastic with all dependencies into your current
 conda environment. If you want to add my anaconda.org channel into your conda
-installation you need to run following command:
+installation you need to run following command::
 
     conda config --add channels conda-forge
 
