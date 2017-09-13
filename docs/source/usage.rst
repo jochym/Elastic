@@ -91,53 +91,52 @@ following command in the source directory::
 Usage
 =====
 
-Starting from ver. 5.0, the command line utility `elastic` is a primary
+Starting from ver. 5.0, the command line utility 'elastic' is a primary
 interface to the package and the direct python programming with the library
 is relegated to non-standard calculations. 
 
 The basic calculation scheme can be summarized with the following list:
 
 * Prepare the basic structure data in the form of VASP POSCAR file or 
-    abinit input file. Support for other programs can be added relatively
-    easily. Contact the author if you need it. 
-    
-    The structure should be fully optimized represent what you consider to
-    be ground state of the system.
+abinit input file. Support for other programs can be added relatively
+easily. Contact the author if you need it. 
+The structure should be fully optimized represent what you consider to
+be ground state of the system.
 * run `elastic` on the structure to generate deformed structures probing
-    the properties of the system::
+the properties of the system::
 
     elastic -v --cij gen -n 5 -s 2 POSCAR
 
-    which generates a set of deformed systems named cij_XXX.POSCAR, where
-    XXX is replaced by numbers with 000 corresponding to undisturbed structure.
+which generates a set of deformed systems named cij_XXX.POSCAR, where
+XXX is replaced by numbers with 000 corresponding to undisturbed structure.
 * run your DFT program (VASP, abinit, etc.) on all systems. This step depends
-    on your particular system, and you need to handle it yourself. You need to 
-    make sure that for each system the internal degrees of freedom are 
-    optimized and full stress tensor gets calculated. Example 
-    bash script handling this task on my cluster looks like this::
+  on your particular system, and you need to handle it yourself. You need to 
+  make sure that for each system the internal degrees of freedom are 
+  optimized and full stress tensor gets calculated. Example 
+  bash script handling this task on my cluster looks like this::
 
-        #!/bin/bash
-        
-        # Command to run vasp in current directory
-        RUN_VASP="/opt/bin/run-vasp541"
+    #!/bin/bash
+    
+    # Command to run vasp in current directory
+    RUN_VASP="/opt/bin/run-vasp541"
 
-        for s in $* ; do
-            d=${s%%.POSCAR}
-            echo -n  $d ": "
-            mkdir calc-$d
-            (
-                cd calc-$d
-                ln -s ../INCAR ../KPOINTS ../POTCAR ../vasprun.conf .
-                ln -s ../$s POSCAR
-                $RUN_VASP
-            )
-        done
+    for s in $* ; do
+        d=${s%%.POSCAR}
+        echo -n  $d ": "
+        mkdir calc-$d
+        (
+            cd calc-$d
+            ln -s ../INCAR ../KPOINTS ../POTCAR ../vasprun.conf .
+            ln -s ../$s POSCAR
+            $RUN_VASP
+        )
+    done
 
-    This produces a set of directories: calc-cij_XXX with completed 
-    single-point calculations.
+  This produces a set of directories: calc-cij_XXX with completed 
+  single-point calculations.
 * run `elastic` again to post-process the calculations. We do that by 
-    feeding it with output from the DFT calculations. Remember to put
-    undisturbed structure at the first position::
+feeding it with output from the DFT calculations. Remember to put
+undisturbed structure at the first position::
 
     elastic -v --cij proc calc-cij_000/vasprun.xml calc-cij_*/vasprun.xml
 
