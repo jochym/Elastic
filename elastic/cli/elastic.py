@@ -126,9 +126,10 @@ def proc(ctx, files):
             for sv in cij[1][3]/msv:
                 echo('{:7.4f}{}'.format(
                         sv, '* ' if (sv) < eps else '  '), nl=False)
-            echo('\n\nElastic tensor (GPa):\n'+30*'-')
+            echo('\n\nElastic tensor (GPa):')
             for dsc in elastic.elastic.get_cij_order(systems[0]):
-                echo('{:7s}  '.format(dsc), nl=False)
+                echo('{: >7s}  '.format(dsc), nl=False)
+            echo('\n'+30*'-')
         for c, sv in zip(cij[0], cij[1][3]/msv):
             echo('{:7.2f}{}'.format(
                     c, '* ' if sv < eps else '  '), nl=False)
