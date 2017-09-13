@@ -71,35 +71,101 @@ Use it at your own risk and if you know what you are doing.
 Testing
 -------
 
-The whole package has a set unittests based on hypothesis package.
-The tests are self-contained and do not require any external packages
+The simplest verification if everything works is just using the `elastic`
+utility to see the help screen::
+
+    elastic --help
+
+or version of the package::
+
+    elastic --version
+
+Additionally the whole package has a set of unittests based on hypothesis
+package. The tests are self-contained and do not require any external packages
 like DFT programs (e.g. VASP). You can run these tests by executing
 following command in the source directory::
 
     python -m unittest discover -s test -b
 
-All modules have small testing sets at the end. You can run these test by 
-simply running each module as a python script::
-
-    python parcalc.py
-
-which will run a short series of single-point calculations on the MgO unit
-cell and plot the resulting equation of state. 
-
-The main module testing routine::
-
-    python elastic.py
-
-will run the equation of state and elastic tensor calculations for a set of 
-small crystals - one for each Bravais lattice. This may take some considerable
-time. 
-
-The testing routines will probably not work out of the box in your system.
-Review the comments at the end of the files to make them work. I will try to make 
-them as setup-agnostic as possible.
 
 Usage
 =====
+
+Starting from ver. 5.0, the command line utility `elastic` is a primary
+interface to the package and the direct python programming with the library
+is relegated to non-standard calculations. 
+
+The basic calculation scheme can be summarized with the following list:
+
+* Prepare the basic structure data in the form of VASP POSCAR file or 
+    abinit input file. Support for other programs can be added relatively
+    easily. Contact the author if you need it. 
+    
+    The structure should be fully optimized represent what you consider to
+    be ground state of the system.
+* run `elastic` on the structure to generate deformed structures probing
+    the properties of the system::
+
+    elastic -v --cij gen -n 5 -s 2 POSCAR
+
+    which generates a set of deformed systems named cij_XXX.POSCAR, where
+    XXX is replaced by numbers with 000 corresponding to undisturbed structure.
+* run your DFT program (VASP, abinit, etc.) on all systems. This step depends
+    on your particular system, and you need to handle it yourself. You need to 
+    make sure that for each system the internal degrees of freedom are 
+    optimized and full stress tensor gets calculated. Example 
+    bash script handling this task on my cluster looks like this::
+
+        #!/bin/bash
+        
+        # Command to run vasp in current directory
+        RUN_VASP="/opt/bin/run-vasp541"
+
+        for s in $* ; do
+            d=${s%%.POSCAR}
+            echo -n  $d ": "
+            mkdir calc-$d
+            (
+                cd calc-$d
+                ln -s ../INCAR ../KPOINTS ../POTCAR ../vasprun.conf .
+                ln -s ../$s POSCAR
+                $RUN_VASP
+            )
+        done
+
+    This produces a set of directories: calc-cij_XXX with completed 
+    single-point calculations.
+* run `elastic` again to post-process the calculations. We do that by 
+    feeding it with output from the DFT calculations. Remember to put
+    undisturbed structure at the first position::
+
+    elastic -v --cij proc calc-cij_000/vasprun.xml calc-cij_*/vasprun.xml
+
+You can test this procedure using data provided as a reference in the 
+`tests/data` directory. If you run the script on the provided data you
+should get following output::
+
+    elastic -v --cij proc calc-cij_000/vasprun.xml calc-cij_*/vasprun.xml
+    
+    Cij solution
+    ------------------------------
+     Solution rank:  3
+     Square of residuals: 0.00053
+     Relative singular values:
+     1.0000   0.7071   0.6354  
+
+    Elastic tensor (GPa):
+       C_11     C_12     C_44  
+    ------------------------------
+     321.15    95.88   143.44 
+
+The data provided correspond to cubic MgO crystal. The DFT calculation setup
+is tuned to provide quick results for testing and *should not* be used as
+a guide for production calculations. You *need* to determine proper
+calculation setup for your system.
+
+Library usage
+=============
 
 In this section we assume that you have all parts of ASE properly installed and 
 the elastic is installed and working properly. The examples are available in the 
