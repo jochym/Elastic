@@ -115,16 +115,17 @@ def proc(ctx, files):
         cij = elastic.get_elastic_tensor(systems[0], systems=systems[1:])
         msv = cij[1][3].max()
         if verbose:
-            echo('Cij solution:\n--------------')
-            echo('Square of residuals: {:7.2f}'.format(cij[1][1]))
-            echo('Solution rank: {:2d}{}'.format(
+            echo('Cij solution:\n'+30*'-')
+            echo(' Solution rank: {:2d}{}'.format(
                     cij[1][2],
                     ' (undetermined)' if cij[1][2] < len(cij[0]) else ''))
-            echo('Solution quality (relative singular values):')
+            if cij[1][2] == len(cij[0]):
+                echo(' Square of residuals: {:7.2f}'.format(cij[1][1]))
+            echo(' Solution quality (relative singular values):')
             for sv in cij[1][3]/msv:
                 echo('  {:7.2}{}'.format(
                         sv, '* ' if (sv) < 1e-4 else '  '), nl=False)
-            echo('Elastic tensor:')
+            echo('Elastic tensor:\n'+30*'-')
         for c, sv in zip(cij[0], cij[1][3]/msv):
             echo('  {:7.2f}'.format(
                     c, '* ' if sv < 1e-4 else '  '), nl=False)
