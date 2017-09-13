@@ -354,7 +354,7 @@ def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, systems=None, scale_volumes=True):
                     norm(r.get_cell()[:, 0]),
                     norm(r.get_cell()[:, 1]),
                     norm(r.get_cell()[:, 2])] for r in res])
-
+    print(pvdat)
     # Fitting functions
     def fitfunc(p, x):
         return [BMEOS(xv, p[0], p[1], p[2]) for xv in x]

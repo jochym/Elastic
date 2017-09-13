@@ -69,17 +69,17 @@ def cli(ctx, frmt, action, verbose):
 
 
 @cli.command()
-@click.option('-n', '--n', default=5, type=int,
+@click.option('-n', '--num', 'num', default=5, type=int,
               help='Number of generated deformations per axis (default: 5)')
-@click.option('-l', '--lo', default=0.98, type=float,
+@click.option('-l', '--lo', 'lo', default=0.98, type=float,
               help='Lower relative volume for EOS scan (default: 0.98)')
-@click.option('-h', '--hi', default=0.98, type=float,
+@click.option('-h', '--hi', 'hi', default=0.98, type=float,
               help='Upper relative volume for EOS scan (default: 1.02)')
-@click.option('-s', '--size', default=2.0, type=float,
+@click.option('-s', '--size', 'size', default=2.0, type=float,
               help='Deformation size for Cij scan (% or deg., default: 2.0)')
 @click.argument('struct', type=click.Path(exists=True))
 @click.pass_context
-def gen(ctx, n, lo, hi, size, struct):
+def gen(ctx, num, lo, hi, size, struct):
     '''Generate deformed structures'''
 
     frmt = ctx.parent.params['frmt']
@@ -99,9 +99,9 @@ def gen(ctx, n, lo, hi, size, struct):
         echo('%s lattice (%s): %s' % (brav, sg, cryst.get_chemical_formula()))
 
     if action == 'cij':
-        systems = elastic.get_elastic_tensor(cryst, n=n, d=size)
+        systems = elastic.get_elastic_tensor(cryst, n=num, d=size)
     elif action == 'eos':
-        systems = elastic.get_BM_EOS(cryst, n=n, lo=lo, hi=hi)
+        systems = elastic.get_BM_EOS(cryst, n=num, lo=lo, hi=hi)
 
     systems.insert(0, cryst)
     if verbose:
