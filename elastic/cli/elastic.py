@@ -104,7 +104,6 @@ def gen(ctx, num, lo, hi, size, struct):
             echo('Generating {:d} deformations from {:.3f} to {:.3f} of V0'.format(
                     num, lo, hi))
 
-
     if action == 'cij':
         systems = elastic.get_elastic_tensor(cryst, n=num, d=size)
     elif action == 'eos':
