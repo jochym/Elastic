@@ -33,7 +33,7 @@ verbose = 0
 
 
 def banner():
-    if verbose > 0:
+    if verbose > 1:
         echo('Elastic ver. %s\n----------------------' %
              pkg_resources.get_distribution("elastic").version)
 
@@ -69,6 +69,7 @@ def cli(ctx, frmt, action, verbose):
 
 
 @cli.command()
+#@click.option()
 @click.argument('struct', type=click.Path(exists=True))
 @click.pass_context
 def gen(ctx, struct):
@@ -112,14 +113,27 @@ def proc(ctx, files):
     systems = [ase.io.read(calc) for calc in files]
     if action == 'cij':
         cij = elastic.get_elastic_tensor(systems[0], systems=systems[1:])
+        msv = cij[1][3].max()
         if verbose:
-            pass
-        echo(cij)
+            echo('Cij solution:\n--------------')
+            echo('Square of residuals: {:7.2f}'.format(cij[1][1]))
+            echo('Solution rank: {:2d}{}'.format(
+                    cij[1][2],
+                    ' (undetermined)' if cij[1][2] < len(cij[0]) else ''))
+            echo('Solution quality (relative singular values):')
+            for sv in cij[1][3]/msv:
+                echo('  {:7.2}{}'.format(
+                        sv, '* ' if (sv) < 1e-4 else '  '), nl=False)
+            echo('Elastic tensor:')
+        for c, sv in zip(cij[0], cij[1][3]/msv):
+            echo('  {:7.2f}'.format(
+                    c, '* ' if sv < 1e-4 else '  '), nl=False)
+        echo()
     elif action == 'eos':
         eos = elastic.get_BM_EOS(systems[0], systems=systems[1:])
         if verbose:
-            echo('# %7s (A^3)  %7s (GPa)  %7s' % ("V0", "B0", "B0'"))
-        echo('  %7.2f (A^3)  %7.2f (GPa)  %7.2f' % tuple(eos))
+            echo('# %7s (A^3)  %7s (GPa)   %7s' % ("V0", "B0", "B0'"))
+        echo('    %7.2f        %7.2f        %7.2f' % tuple(eos))
 
 
 if __name__ == '__main__':
