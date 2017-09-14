@@ -102,7 +102,7 @@ def regular(u):
        C_{11}, C_{12}, C_{44}
 
     :param u: vector of deformations:
-        :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
@@ -123,6 +123,11 @@ def tetragonal(u):
 
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
     '''
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
@@ -142,6 +147,11 @@ def orthorombic(u):
     .. math::
        C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
        C_{44}, C_{55}, C_{66}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
     '''
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
@@ -163,6 +173,11 @@ def trigonal(u):
 
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
     '''
     # TODO: Not tested yet.
     # TODO: There is still some doubt about the :math:`C_{14}` constant.
@@ -186,6 +201,11 @@ def hexagonal(u):
 
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
     '''
     # TODO: Still needs good verification
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
@@ -199,12 +219,18 @@ def hexagonal(u):
 
 
 def monoclinic(u):
-    '''
-    Monoclinic group, the ordering of constants is:
+    '''Monoclinic group,
+
+    The ordering of constants is:
 
     .. math::
        C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
        C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
     '''
 
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
@@ -218,8 +244,7 @@ def monoclinic(u):
 
 
 def triclinic(u):
-    '''
-    Triclinic crystals.
+    '''Triclinic crystals.
 
     *Note*: This was never tested on the real case. Beware!
 
@@ -231,6 +256,11 @@ def triclinic(u):
        C_{44}, C_{55}, C_{66},
        C_{16}, C_{26}, C_{36}, C_{46}, C_{56},
        C_{14}, C_{15}, C_{25}, C_{45}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
     '''
     # Based on the monoclinic matrix and not tested on real case.
     # If you have test cases for this symmetry send them to the author.
@@ -245,6 +275,12 @@ def triclinic(u):
 
 
 def get_cij_order(cryst):
+    '''Give order of of elastic constants for the structure
+
+    :param cryst: ASE Atoms object
+
+    :returns: Order of elastic constants as a tuple of strings: C_ij
+    '''
     orders = {
             1: ('C_11', 'C_22', 'C_33', 'C_12', 'C_13', 'C_23',
                 'C_44', 'C_55', 'C_66', 'C_16', 'C_26', 'C_36',
@@ -262,18 +298,22 @@ def get_cij_order(cryst):
 
 
 def get_lattice_type(cryst):
-    '''
-    Find the symmetry of the crystal using spglib symmetry finder.
+    '''Find the symmetry of the crystal using spglib symmetry finder.
+
     Assign to sg_name i sg_nr members name of the space group and
     its number extracted from the result. Based on the group number
     identify also the lattice type (assigned to sg_type member) and
     the Bravais lattice of the crystal (assigned to bravais member).
     The returned value is the lattice type number.
-    The lattice type numbers are
-    (see also Crystal.ls, the numbering starts from 1):
+    The lattice type numbers are (the numbering starts from 1):
 
-    Triclinic (1), Monoclinic (2), Orthorombic (3), Tetragonal (4)
-    Trigonal (5), Hexagonal (6), Cubic (7)
+    Triclinic (1), Monoclinic (2), Orthorombic (3),
+    Tetragonal (4), Trigonal (5), Hexagonal (6), Cubic (7)
+
+    :param cryst: ASE Atoms object
+
+    :returns: tuple (lattice type number (1-7), lattice name, space group 
+                     name, space group number)
     '''
     # Table of lattice types and correcponding group numbers dividing
     # the ranges. See get_lattice_type method for precise definition.
