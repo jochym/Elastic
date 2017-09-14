@@ -33,6 +33,8 @@ __conda_version__.txt
 .tox
 nosetests.xml
 tests/data/calc-*_*/
+tests/data
+docs/notebook
 
 # Translations
 *.mo
