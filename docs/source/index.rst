@@ -45,6 +45,7 @@ The project is free software and I welcome patches, ideas and other feedback.
    
    intro
    usage
+   lib-usage
    modules
    endmatter
 
