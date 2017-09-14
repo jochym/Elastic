@@ -101,8 +101,7 @@ def regular(u):
     .. math::
        C_{11}, C_{12}, C_{44}
 
-    :param u: vector of deformations 
-    :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`
+    :param u: vector of deformations :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
