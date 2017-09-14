@@ -44,7 +44,7 @@ The project is free software and I welcome patches, ideas and other feedback.
    :maxdepth: 3
    
    intro
-   usage
+   cli-usage
    lib-usage
    modules
    endmatter
