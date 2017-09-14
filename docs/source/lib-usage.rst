@@ -9,7 +9,7 @@ Once you have everything installed and running you can run your first
 real calculation. The first step is to import the modules to your
 program (the examples here use VASP calculator)
 
-.. code:: ipython3
+.. code:: python
 
     from ase.spacegroup import crystal
     from parcalc import ClusterVasp, ParCalculate
@@ -21,7 +21,7 @@ program (the examples here use VASP calculator)
 
 next we need to create our example MgO crystal:
 
-.. code:: ipython3
+.. code:: python
 
     a = 4.194
     cryst = crystal(['Mg', 'O'], 
@@ -34,7 +34,7 @@ defined in the parcalc module. You can probably replace this calculator
 by any other ASE calculator but this was not tested yet. Thus let us
 define the calculator:
 
-.. code:: ipython3
+.. code:: python
 
     # Create the calculator running on one, eight-core node.
     # This is specific to the setup on my cluster.
@@ -56,7 +56,7 @@ define the calculator:
 Finally, run our first calculation. Obtain relaxed structure and
 residual pressure after optimization:
 
-.. code:: ipython3
+.. code:: python
 
     print("Residual pressure: %.3f bar" % (
             get_pressure(cryst.get_stress())))
@@ -74,7 +74,7 @@ demonstrate the ability to run several calculations in parallel - if you
 have a cluster of machines at your disposal this will speed up the
 calculation considerably.
 
-.. code:: ipython3
+.. code:: python
 
     # Lets extract optimized lattice constant.
     # MgO is cubic so a is a first diagonal element of lattice matrix
@@ -139,7 +139,7 @@ Now we repeat the setup and optimization procedure from the example 1
 above but using a new Crystal class (see above we skip this part for
 brevity). Then comes a new part (IDOF - Internal Degrees of Freedom):
 
-.. code:: ipython3
+.. code:: python
 
     # Switch to cell shape+IDOF optimizer
     calc.set(isif=4)
@@ -222,7 +222,7 @@ and optimize its structure (see :ref:``parcalc`` above). Once we have an
 optimized structure we can switch the calculator to internal degrees of
 freedom optimization (IDOF) and calculate the elastic tensor:
 
-.. code:: ipython3
+.. code:: python
 
     # Switch to IDOF optimizer
     calc.set(isif=2)
@@ -250,7 +250,7 @@ along a (x) axis by +/-0.2% and fit the :math:`3^{rd}` order polynomial
 to the stress-strain data. The linear component of the fit is the
 element of the elastic tensor:
 
-.. code:: ipython3
+.. code:: python
 
     from elastic.elastic import get_cart_deformed_cell
     
@@ -278,7 +278,7 @@ element of the elastic tensor:
     Workers started: 10
 
 
-.. code:: ipython3
+.. code:: python
 
     # Make a plot
     plt.plot(ss[:,0,0],ss[:,1,0]/units.GPa,'.')
