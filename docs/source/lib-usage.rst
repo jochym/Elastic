@@ -1,13 +1,16 @@
 
+Library usage
+=============
+
 Simple Parallel Calculation
 ---------------------------
 
 Once you have everything installed and running you can run your first
-real calculation. The testing code at the end of the parcalc.py may be
-used as an example how to do it. The first step is to import the modules
-to your program (the examples here use VASP calculator)::
+real calculation. The first step is to import the modules to your
+program (the examples here use VASP calculator)
 
-.. code:: python
+.. code:: ipython3
+
     from ase.spacegroup import crystal
     from parcalc import ClusterVasp, ParCalculate
     from elastic import get_pressure, BMEOS, get_strain
@@ -16,9 +19,10 @@ to your program (the examples here use VASP calculator)::
     import numpy
     import matplotlib.pyplot as plt
 
-next we need to create the crystal, MgO in this case::
+next we need to create our example MgO crystal:
 
-.. code-block:: python
+.. code:: ipython3
+
     a = 4.194
     cryst = crystal(['Mg', 'O'], 
                     [(0, 0, 0), (0.5, 0.5, 0.5)], 
@@ -28,9 +32,9 @@ next we need to create the crystal, MgO in this case::
 We need a calculator for our job, here we use VASP and ClusterVasp
 defined in the parcalc module. You can probably replace this calculator
 by any other ASE calculator but this was not tested yet. Thus let us
-define the calculator::
+define the calculator:
 
-.. code:: python
+.. code:: ipython3
 
     # Create the calculator running on one, eight-core node.
     # This is specific to the setup on my cluster.
@@ -50,9 +54,9 @@ define the calculator::
     calc.set(isif=3)
 
 Finally, run our first calculation. Obtain relaxed structure and
-residual pressure after optimization::
+residual pressure after optimization:
 
-.. code:: python
+.. code:: ipython3
 
     print("Residual pressure: %.3f bar" % (
             get_pressure(cryst.get_stress())))
@@ -70,7 +74,7 @@ demonstrate the ability to run several calculations in parallel - if you
 have a cluster of machines at your disposal this will speed up the
 calculation considerably.
 
-.. code:: python
+.. code:: ipython3
 
     # Lets extract optimized lattice constant.
     # MgO is cubic so a is a first diagonal element of lattice matrix
@@ -133,9 +137,9 @@ parameters):
 
 Now we repeat the setup and optimization procedure from the example 1
 above but using a new Crystal class (see above we skip this part for
-brevity). Then comes a new part (IDOF - Internal Degrees of Freedom)::
+brevity). Then comes a new part (IDOF - Internal Degrees of Freedom):
 
-.. code:: python
+.. code:: ipython3
 
     # Switch to cell shape+IDOF optimizer
     calc.set(isif=4)
@@ -148,7 +152,7 @@ brevity). Then comes a new part (IDOF - Internal Degrees of Freedom)::
     res=ParCalculate(deform,calc)
     
     # Post-process the results
-    fit=get_BM_EOS(cryst, data=res)
+    fit=get_BM_EOS(cryst, systems=res)
     
     # Get the P(V) data points just calculated
     pv=numpy.array(cryst.pv)
@@ -163,7 +167,7 @@ brevity). Then comes a new part (IDOF - Internal Degrees of Freedom)::
     v0=fit[0]
     
     # B-M EOS for plotting
-    fitfunc = lambda p, x: [BMEOS(xv,p[0],p[1],p[2]) for xv in x]
+    fitfunc = lambda p, x: numpy.array([BMEOS(xv,p[0],p[1],p[2]) for xv in x])
     
     # Ranges - the ordering in pv is not guarateed at all!
     # In fact it may be purely random.
@@ -173,7 +177,7 @@ brevity). Then comes a new part (IDOF - Internal Degrees of Freedom)::
     
     # Plot the P(V) curves and points for the crystal
     # Plot the points
-    plt.plot(pv[:,0]/v0,pv[:,1],'o')
+    plt.plot(pv[:,0]/v0,pv[:,1]/units.GPa,'o')
     
     # Mark the center P=0 V=V0
     plt.axvline(1,ls='--')
@@ -181,7 +185,10 @@ brevity). Then comes a new part (IDOF - Internal Degrees of Freedom)::
     
     # Plot the fitted B-M EOS through the points
     xa=numpy.linspace(x[0],x[-1],20)
-    plt.plot(xa/v0,fitfunc(fit,xa),'-')
+    plt.plot(xa/v0,fitfunc(fit,xa)/units.GPa,'-')
+    plt.title('MgO pressure vs. volume')
+    plt.xlabel('$V/V_0$')
+    plt.ylabel('P (GPa)')
     plt.show()
 
 
@@ -206,8 +213,6 @@ printed out in the output close to:
       B'_0 = 4.3  \quad
       a_0 = 4.1936 \text{ A}
 
-The pressure dependence on volume in MgO crystal (example2.py).
-
 Calculation of the elastic tensor
 ---------------------------------
 
@@ -215,9 +220,9 @@ Finally let us calculate an elastic tensor for the same simple cubic
 crystal - magnesium oxide (MgO). For this we need to create the crystal
 and optimize its structure (see :ref:``parcalc`` above). Once we have an
 optimized structure we can switch the calculator to internal degrees of
-freedom optimization (IDOF) and calculate the elastic tensor::
+freedom optimization (IDOF) and calculate the elastic tensor:
 
-.. code:: python
+.. code:: ipython3
 
     # Switch to IDOF optimizer
     calc.set(isif=2)
@@ -236,16 +241,16 @@ freedom optimization (IDOF) and calculate the elastic tensor::
 .. parsed-literal::
 
     Workers started: 10
-    Cij (GPa): [ 338.4689633   103.64333973  152.21575456]
+    Cij (GPa): [ 338.46920873  103.64248824  152.21479687]
 
 
 To make sure we are getting the correct answer let us make the
 calculation for :math:`C_{11}, C_{12}` by hand. We will deform the cell
 along a (x) axis by +/-0.2% and fit the :math:`3^{rd}` order polynomial
 to the stress-strain data. The linear component of the fit is the
-element of the elastic tensor::
+element of the elastic tensor:
 
-.. code:: python
+.. code:: ipython3
 
     from elastic.elastic import get_cart_deformed_cell
     
@@ -266,8 +271,18 @@ element of the elastic tensor::
     mi=(lo+hi)/2
     wi=(hi-lo)/2
     xa=numpy.linspace(mi-1.1*wi,mi+1.1*wi, 50)
-    plt.plot(ss[:,0,0],ss[:,1,0],'k.')
-    plt.plot(ss[:,0,0],ss[:,1,1],'r.')
+
+
+.. parsed-literal::
+
+    Workers started: 10
+
+
+.. code:: ipython3
+
+    # Make a plot
+    plt.plot(ss[:,0,0],ss[:,1,0]/units.GPa,'.')
+    plt.plot(ss[:,0,0],ss[:,1,1]/units.GPa,'.')
     
     plt.axvline(0,ls='--')
     plt.axhline(0,ls='--')
@@ -278,15 +293,18 @@ element of the elastic tensor::
     c11=f[-2]/units.GPa
     
     # Plot the fitted function
-    plt.plot(xa,numpy.polyval(f,xa),'b-')
+    plt.plot(xa,numpy.polyval(f,xa)/units.GPa,'-', label='$C_{11}$')
     
     # C12 component
     f=numpy.polyfit(ss[:,0,0],ss[:,1,1],3)
     c12=f[-2]/units.GPa
     
     # Plot the fitted function
-    plt.plot(xa,numpy.polyval(f,xa),'g-')
-    
+    plt.plot(xa,numpy.polyval(f,xa)/units.GPa,'-', label='$C_{12}$')
+    plt.xlabel('Relative strain')
+    plt.ylabel('Stress componnent (GPa)')
+    plt.title('MgO, strain-stress relation ($C_{11}, C_{12}$)')
+    plt.legend(loc='best')
     # Here are the results. They should agree with the results
     # of the internal routine.
     print('C11 = %.3f GPa, C12 = %.3f GPa => K= %.3f GPa' % (
@@ -297,23 +315,25 @@ element of the elastic tensor::
 
 .. parsed-literal::
 
-    Workers started: 10
-    C11 = 325.004 GPa, C12 = 102.439 GPa => K= 176.628 GPa
+    C11 = 325.003 GPa, C12 = 102.440 GPa => K= 176.628 GPa
 
 
 
-.. image:: lib-usage_files/lib-usage_17_1.png
+.. image:: lib-usage_files/lib-usage_18_1.png
 
-
-The pressure dependence on volume in MgO crystal (example3.py).
 
 If you set up everything correctly you should obtain fitted parameters
 printed out in the output close to:
 
-:math:`C_{ij}` (GPa): [ 319.1067 88.8528 139.35852632]
+::
+
+    Cij (GPa): [ 340   100   180]
 
 With the following result of fitting:
 
 ::
 
-    $C_{11}$ = 317.958 GPa, $C_{12}$ = 68.878 GPa => K= 151.905 GPa
+    C11 = 325 GPa, C12 = 100 GPa => K= 180 GPa
+
+The actual numbers depend on the details of the calculations setup but
+should be fairly close to the above results.
