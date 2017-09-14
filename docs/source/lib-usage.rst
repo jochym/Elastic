@@ -8,7 +8,6 @@ used as an example how to do it. The first step is to import the modules
 to your program (the examples here use VASP calculator)::
 
 .. code:: python
-
     from ase.spacegroup import crystal
     from parcalc import ClusterVasp, ParCalculate
     from elastic import get_pressure, BMEOS, get_strain
@@ -19,8 +18,7 @@ to your program (the examples here use VASP calculator)::
 
 next we need to create the crystal, MgO in this case::
 
-.. code:: python
-
+.. code-block:: python
     a = 4.194
     cryst = crystal(['Mg', 'O'], 
                     [(0, 0, 0), (0.5, 0.5, 0.5)], 
