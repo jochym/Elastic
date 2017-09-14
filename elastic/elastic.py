@@ -59,6 +59,8 @@ See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 There is some usefull summary also at:
 `ScienceWorld <http://scienceworld.wolfram.com/physics/Elasticity.html>`_
 
+---------
+
 '''
 
 from __future__ import print_function, division, absolute_import
@@ -98,15 +100,20 @@ def regular(u):
 
     .. math::
        C_{11}, C_{12}, C_{44}
+
+    :param u: vector of deformations
+    `u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`
+
+    :returns: Symmetry defined stress-strain equation matrix
     '''
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
                [[uxx,   uyy + uzz,      0],
                 [uyy,   uxx + uzz,      0],
                 [uzz,   uxx + uyy,      0],
-                [0,             0,              2*uyz],
-                [0,             0,              2*uxz],
-                [0,             0,              2*uxy]])
+                [0,             0,      2*uyz],
+                [0,             0,      2*uxz],
+                [0,             0,      2*uxy]])
 
 
 def tetragonal(u):
