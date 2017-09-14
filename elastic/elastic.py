@@ -59,8 +59,6 @@ See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 There is some usefull summary also at:
 `ScienceWorld <http://scienceworld.wolfram.com/physics/Elasticity.html>`_
 
-Implementation description
-"""""""""""""""""
 '''
 
 from __future__ import print_function, division, absolute_import

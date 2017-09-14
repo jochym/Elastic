@@ -39,8 +39,6 @@ calculator execution in the cluster environment.
 The SIESTA code by Georgios Tritsaris <gtritsaris@seas.harvard.edu>
 Not fully tested after merge.
 
-Class description
-"""""""""""""""""
 '''
 
 from __future__ import print_function, division
