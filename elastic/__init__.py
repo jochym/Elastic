@@ -25,15 +25,11 @@
 Elastic Module
 ^^^^^^^^^^^^^^
 
-This module depends on :ref:`par-calc-mod` for parallelisation of
-independent calculations.
-
 Elastic is a module for calculation of :math:`C_{ij}` components of elastic
 tensor from the strain-stress relation.
 
 The strain components here are ordered in standard way which is different
-to ordering in previous versions of the code.
-
+to ordering in previous versions of the code (up to 4.0).
 The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
 
 The general ordering of :math:`C_{ij}` components is (except for triclinic
@@ -44,7 +40,7 @@ symmetry and taking into account customary names of constants - e.g.
    C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
    C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
 
-The functions outside of the Crystal class define the symmetry of the
+The functions with the name of bravais lattices define the symmetry of the
 :math:`C_{ij}` matrix. The matrix is N columns by 6 rows where the columns
 corespond to independent elastic constants of the given crystal, while the rows
 corespond to the canonical deformations of a crystal. The elements are the
@@ -61,6 +57,8 @@ See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 
 There is some usefull summary also at:
 `ScienceWorld <http://scienceworld.wolfram.com/physics/Elasticity.html>`_
+
+---------
 
 '''
 
