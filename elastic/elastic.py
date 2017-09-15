@@ -300,19 +300,17 @@ def get_cij_order(cryst):
 def get_lattice_type(cryst):
     '''Find the symmetry of the crystal using spglib symmetry finder.
 
-    Assign to sg_name i sg_nr members name of the space group and
-    its number extracted from the result. Based on the group number
-    identify also the lattice type (assigned to sg_type member) and
-    the Bravais lattice of the crystal (assigned to bravais member).
-    The returned value is the lattice type number.
-    The lattice type numbers are (the numbering starts from 1):
+    Derive name of the space group and its number extracted from the result.
+    Based on the group number identify also the lattice type and the Bravais
+    lattice of the crystal. The lattice type numbers are
+    (the numbering starts from 1):
 
     Triclinic (1), Monoclinic (2), Orthorombic (3),
     Tetragonal (4), Trigonal (5), Hexagonal (6), Cubic (7)
 
     :param cryst: ASE Atoms object
 
-    :returns: tuple (lattice type number (1-7), lattice name, space group 
+    :returns: tuple (lattice type number (1-7), lattice name, space group
                      name, space group number)
     '''
     # Table of lattice types and correcponding group numbers dividing
@@ -343,11 +341,18 @@ def get_lattice_type(cryst):
 
 
 def get_bulk_modulus(cryst):
-    '''
-    Calculate bulk modulus using the Birch-Murnaghan equation of state
-    data calculated by get_BM_EOS routine (see).
+    '''Calculate bulk modulus using the Birch-Murnaghan equation of state.
+
+    The EOS must be previously calculated by get_BM_EOS routine.
     The returned bulk modulus is a :math:`B_0` coefficient of the B-M EOS.
-    The arguments are the same as in BM EOS function.
+    The units of the result are defined by ASE. To get the result in
+    any particular units (e.g. GPa) you need to divide it by ase.units.unit::
+
+        get_bulk_modulus(cryst)/ase.units.GPa
+
+    :param cryst: ASE Atoms object
+
+    :returns: float, bulk modulus :math:`B_0` in ASE units.
     '''
 
     if getattr(cryst, 'bm_eos', None) is None:
@@ -357,8 +362,8 @@ def get_bulk_modulus(cryst):
 
 
 def get_pressure(s):
-    '''
-    Return *external* isotropic (hydrostatic) pressure in ASE units.
+    '''Return *external* isotropic (hydrostatic) pressure in ASE units.
+
     If the pressure is positive the system is under external pressure.
     This is a convenience function to convert output of get_stress function
     into external pressure.
