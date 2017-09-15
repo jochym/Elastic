@@ -129,6 +129,7 @@ def tetragonal(u):
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
+
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
                 [[uxx,   0,    uyy,  uzz,      0,      0],
@@ -153,6 +154,7 @@ def orthorombic(u):
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
+
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
                 [[uxx,     0,    0,  uyy,  uzz,    0,     0,     0,     0],
@@ -179,6 +181,7 @@ def trigonal(u):
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
+
     # TODO: Not tested yet.
     # TODO: There is still some doubt about the :math:`C_{14}` constant.
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
@@ -207,6 +210,7 @@ def hexagonal(u):
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
+
     # TODO: Still needs good verification
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
@@ -262,6 +266,7 @@ def triclinic(u):
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
+
     # Based on the monoclinic matrix and not tested on real case.
     # If you have test cases for this symmetry send them to the author.
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
@@ -281,6 +286,7 @@ def get_cij_order(cryst):
 
     :returns: Order of elastic constants as a tuple of strings: C_ij
     '''
+
     orders = {
             1: ('C_11', 'C_22', 'C_33', 'C_12', 'C_13', 'C_23',
                 'C_44', 'C_55', 'C_66', 'C_16', 'C_26', 'C_36',
@@ -313,9 +319,9 @@ def get_lattice_type(cryst):
     :returns: tuple (lattice type number (1-7), lattice name, space group
                      name, space group number)
     '''
+
     # Table of lattice types and correcponding group numbers dividing
     # the ranges. See get_lattice_type method for precise definition.
-
     lattice_types = [
             [3,   "Triclinic"],
             [16,  "Monoclinic"],
@@ -346,7 +352,8 @@ def get_bulk_modulus(cryst):
     The EOS must be previously calculated by get_BM_EOS routine.
     The returned bulk modulus is a :math:`B_0` coefficient of the B-M EOS.
     The units of the result are defined by ASE. To get the result in
-    any particular units (e.g. GPa) you need to divide it by ase.units.unit::
+    any particular units (e.g. GPa) you need to divide it by
+    ase.units.<unit name>::
 
         get_bulk_modulus(cryst)/ase.units.GPa
 
@@ -367,21 +374,28 @@ def get_pressure(s):
     If the pressure is positive the system is under external pressure.
     This is a convenience function to convert output of get_stress function
     into external pressure.
+
+    :param cryst: stress tensor in Voight (vector) notation as returned by
+        the get_stress() method.
+
+    :returns: float, external hydrostatic pressure in ASE units.
     '''
+
     return -mean(s[:3])
 
 
 def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, systems=None, scale_volumes=True):
-    """
-    Calculate Birch-Murnaghan Equation of State for the crystal:
+    """Calculate Birch-Murnaghan Equation of State for the crystal.
+
+    The B-M equation of state is defined by:
 
     .. math::
        P(V)= \\frac{B_0}{B'_0}\\left[
        \\left({\\frac{V}{V_0}}\\right)^{-B'_0} - 1
        \\right]
 
-    using n single-point structures ganerated from the
-    crystal (cryst) by the scan_volumes function between lo and hi
+    It's coefficients are estimated using n single-point structures ganerated
+    from the crystal (cryst) by the scan_volumes function between lo and hi
     relative volumes. The BM EOS is fitted to the computed points by
     least squares method. The returned value is a list of fitted
     parameters: :math:`V_0, B_0, B_0'` if the fit succeded.
@@ -392,6 +406,19 @@ def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, systems=None, scale_volumes=True):
     *Note:* You have to set up the calculator to properly
     optimize the structure without changing the volume at each point.
     You are responsible for calculating the structures properly.
+
+    The behaviour of the function depends on the value of systems argument
+    (see below).
+
+    :param n: number of volume sample points
+    :param lo: lower bound of the V/V_0 in the scan
+    :param hi: upper bound of the V/V_0 in the scan
+    :param systems: None or a set of calculated structures
+
+    :returns: If the systems is left as None the function returns a set of
+        deformed systems to be calculated. If systems is set to a list of
+        calculated structures it returns the tuple of EOS parameters
+        :math:`V_0, B_0, B_0'`.
     """
 
     if systems is None:  # generate data for separate calc
