@@ -12,12 +12,15 @@ program (the examples here use VASP calculator)
 .. code:: python
 
     from ase.spacegroup import crystal
-    from parcalc import ClusterVasp, ParCalculate
-    from elastic import get_pressure, BMEOS, get_strain
-    from elastic import get_BM_EOS, get_elastic_tensor
     import ase.units as units
     import numpy
     import matplotlib.pyplot as plt
+    
+    from parcalc import ClusterVasp, ParCalculate
+    
+    from elastic import get_pressure, BMEOS, get_strain
+    from elastic import get_elementary_deformations, scan_volumes
+    from elastic import get_BM_EOS, get_elastic_tensor
 
 next we need to create our example MgO crystal:
 
@@ -146,7 +149,7 @@ brevity). Then comes a new part (IDOF - Internal Degrees of Freedom):
     
     # Calculate few volumes and fit B-M EOS to the result
     # Use +/-3% volume deformation and 5 data points
-    deform=get_BM_EOS(cryst, n=5,lo=0.97,hi=1.03)
+    deform=scan_volumes(cryst, n=5,lo=0.97,hi=1.03)
     
     # Run the calculations - here with Cluster VASP
     res=ParCalculate(deform,calc)
@@ -228,7 +231,7 @@ freedom optimization (IDOF) and calculate the elastic tensor:
     calc.set(isif=2)
     
     # Create elementary deformations
-    systems = get_elastic_tensor(cryst, n=5, d=0.33)
+    systems = get_elementary_deformations(cryst, n=5, d=0.33)
     
     # Run the stress calculations on deformed cells
     res = ParCalculate(systems, calc)
@@ -241,7 +244,7 @@ freedom optimization (IDOF) and calculate the elastic tensor:
 .. parsed-literal::
 
     Workers started: 10
-    Cij (GPa): [ 338.46920873  103.64248824  152.21479687]
+    Cij (GPa): [ 338.46921273  103.64272667  152.2150523 ]
 
 
 To make sure we are getting the correct answer let us make the
@@ -315,7 +318,7 @@ element of the elastic tensor:
 
 .. parsed-literal::
 
-    C11 = 325.003 GPa, C12 = 102.440 GPa => K= 176.628 GPa
+    C11 = 325.005 GPa, C12 = 102.441 GPa => K= 176.629 GPa
 
 
 
