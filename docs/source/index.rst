@@ -11,7 +11,7 @@ Calculation of elastic properties of crystals
 
 ------
 
-**New version 5.0 released:**
+**New version 5.0 released**
 
 The new version is API *incompatible* with the previous versions.
 It provides a new command line utility as the main user interface
