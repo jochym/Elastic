@@ -106,9 +106,9 @@ def gen(ctx, num, lo, hi, size, struct):
                     num, lo, hi))
 
     if action == 'cij':
-        systems = elastic.get_elastic_tensor(cryst, n=num, d=size)
+        systems = elastic.get_elementary_deformations(cryst, n=num, d=size)
     elif action == 'eos':
-        systems = elastic.get_BM_EOS(cryst, n=num, lo=lo, hi=hi)
+        systems = elastic.scan_volumes(cryst, n=num, lo=lo, hi=hi)
 
     systems.insert(0, cryst)
     if verbose:

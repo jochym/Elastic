@@ -29,8 +29,7 @@ Elastic is a module for calculation of :math:`C_{ij}` components of elastic
 tensor from the strain-stress relation.
 
 The strain components here are ordered in standard way which is different
-to ordering in previous versions of the code.
-
+to ordering in previous versions of the code (up to 4.0).
 The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
 
 The general ordering of :math:`C_{ij}` components is (except for triclinic
@@ -399,7 +398,7 @@ def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, systems=None, scale_volumes=True):
     relative volumes. The BM EOS is fitted to the computed points by
     least squares method. The returned value is a list of fitted
     parameters: :math:`V_0, B_0, B_0'` if the fit succeded.
-    If the fitting fails the RuntimeError('Calculation failed') is reised.
+    If the fitting fails the ``RuntimeError('Calculation failed')`` is reised.
     The data from the calculation and fit is stored in the bm_eos and pv
     members of cryst for future reference.
 
@@ -465,19 +464,71 @@ def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, systems=None, scale_volumes=True):
     return cryst.bm_eos
 
 
-def get_elastic_tensor(cryst, n=5, d=2, systems=None):
+def get_elementary_deformations(cryst, n=5, d=2):
+    '''Generate elementary deformations for elastic tensor calculation.
+
+    The deformations are created based on the symmetry of the crystal and
+    are limited to the non-equivalet axes of the crystal.
+
+    :param cryst: Atoms object, basic structure
+    :param n: integer, number of deformations per non-equivalent axis
+    :param d: float, size of the maximum deformation in percent and degrees
+
+    :returns: list of deformed structures
     '''
-    Calculate elastic tensor of the crystal.
+    # Deformation look-up table
+    # Perhaps the number of deformations for trigonal
+    # system could be reduced to [0,3] but better safe then sorry
+    deform = {
+        "Cubic": [[0, 3], regular],
+        "Hexagonal": [[0, 2, 3, 5], hexagonal],
+        "Trigonal": [[0, 1, 2, 3, 4, 5], trigonal],
+        "Tetragonal": [[0, 2, 3, 5], tetragonal],
+        "Orthorombic": [[0, 1, 2, 3, 4, 5], orthorombic],
+        "Monoclinic": [[0, 1, 2, 3, 4, 5], monoclinic],
+        "Triclinic": [[0, 1, 2, 3, 4, 5], triclinic]
+    }
+
+    lattyp, brav, sg_name, sg_nr = get_lattice_type(cryst)
+    # Decide which deformations should be used
+    axis, symm = deform[brav]
+
+    systems = []
+    for a in axis:
+        if a < 3:  # tetragonal deformation
+            for dx in linspace(-d, d, n):
+                systems.append(
+                        get_cart_deformed_cell(cryst, axis=a, size=dx))
+        elif a < 6:  # sheer deformation (skip the zero angle)
+            for dx in linspace(d/10.0, d, n):
+                systems.append(
+                        get_cart_deformed_cell(cryst, axis=a, size=dx))
+    return systems
+
+
+def get_elastic_tensor(cryst, systems):
+    '''Calculate elastic tensor of the crystal.
+
+    The elastic tensor is calculated from the stress-strain relation
+    and derived by fitting this relation to the set of linear equations
+    build from the symmetry of the crystal and strains and stresses
+    of the set of elementary deformations of the unit cell.
+
     It is assumed that the crystal is converged and optimized
-    under intended pressure/stress.
-    The geometry and stress at the call point is taken as
-    the reference point. No additional optimization will be run.
-    It is also assumed that the calculator is set to pure IDOF optimization.
-    The size of used finite deformation is passed in d parameter as a
-    percentage relative deformation. The n parameter defines number of
-    deformed structures used in the calculation.
+    under intended pressure/stress. The geometry and stress on the
+    cryst is taken as the reference point. No additional optimization
+    will be run. Structures in cryst and systems list must have calculated
+    stresses. The function returns tuple of :math:`C_{ij}` elastic tensor,
+    raw Birch coefficients :math:`B_{ij}` and fitting results: residuals,
+    solution rank, singular values returned by numpy.linalg.lstsq.
+
+    :param cryst: Atoms object, basic structure
+    :param systems: list of Atoms object with calculated deformed structures
+
+    :returns: tuple(:math:`C_{ij}` float vector,
+                    tuple(:math:`B_{ij}` float vector,
+                          residuals, solution rank, singular values)
     '''
-    # TODO: Provide API to enforce calculator selection
 
     # Deformation look-up table
     # Perhaps the number of deformations for trigonal
@@ -496,29 +547,12 @@ def get_elastic_tensor(cryst, n=5, d=2, systems=None):
     # Decide which deformations should be used
     axis, symm = deform[brav]
 
-    if systems is None:
-        # Generate deformations if there are no input data
-        systems = []
-        for a in axis:
-            if a < 3:  # tetragonal deformation
-                for dx in linspace(-d, d, n):
-                    systems.append(
-                            get_cart_deformed_cell(cryst, axis=a, size=dx))
-            elif a < 6:  # sheer deformation (skip the zero angle)
-                for dx in linspace(d/10.0, d, n):
-                    systems.append(
-                            get_cart_deformed_cell(cryst, axis=a, size=dx))
-        return systems
-    else:
-        # We got systems presumably calculated - process the data
-        r = systems
-
     ul = []
     sl = []
     p = get_pressure(cryst.get_stress())
-    for g in r:
+    for g in systems:
         ul.append(get_strain(g, refcell=cryst))
-        # Remove the pressure from the stress tensor
+        # Remove the ambient pressure from the stress tensor
         sl.append(g.get_stress()-array([p, p, p, 0, 0, 0]))
     # print(symm, ul)
     eqm = array([symm(u) for u in ul])
@@ -583,12 +617,12 @@ def scan_pressures(cryst, lo, hi, n=5, eos=None):
     return systems
 
 
-def scan_volumes(cryst, lo, hi, n, scale_volumes=False):
+def scan_volumes(cryst, lo, hi, n, scale_volumes=True):
     '''
     Provide set of crystals along volume axis from lo to hi (inclusive).
     No volume cell optimization is performed. Bounds are specified as
-    fractions (1.10 = 10% increase). If scale_volumes==True the scalling
-    is applied to volumes instead of lattice vectors.
+    fractions (1.10 = 10% increase). If scale_volumes==False the scalling
+    is applied to lattice vectors instead of volumes.
     '''
     scale = linspace(lo, hi, num=n)
     if scale_volumes:
