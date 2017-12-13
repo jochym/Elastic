@@ -11,6 +11,8 @@ if ver[-1].startswith('dev'):
 
 ver = '.'.join(ver)
 
+print("Building version:", ver)
+
 setup(
     name='elastic',
     version=ver,
