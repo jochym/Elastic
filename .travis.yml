@@ -1,9 +1,9 @@
-language: generic
+#language: generic
 
-python:
+#python:
 #    - '2.7'
 #    - '3.5'
-    - '3.6'
+#    - '3.6'
 
 
 matrix:
@@ -13,24 +13,24 @@ matrix:
       osx_image: xcode6.4
       before_install:
         # Remove homebrew.
-        - |  # [osx]
-          if [ $TRAVIS_OS_NAME == "osx" ] ; then 
+        - |
           echo ""
           echo "Removing homebrew from Travis CI to avoid conflicts."
           curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > ~/uninstall_homebrew
           chmod +x ~/uninstall_homebrew
           ~/uninstall_homebrew -fq
           rm ~/uninstall_homebrew
-          fi
+          PYVER=3.6
 #        - brew update
 #        - brew install python3
 #        - virtualenv env -p python3
 #        - source env/bin/activate
     - os: linux
+        - PYVER=3.6
+        - PYVER=3.5
 
 
 before_install:
-
     # Install Miniconda.
     - MINICONDA_URL="https://repo.continuum.io/miniconda"
 
@@ -50,11 +50,12 @@ before_install:
       conda config --add channels conda-forge
       conda update --yes conda
       conda install --yes conda-build
-      conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client
+      #conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client
+      conda install --yes python=$PYVER anaconda-client
 
 install:
-    - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
-    - conda install --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis
+    - conda install --yes python=$PYVER pip numpy scipy setuptools_scm
+    - conda install --yes python=$PYVER ase spglib hypothesis
     - git fetch --unshallow
     - git describe --tags
     - python setup.py install
