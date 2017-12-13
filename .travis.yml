@@ -26,8 +26,9 @@ matrix:
 #        - virtualenv env -p python3
 #        - source env/bin/activate
     - os: linux
-        before_install:
-            - PYVER=$TRAVIS_PYTHON_VERSION
+        - PYVER=3.5
+    - os: linux
+        - PYVER=3.6
 
 before_install:
     # Install Miniconda.
