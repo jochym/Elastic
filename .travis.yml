@@ -1,5 +1,4 @@
 language: python
-osx_image: xcode8.3
 
 python:
 #    - '2.7'
@@ -48,6 +47,8 @@ before_install:
 install:
     - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
     - conda install --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis
+    - git checkout $TRAVIS_BRANCH
+    - git describe --tags
     - python setup.py install
 
 script: 
