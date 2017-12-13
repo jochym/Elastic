@@ -26,9 +26,11 @@ matrix:
 #        - virtualenv env -p python3
 #        - source env/bin/activate
     - os: linux
-        - PYVER=3.5
+        env:
+            - PYVER=3.5
     - os: linux
-        - PYVER=3.6
+        env:
+            - PYVER=3.6
 
 before_install:
     # Install Miniconda.
@@ -50,7 +52,6 @@ before_install:
       conda config --add channels conda-forge
       conda update --yes conda
       conda install --yes conda-build
-      #conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client
       conda install --yes python=$PYVER anaconda-client
 
 install:
