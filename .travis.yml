@@ -47,7 +47,7 @@ before_install:
 install:
     - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
     - conda install --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis
-    - git checkout $TRAVIS_BRANCH
+    - git fetch --unshallow
     - git describe --tags
     - python setup.py install
 
