@@ -27,10 +27,15 @@ matrix:
 #        - source env/bin/activate
     - language: python
       os: linux
-      python:
-        - '2.7'
-        - '3.5'
-        - '3.6'
+      python: 2.7
+
+    - language: python
+      os: linux
+      python: 3.5
+
+    - language: python
+      os: linux
+      python: 3.6
 
 before_install:
     # Install Miniconda.
