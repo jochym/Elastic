@@ -25,12 +25,12 @@ matrix:
 #        - brew install python3
 #        - virtualenv env -p python3
 #        - source env/bin/activate
-    - os: linux
-        env:
-            - PYVER=3.5
-    - os: linux
-        env:
-            - PYVER=3.6
+    - language: python
+      os: linux
+      python:
+        - '2.7'
+        - '3.5'
+        - '3.6'
 
 before_install:
     # Install Miniconda.
@@ -49,14 +49,17 @@ before_install:
       curl -L -O "${MINICONDA_URL}/${MINICONDA_FILE}"
       bash $MINICONDA_FILE -b
       export PATH="$HOME/miniconda3/bin:$PATH"
+      if [ .$TRAVIS_PYTHON_VERSION == '.'] ; then
+      TRAVIS_PYTHON_VERSION=$PYVER
+      fi
       conda config --add channels conda-forge
       conda update --yes conda
       conda install --yes conda-build
-      conda install --yes python=$PYVER anaconda-client
+      conda install --yes python=$TRAVIS_PYTHON_VERSION anaconda-client
 
 install:
-    - conda install --yes python=$PYVER pip numpy scipy setuptools_scm
-    - conda install --yes python=$PYVER ase spglib hypothesis
+    - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy setuptools_scm
+    - conda install --yes python=$TRAVIS_PYTHON_VERSION ase spglib hypothesis
     - git fetch --unshallow
     - git describe --tags
     - python setup.py install
