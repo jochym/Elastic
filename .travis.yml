@@ -1,41 +1,35 @@
 language: generic
 
-#python:
-#    - '2.7'
-#    - '3.5'
-#    - '3.6'
-
+osx_image: xcode6.4
 
 matrix:
   include:
     - language: generic
       os: osx
-      osx_image: xcode6.4
-      before_install:
-        # Remove homebrew.
-        - |
-          echo ""
-          echo "Removing homebrew from Travis CI to avoid conflicts."
-          curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > ~/uninstall_homebrew
-          chmod +x ~/uninstall_homebrew
-          ~/uninstall_homebrew -fq
-          rm ~/uninstall_homebrew
-          PYVER=3.6
-#        - brew update
-#        - brew install python3
-#        - virtualenv env -p python3
-#        - source env/bin/activate
-    - language: python
-      os: linux
-      python: '2.7'
+      env:
+        - TRAVIS_PYTHON_VERSION=2.7
+
+    - language: generic
+      os: osx
+      env:
+        - TRAVIS_PYTHON_VERSION=3.5
+
+    - language: generic
+      os: osx
+      env:
+        - TRAVIS_PYTHON_VERSION=3.6
 
     - language: python
       os: linux
-      python: '3.5'
+      python: 2.7
 
     - language: python
       os: linux
-      python: '3.6'
+      python: 3.5
+
+    - language: python
+      os: linux
+      python: 3.6
 
 before_install:
     # Install Miniconda.
@@ -44,6 +38,10 @@ before_install:
     - |
       if [ $TRAVIS_OS_NAME == "osx" ] ; then  
       MINICONDA_FILE="Miniconda3-latest-MacOSX-x86_64.sh"
+      curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > ~/uninstall_homebrew
+      chmod +x ~/uninstall_homebrew
+      ~/uninstall_homebrew -fq
+      rm ~/uninstall_homebrew
       else
       MINICONDA_FILE="Miniconda3-latest-Linux-x86_64.sh"
       fi
@@ -54,9 +52,6 @@ before_install:
       curl -L -O "${MINICONDA_URL}/${MINICONDA_FILE}"
       bash $MINICONDA_FILE -b
       export PATH="$HOME/miniconda3/bin:$PATH"
-      if [ .$TRAVIS_PYTHON_VERSION == '.'] ; then
-      TRAVIS_PYTHON_VERSION=$PYVER
-      fi
       conda config --add channels conda-forge
       conda update --yes conda
       conda install --yes conda-build
