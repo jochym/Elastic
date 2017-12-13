@@ -68,7 +68,7 @@ deploy:
     on:
       branch: rc
       repo: jochym/Elastic
-      os: linux
+      condition: " $TRAVIS_OS_NAME = linux "
 
   # testing anaconda
   - provider: script
@@ -88,7 +88,7 @@ deploy:
     on:
       branch: master
       repo: jochym/Elastic
-      os: linux
+      condition: " $TRAVIS_OS_NAME = linux "
 
   # production anaconda
   - provider: script
