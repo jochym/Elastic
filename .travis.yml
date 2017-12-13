@@ -32,7 +32,7 @@ before_install:
       echo "Installing a fresh version of Miniconda."
       curl -L -O "${MINICONDA_URL}/${MINICONDA_FILE}"
       bash $MINICONDA_FILE -b
-      export PATH="$HOME/miniconda/bin:$PATH"
+      export PATH="$HOME/miniconda3/bin:$PATH"
       conda config --add channels conda-forge
       conda update --yes conda
       conda install --yes conda-build
