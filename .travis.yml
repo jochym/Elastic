@@ -1,9 +1,9 @@
-#language: generic
+language: python
 
-#python:
+python:
 #    - '2.7'
 #    - '3.5'
-#    - '3.6'
+    - '3.6'
 
 
 matrix:
@@ -26,9 +26,8 @@ matrix:
 #        - virtualenv env -p python3
 #        - source env/bin/activate
     - os: linux
-        - PYVER=3.6
-        - PYVER=3.5
-
+        before_install:
+            - PYVER=$TRAVIS_PYTHON_VERSION
 
 before_install:
     # Install Miniconda.
