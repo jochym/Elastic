@@ -1,31 +1,38 @@
 language: python
 osx_image: xcode8.3
 
+python:
+#    - '2.7'
+#    - '3.5'
+    - '3.6'
+
 matrix:
   include:
     - os: osx
     - os: linux
 
-python:
-    - '2.7'
-    - '3.5'
-    - '3.6'
 
 before_install:
     # Remove homebrew.
     - |  # [osx]
+      if [ $TRAVIS_OS_NAME == "osx" ] ; then 
       echo ""
       echo "Removing homebrew from Travis CI to avoid conflicts."
       curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > ~/uninstall_homebrew
       chmod +x ~/uninstall_homebrew
       ~/uninstall_homebrew -fq
       rm ~/uninstall_homebrew
+      fi
 
     # Install Miniconda.
     - MINICONDA_URL="https://repo.continuum.io/miniconda"
 
-    - MINICONDA_FILE="Miniconda3-latest-MacOSX-x86_64.sh"  # [osx]
-    - MINICONDA_FILE="Miniconda3-latest-Linux-x86_64.sh"  # [linux]
+    - |
+      if [ $TRAVIS_OS_NAME == "osx" ] ; then  
+      MINICONDA_FILE="Miniconda3-latest-MacOSX-x86_64.sh"
+      else
+      MINICONDA_FILE="Miniconda3-latest-Linux-x86_64.sh"
+      fi
       
     - |
       echo ""
