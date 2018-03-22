@@ -9,6 +9,17 @@ Calculation of elastic properties of crystals
 .. image:: https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg
    :target: http://dx.doi.org/10.5281/zenodo.18759
 
+------
+
+**New version 5.0 released**
+
+The new version is API *incompatible* with the previous versions.
+It provides a new command line utility as the main user interface
+to the package - which hoppefully will broaden the user base byond
+python users.
+
+------
+
 Elastic is a set of python routines for calculation of elastic properties of 
 crystals (elastic constants, equation of state, sound velocities, etc.). 
 It is a fifth version of the in-house code I have 
@@ -25,6 +36,7 @@ and publish it properly under the GPL as versions 3 and 4.
 
 Later, in 2017, needs of users nudged me into implementing the command-line 
 front-end to the library which is included with version 5.0 of the package.
+
 The version 5.0 also changes API of the library from mix-in class to the set
 of simple functions providing functionality of the module. The workflow of the 
 package was also changed to prepare data - calculate - post-process style, 

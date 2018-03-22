@@ -383,7 +383,7 @@ def get_pressure(s):
     return -mean(s[:3])
 
 
-def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, systems=None, scale_volumes=True):
+def get_BM_EOS(cryst, systems):
     """Calculate Birch-Murnaghan Equation of State for the crystal.
 
     The B-M equation of state is defined by:
@@ -394,42 +394,26 @@ def get_BM_EOS(cryst, n=5, lo=0.98, hi=1.02, systems=None, scale_volumes=True):
        \\right]
 
     It's coefficients are estimated using n single-point structures ganerated
-    from the crystal (cryst) by the scan_volumes function between lo and hi
-    relative volumes. The BM EOS is fitted to the computed points by
+    from the crystal (cryst) by the scan_volumes function between two relative
+    volumes. The BM EOS is fitted to the computed points by
     least squares method. The returned value is a list of fitted
     parameters: :math:`V_0, B_0, B_0'` if the fit succeded.
-    If the fitting fails the ``RuntimeError('Calculation failed')`` is reised.
+    If the fitting fails the ``RuntimeError('Calculation failed')`` is raised.
     The data from the calculation and fit is stored in the bm_eos and pv
-    members of cryst for future reference.
+    members of cryst for future reference. You have to provide properly
+    optimized structures in cryst and systems list.
 
-    *Note:* You have to set up the calculator to properly
-    optimize the structure without changing the volume at each point.
-    You are responsible for calculating the structures properly.
+    :param cryst: Atoms object, basic structure
+    :param systems: A list of calculated structures
 
-    The behaviour of the function depends on the value of systems argument
-    (see below).
-
-    :param n: number of volume sample points
-    :param lo: lower bound of the V/V_0 in the scan
-    :param hi: upper bound of the V/V_0 in the scan
-    :param systems: None or a set of calculated structures
-
-    :returns: If the systems is left as None the function returns a set of
-        deformed systems to be calculated. If systems is set to a list of
-        calculated structures it returns the tuple of EOS parameters
-        :math:`V_0, B_0, B_0'`.
+    :returns: tuple of EOS parameters :math:`V_0, B_0, B_0'`.
     """
-
-    if systems is None:  # generate data for separate calc
-        return scan_volumes(cryst, lo, hi, n, scale_volumes=scale_volumes)
-    else:  # analyse results of previous calc
-        res = systems
 
     pvdat = array([[r.get_volume(),
                     get_pressure(r.get_stress()),
                     norm(r.get_cell()[:, 0]),
                     norm(r.get_cell()[:, 1]),
-                    norm(r.get_cell()[:, 2])] for r in res])
+                    norm(r.get_cell()[:, 2])] for r in systems])
 
     # Fitting functions
     def fitfunc(p, x):
@@ -617,12 +601,20 @@ def scan_pressures(cryst, lo, hi, n=5, eos=None):
     return systems
 
 
-def scan_volumes(cryst, lo, hi, n, scale_volumes=True):
+def scan_volumes(cryst, lo=0.98, hi=1.02, n=5, scale_volumes=True):
     '''
     Provide set of crystals along volume axis from lo to hi (inclusive).
     No volume cell optimization is performed. Bounds are specified as
     fractions (1.10 = 10% increase). If scale_volumes==False the scalling
     is applied to lattice vectors instead of volumes.
+
+    :param lo: lower bound of the V/V_0 in the scan
+    :param hi: upper bound of the V/V_0 in the scan
+    :param n: number of volume sample points
+    :param scale_volumes: If True scale the unit cell volume or,
+                            if False, scale the length of lattice axes.
+
+    :returns: a list of deformed systems
     '''
     scale = linspace(lo, hi, num=n)
     if scale_volumes:
@@ -748,7 +740,7 @@ if __name__ == '__main__':
                     spacegroup=225,
                     cellpar=[a, a, a, 90, 90, 90])
 
-    sl = get_BM_EOS(cryst)
+    sl = scan_volumes(cryst)
     print('Volumes: ', end='')
     for c in sl:
         print('%.2f (%.1f%%)' % (c.get_volume(),
@@ -757,7 +749,7 @@ if __name__ == '__main__':
 
     print()
 
-    sl = get_elastic_tensor(cryst)
+    sl = get_elementary_deformations(cryst)
     print('Structures: ')
     print('   Vol             A       B       C          alph    bet     gam')
     for n, c in enumerate(sl):
