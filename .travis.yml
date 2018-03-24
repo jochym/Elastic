@@ -1,7 +1,5 @@
 language: generic
 
-osx_image: xcode6.4
-
 matrix:
   include:
     - language: generic
@@ -38,6 +36,8 @@ before_install:
     - |
       if [ $TRAVIS_OS_NAME == "osx" ] ; then  
       MINICONDA_FILE="Miniconda3-latest-MacOSX-x86_64.sh"
+      echo ""
+      echo "Removing homebrew to avoid conflicts."
       curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > ~/uninstall_homebrew
       chmod +x ~/uninstall_homebrew
       ~/uninstall_homebrew -fq
