@@ -32,7 +32,6 @@ requirements:
     - setuptools_scm
     - sphinx
     - docutils
-    - click
 
   run:
     - python
@@ -44,7 +43,7 @@ requirements:
     - click
 
 test:
-  source_files: 
+  source_files:
     - test
     - tests
   requires:

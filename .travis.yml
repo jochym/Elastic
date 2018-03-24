@@ -34,7 +34,7 @@ before_install:
     - MINICONDA_URL="https://repo.continuum.io/miniconda"
 
     - |
-      if [ $TRAVIS_OS_NAME == "osx" ] ; then  
+      if [ $TRAVIS_OS_NAME == "osx" ] ; then
       MINICONDA_FILE="Miniconda3-latest-MacOSX-x86_64.sh"
       echo ""
       echo "Removing homebrew to avoid conflicts."
@@ -45,7 +45,7 @@ before_install:
       else
       MINICONDA_FILE="Miniconda3-latest-Linux-x86_64.sh"
       fi
-      
+
     - |
       echo ""
       echo "Installing a fresh version of Miniconda."
@@ -64,8 +64,8 @@ install:
     - git describe --tags
     - python setup.py install
 
-script: 
-    - python -m unittest discover -s test -b 
+script:
+    - python -m unittest discover -s test -b
     - elastic --version
     - elastic -v --cij proc tests/data/calc-cij_*/vasprun.xml
     - elastic -v --eos proc tests/data/calc-eos_*/vasprun.xml
