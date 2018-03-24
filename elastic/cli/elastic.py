@@ -123,8 +123,15 @@ def gen(ctx, num, lo, hi, size, struct):
 def proc(ctx, files):
     '''Process calculated structures'''
 
+    def calc_reader(fn, verb):
+        if verb:
+            echo('Reading: {:<60s}\r'.format(fn), nl=False, err=True)
+        return ase.io.read(fn)
+
     action = ctx.parent.params['action']
-    systems = [ase.io.read(calc) for calc in files]
+    systems = [calc_reader(calc, verbose) for calc in files]
+    if verbose :
+        echo('', err=True)
     if action == 'cij':
         cij = elastic.get_elastic_tensor(systems[0], systems=systems[1:])
         msv = cij[1][3].max()
