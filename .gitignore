@@ -44,3 +44,7 @@ docs/notebook
 .project
 .pydevproject
 .spyproject
+
+# Notebooks
+.ipynb_checkpoints
+

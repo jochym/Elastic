@@ -413,23 +413,16 @@ def get_BM_EOS(cryst, systems):
                     get_pressure(r.get_stress()),
                     norm(r.get_cell()[:, 0]),
                     norm(r.get_cell()[:, 1]),
-                    norm(r.get_cell()[:, 2])] for r in systems])
-
-    # Fitting functions
-    def fitfunc(p, x):
-        return [BMEOS(xv, p[0], p[1], p[2]) for xv in x]
-
-    def errfunc(p, x, y):
-        return fitfunc(p, x) - y
+                    norm(r.get_cell()[:, 2])] for r in systems]).T
 
     # Estimate the initial guess assuming b0p=1
     # Limiting volumes
-    v1 = min(pvdat[:, 0])
-    v2 = max(pvdat[:, 0])
+    v1 = min(pvdat[0])
+    v2 = max(pvdat[0])
 
     # The pressure is falling with the growing volume
-    p2 = min(pvdat[:, 1])
-    p1 = max(pvdat[:, 1])
+    p2 = min(pvdat[1])
+    p1 = max(pvdat[1])
     b0 = (p1*v1-p2*v2)/(v2-v1)
     v0 = v1*(p1+b0)/b0
 
@@ -437,10 +430,9 @@ def get_BM_EOS(cryst, systems):
     p0 = [v0, b0, 1]
 
     # Fitting
-    p1, succ = optimize.leastsq(errfunc, p0[:],
-                                args=(pvdat[:, 0], pvdat[:, 1]))
-
-    if not succ:
+    try :
+        p1, succ = optimize.curve_fit(BMEOS, pvdat[0], pvdat[1], p0)
+    except (ValueError, RuntimeError, OptimizeWarning) as ex:
         raise RuntimeError('Calculation failed')
 
     cryst.bm_eos = p1
