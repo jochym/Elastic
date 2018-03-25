@@ -29,7 +29,6 @@ deploy:
   # testing testpypi
   - provider: pypi
     skip_cleanup: false
-    distributions: "sdist"
     server: https://test.pypi.org/legacy/
     user: jochym
     password:
@@ -49,19 +48,7 @@ deploy:
 
   # Production pypi
   - provider: pypi
-    skip_cleanup: true
-    distributions: "bdist_wheel"
-    user: jochym
-    password:
-      secure: "MkalwXVlwqjAaz9opJWANGEabTcRM7FdcSk3Z6ezQUqnfqoea7+viOVsHkbfb1l+pWyLb88yfkji4oBlUD0kVQkB9yiBrLBNeMX21n2WzymYukMnDsI/y6vVRocqLO0CUIqGaMBFBitum8e6wim04zkFWfYszJ/Ul5cgBep1pQN15Z3VnjbYJHWvomYOJyjiTfc84I4ui/flUbkmbmjwuosevY0D/DHZIgSjHlhmBf8cR986nGZuzaMLuErpxm5D/a27tiXx4SEE8deDfajkdXZylA0/nfOulRKt+HfRKW+YjbvSUdKUj3W9xiIuf27TQf01bcIXzIULJiueo/cqyFXXIvjUy744TW8HWjrWzIVVFBviaU/hDO8i4t8ToOOwzo4pfWPKABxmpHDECDHGHT61E9fyaVPM1v0YJhRIC8rTw2AINK/Chm90FpxVejkV1d3JHlKJQtwpT2f8Y/HpcfS9hJ4Ibw+axWEEceDKaGa5dT/Z9fJFRsXX65e8H71vvgqq/H3R5nakrzdo9t7I06XqQC8UGMYMS45wEbi+GaJ14Gj92Z2Sseo54WkTlJmVSOPqj8P2oDqrcwl3yuadwvPR8sZ0MMxH4OHsXSniSt9UNtX7WcYn+KNopHsUWlN6m57JrR7It7NquOeUa9ivz32fm3QeByDggBnkpOpqAeo="
-    on:
-      branch: master
-      repo: jochym/Elastic
-
-  # Production pypi
-  - provider: pypi
-    skip_cleanup: true
-    distributions: "sdist"
+    skip_cleanup: false
     user: jochym
     password:
       secure: "MkalwXVlwqjAaz9opJWANGEabTcRM7FdcSk3Z6ezQUqnfqoea7+viOVsHkbfb1l+pWyLb88yfkji4oBlUD0kVQkB9yiBrLBNeMX21n2WzymYukMnDsI/y6vVRocqLO0CUIqGaMBFBitum8e6wim04zkFWfYszJ/Ul5cgBep1pQN15Z3VnjbYJHWvomYOJyjiTfc84I4ui/flUbkmbmjwuosevY0D/DHZIgSjHlhmBf8cR986nGZuzaMLuErpxm5D/a27tiXx4SEE8deDfajkdXZylA0/nfOulRKt+HfRKW+YjbvSUdKUj3W9xiIuf27TQf01bcIXzIULJiueo/cqyFXXIvjUy744TW8HWjrWzIVVFBviaU/hDO8i4t8ToOOwzo4pfWPKABxmpHDECDHGHT61E9fyaVPM1v0YJhRIC8rTw2AINK/Chm90FpxVejkV1d3JHlKJQtwpT2f8Y/HpcfS9hJ4Ibw+axWEEceDKaGa5dT/Z9fJFRsXX65e8H71vvgqq/H3R5nakrzdo9t7I06XqQC8UGMYMS45wEbi+GaJ14Gj92Z2Sseo54WkTlJmVSOPqj8P2oDqrcwl3yuadwvPR8sZ0MMxH4OHsXSniSt9UNtX7WcYn+KNopHsUWlN6m57JrR7It7NquOeUa9ivz32fm3QeByDggBnkpOpqAeo="
