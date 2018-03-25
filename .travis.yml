@@ -64,5 +64,6 @@ deploy:
     script: conda/anaconda_deploy.sh main $ANACONDA_TOKEN $TRAVIS_BRANCH
     on:
       branch: master
+      python: 3.6
       repo: jochym/Elastic
 
