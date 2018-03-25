@@ -56,7 +56,7 @@ deploy:
     skip_cleanup: true
     script: conda/anaconda_deploy.sh rc $ANACONDA_TOKEN $TRAVIS_BRANCH
     on:
-      branch: rc
+      branch: rc-block
       repo: jochym/Elastic
 
   # Production pypi
