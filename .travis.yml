@@ -63,6 +63,6 @@ deploy:
     skip_cleanup: true
     script: conda/anaconda_deploy.sh main $ANACONDA_TOKEN $TRAVIS_BRANCH
     on:
-      branch: master-block
+      branch: master
       repo: jochym/Elastic
 
