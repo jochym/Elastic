@@ -29,7 +29,7 @@ setup(
     platforms=['all'],
     classifiers=[],
     include_package_data=True,
-    install_requires=['Click', ],
+    install_requires=['click', ],
     entry_points='''
         [console_scripts]
         elastic=elastic.cli.elastic:cli
