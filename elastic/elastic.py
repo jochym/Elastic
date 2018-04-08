@@ -332,7 +332,7 @@ def get_lattice_type(cryst):
         ]
 
     sg = spg.get_spacegroup(cryst)
-    m = re.match(r'([A-Z].*\\b)\s*\(([0-9]*)\)', sg)
+    m = re.match(r'([A-Z].*\b)\s*\(([0-9]*)\)', sg)
     sg_name = m.group(1)
     sg_nr = int(m.group(2))
 
