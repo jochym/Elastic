@@ -432,7 +432,7 @@ def get_BM_EOS(cryst, systems):
     # Fitting
     try :
         p1, succ = optimize.curve_fit(BMEOS, pvdat[0], pvdat[1], p0)
-    except (ValueError, RuntimeError, OptimizeWarning) as ex:
+    except (ValueError, RuntimeError, optimize.OptimizeWarning) as ex:
         raise RuntimeError('Calculation failed')
 
     cryst.bm_eos = p1
