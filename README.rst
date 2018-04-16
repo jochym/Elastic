@@ -58,8 +58,8 @@ In the past the project was partially supported by:
    :target: https://pypi.org/project/elastic/
 .. |CVersion Badge| image:: https://anaconda.org/conda-forge/elastic/badges/version.svg
    :target: https://anaconda.org/conda-forge/elastic
-.. |Downloads Badge| image:: https://anaconda.org/jochym/elastic/badges/downloads.svg
-   :target: https://anaconda.org/jochym/elastic
+.. |Downloads Badge| image:: https://anaconda.org/conda-forge/elastic/badges/downloads.svg
+   :target: https://anaconda.org/conda-forge/elastic
 .. |License Badge| image:: https://anaconda.org/jochym/elastic/badges/license.svg
    :target: https://anaconda.org/jochym/elastic
 .. |Codacy Badge| image:: https://api.codacy.com/project/badge/Grade/9f348d724d564ce399beb009ab9a3654
