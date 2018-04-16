@@ -1,5 +1,5 @@
 ase==3.16.0
 spglib==1.10.3.50
 numpy==1.14.2
-scipy
+scipy==1.0.1
 setuptools_scm
