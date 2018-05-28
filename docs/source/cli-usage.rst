@@ -1,11 +1,13 @@
 Installation
 ============
 
-.. image:: https://anaconda.org/jochym/elastic/badges/version.svg
-   :target: https://anaconda.org/jochym/elastic
-.. image:: https://anaconda.org/jochym/elastic/badges/installer/conda.svg
-   :target: https://conda.anaconda.org/jochym
-
+.. image:: https://anaconda.org/conda-forge/elastic/badges/version.svg
+   :target: https://anaconda.org/conda-forge/elastic
+.. image:: https://anaconda.org/conda-forge/elastic/badges/installer/conda.svg   
+   :target: https://conda.anaconda.org/conda-forge
+.. image:: https://anaconda.org/conda-forge/elastic/badges/platforms.svg   
+   :target: https://anaconda.org/conda-forge/elastic
+   
 Conda
 -------
 
