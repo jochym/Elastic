@@ -2,4 +2,4 @@ ase
 spglib
 numpy
 scipy
-setuptools_scm
+setuptools_scm==2.1.0
