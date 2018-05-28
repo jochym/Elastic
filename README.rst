@@ -50,8 +50,8 @@ In the past the project was partially supported by:
 - Department of Computational Material Science, Institute of Nuclear Physics, PAN, Poland
 - Department of Engineering, University of Saskatchewan, Canada
 
-.. |DOI| image:: https://zenodo.org/badge/doi/10.5281/zenodo.18759.svg
-   :target: http://dx.doi.org/10.5281/zenodo.18759
+.. |DOI| image:: https://zenodo.org/badge/doi/10.5281/zenodo.593721.svg
+   :target: https://doi.org/10.5281/zenodo.593721
 .. |Build Status| image:: https://travis-ci.org/jochym/Elastic.svg?branch=master
    :target: https://travis-ci.org/jochym/Elastic
 .. |PVersion Badge| image:: https://img.shields.io/pypi/v/elastic.svg   
