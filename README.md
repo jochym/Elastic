@@ -13,6 +13,7 @@ Badge](https://anaconda.org/conda-forge/elastic/badges/downloads.svg)](https://a
 Badge](https://anaconda.org/jochym/elastic/badges/license.svg)](https://anaconda.org/jochym/elastic)
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.593721.svg)](https://doi.org/10.5281/zenodo.593721)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f348d724d564ce399beb009ab9a3654)](https://www.codacy.com/app/jochym/Elastic?utm_source=github.com&utm_medium=referral&utm_content=jochym/Elastic&utm_campaign=badger)
+[![Documentation Status](//readthedocs.org/projects/elastic/badge/?version=stable)](https://elastic.readthedocs.io/en/latest/?badge=latest)
 
 Elastic is a set of python routines for calculation of elastic
 properties of crystals (elastic constants, equation of state, sound
