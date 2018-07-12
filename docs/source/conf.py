@@ -92,9 +92,9 @@ exclude_patterns = []
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-# html_theme = 'bizstyle'
+html_theme = 'bizstyle'
 # html_theme = 'sphinxdoc'
-html_theme = 'default'
+# html_theme = 'default'
 
 #jsmath_path = 'jsmath/easy/load.js'
 
