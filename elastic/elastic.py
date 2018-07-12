@@ -502,8 +502,7 @@ def get_elastic_tensor(cryst, systems):
     :param systems: list of Atoms object with calculated deformed structures
 
     :returns: tuple(:math:`C_{ij}` float vector,
-                    tuple(:math:`B_{ij}` float vector,
-                          residuals, solution rank, singular values)
+                    tuple(:math:`B_{ij}` float vector, residuals, solution rank, singular values))
     '''
 
     # Deformation look-up table
