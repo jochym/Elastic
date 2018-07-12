@@ -3,9 +3,9 @@ Installation
 
 .. image:: https://anaconda.org/conda-forge/elastic/badges/version.svg
    :target: https://anaconda.org/conda-forge/elastic
-.. image:: https://anaconda.org/conda-forge/elastic/badges/installer/conda.svg   
+.. image:: https://anaconda.org/conda-forge/elastic/badges/installer/conda.svg
    :target: https://conda.anaconda.org/conda-forge
-.. image:: https://anaconda.org/conda-forge/elastic/badges/platforms.svg   
+.. image:: https://anaconda.org/conda-forge/elastic/badges/platforms.svg
    :target: https://anaconda.org/conda-forge/elastic
    
 Conda
