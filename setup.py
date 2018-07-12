@@ -20,7 +20,7 @@ setup(
     license='GPLv3',
     description='Extension for ASE to calculate elastic constants',
     long_description=open('README.md', 'rb').read().decode('utf-8'),
-    long_description_content_type='text/x-rst',
+    long_description_content_type='text/markdown',
     author='Paweł T. Jochym',
     author_email='Pawel.Jochym@ifj.edu.pl',
     url='https://github.com/jochym/Elastic',
