@@ -1,0 +1,8 @@
+title: Elastic
+description: A module for ASE for elastic constants calculation.
+google_analytics: UA-4999088-11
+show_downloads: true
+theme: jekyll-theme-dinky
+
+gems:
+  - jekyll-mentions
