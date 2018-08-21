@@ -1,5 +1,5 @@
 ase
 spglib
-numpy
+numpy==1.15.1
 scipy
 setuptools_scm
