@@ -376,7 +376,7 @@ class RemoteCalculator(Calculator):
                                                     params=self.parameters)
                     })        
 
-    def build_command(self, prop=None, params=None, remote=True):
+    def build_command(self, prop=None, params=None):
         '''
         Build command strings for local or remote execution
         '''
@@ -384,19 +384,18 @@ class RemoteCalculator(Calculator):
             prop = ['energy']
         if params is None :
             params = {}
-        if remote :
-            cmd=self.remote_exec_cmd % {
-                    'command': cmd,
-                    'user': self.parameters['user'],
-                    'host': self.parameters['host']
-            }
-        else :
-            cmd=self.qsub_cmd % {
+        cmd=self.qsub_cmd % {
                 'qsub_tool': self.qsub_tool,
                 'qstat_tool': self.qstat_tool,
                 'title': self.label,
                 'procs': self.parameters['procs'],
-                'rdir': os.path.join(self.parameters['rdir'],os.path.split(self.directory)[-1])
+                'rdir': os.path.join(self.parameters['rdir'],
+                                     os.path.split(self.directory)[-1])
+            }
+        cmd=self.remote_exec_cmd % {
+                'command': cmd,
+                'user': self.parameters['user'],
+                'host': self.parameters['host']
             }
         return cmd
 
