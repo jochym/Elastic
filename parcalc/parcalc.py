@@ -511,7 +511,7 @@ class RemoteCalculator(Calculator):
         self.calc.read_results(self)
 
     @classmethod
-    def ParallelCalculate(cls,syslst,properties=['energy'],system_changes=all_changes):
+    def ParallelCalculate(cls,syslst,properties=None,system_changes=all_changes):
         '''
         Run a series of calculations in parallel using (implicitely) some 
         remote machine/cluster. The function returns the list of systems ready
