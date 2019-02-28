@@ -376,23 +376,34 @@ class RemoteCalculator(Calculator):
                                                     params=self.parameters)
                     })        
 
-    def build_command(self,prop=['energy'],params={}):
-        cmd=self.qsub_cmd % {
-            'qsub_tool': self.qsub_tool,
-            'qstat_tool': self.qstat_tool,
-            'title': self.label,
-            'procs': self.parameters['procs'],
-            'rdir': os.path.join(self.parameters['rdir'],os.path.split(self.directory)[-1])
-        }
-        cmd=self.remote_exec_cmd % {
-                'command': cmd,
-                'user': self.parameters['user'],
-                'host': self.parameters['host']
-         }
+    def build_command(self, prop=None, params=None, remote=True):
+        '''
+        Build command strings for local or remote execution
+        '''
+        if prop is None :
+            prop = ['energy']
+        if params is None :
+            params = {}
+        if remote :
+            cmd=self.remote_exec_cmd % {
+                    'command': cmd,
+                    'user': self.parameters['user'],
+                    'host': self.parameters['host']
+            }
+        else :
+            cmd=self.qsub_cmd % {
+                'qsub_tool': self.qsub_tool,
+                'qstat_tool': self.qstat_tool,
+                'title': self.label,
+                'procs': self.parameters['procs'],
+                'rdir': os.path.join(self.parameters['rdir'],os.path.split(self.directory)[-1])
+            }
         return cmd
 
-    def write_input(self, atoms=None, properties=['energy'], system_changes=all_changes):
+    def write_input(self, atoms=None, properties=None, system_changes=all_changes):
         '''Write input file(s).'''
+        if properties is None :
+            properties = ['energy']
         with work_dir(self.directory):
             self.calc.write_input(self, atoms, properties, system_changes)
             self.write_pbs_in(properties)
@@ -422,7 +433,7 @@ class RemoteCalculator(Calculator):
         return not (state in ['Q','R'])
 
 
-    def run_calculation(self, atoms=None, properties=['energy'],
+    def run_calculation(self, atoms=None, properties=None,
                             system_changes=all_changes):
         '''
         Internal calculation executor. We cannot use FileIOCalculator
@@ -433,6 +444,8 @@ class RemoteCalculator(Calculator):
         raises the exception to signal that we need to come back for results
         when the job is finished.
         '''
+        if properties is None :
+            properties = ['energy']
         self.calc.calculate(self, atoms, properties, system_changes)
         self.write_input(self.atoms, properties, system_changes)
         if self.command is None:
@@ -507,6 +520,8 @@ class RemoteCalculator(Calculator):
         '''
         print('Launching:',end=' ')
         sys.stdout.flush()
+        if properties is None :
+            properties = ['energy']
         for n,s in enumerate(syslst):
             try :
                 s.calc.block=False
