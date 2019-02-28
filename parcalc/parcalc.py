@@ -206,8 +206,8 @@ class ClusterVasp(Vasp):
         Blocking/Non-blocing run method.
         In blocking mode it just runs parent run method.
         In non-blocking mode it raises the __NonBlockingRunException
-        to bail out of the processing of standard calculate method 
-        (or any other method in fact) and signal that the data is not 
+        to bail out of the processing of standard calculate method
+        (or any other method in fact) and signal that the data is not
         ready to be collected.
         '''
         # This is only called from self.calculate - thus
@@ -302,7 +302,7 @@ class RemoteCalculator(Calculator):
     '''
     Remote calculator based on ASE calculator class.
     This class is only involved with the machanics of remotly executing
-    the software and transporting the data. The calculation is 
+    the software and transporting the data. The calculation is
     delegated to the actual calculator class.
     '''
     
@@ -315,7 +315,7 @@ class RemoteCalculator(Calculator):
     # Remote execution command
     remote_exec_cmd='ssh %(user)s@%(host)s "%(command)s"'
 
-    # If you cannot mount the data directory into your system it is best 
+    # If you cannot mount the data directory into your system it is best
     # to use the rsync command to transfer the results back into the system.
 
     # Command for copying the data out to the computing system
@@ -358,7 +358,7 @@ class RemoteCalculator(Calculator):
             attached.  When restarting, atoms will get its positions and
             unit-cell updated from file.
 
-        Create a remote execution calculator based on actual ASE calculator 
+        Create a remote execution calculator based on actual ASE calculator
         calc.
         '''
         logging.debug("Calc: %s Label: %s" % (calc, label))
@@ -374,7 +374,7 @@ class RemoteCalculator(Calculator):
                 fh.write(self.pbs_template % {
                     'command': self.build_command(self,prop=properties,
                                                     params=self.parameters)
-                    })        
+                    })
 
     def build_command(self, prop=None, params=None):
         '''
@@ -438,7 +438,7 @@ class RemoteCalculator(Calculator):
         Internal calculation executor. We cannot use FileIOCalculator
         directly since we need to support remote execution.
         
-        This calculator is different from others. 
+        This calculator is different from others.
         It prepares the directory, launches the remote process and
         raises the exception to signal that we need to come back for results
         when the job is finished.
@@ -493,7 +493,7 @@ class RemoteCalculator(Calculator):
         
         fn=os.path.join(self.directory,'pw.out')
         # Read the pan-ultimate line of the output file
-        try: 
+        try:
             ln=open(fn).readlines()[-2]
             if ln.find('JOB DONE.')>-1 :
                 # Job is done we can read the output
@@ -506,14 +506,14 @@ class RemoteCalculator(Calculator):
         except (IOError, IndexError) :
             # Job not ready.
             raise CalcNotReadyError
-        
+
         # All is fine - really read the results
         self.calc.read_results(self)
 
     @classmethod
     def ParallelCalculate(cls,syslst,properties=None,system_changes=all_changes):
         '''
-        Run a series of calculations in parallel using (implicitely) some 
+        Run a series of calculations in parallel using (implicitely) some
         remote machine/cluster. The function returns the list of systems ready
         for the extraction of calculated properties.
         '''
@@ -596,10 +596,10 @@ def ParCalculate(systems,calc,cleanup=True,block=True,prefix="Calc_"):
     The resulting objects are returned in the list (one per input system).
     '''
 
-    if type(systems) != type([]) :
-        sysl=[systems]
+    if isinstance(systems, list) :
+        sysl = systems
     else :
-        sysl=systems
+        sysl = [systems]
 
     if block :
         iq=Queue(len(sysl)+1)
