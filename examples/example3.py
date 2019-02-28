@@ -19,7 +19,7 @@
 #    along with Elastic.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
-Example of elastic tensor calculation using VASP calculator and 
+Example of elastic tensor calculation using VASP calculator and
 elastic module.
 '''
 
@@ -33,8 +33,8 @@ import numpy
 
 # Create the MgO crystal
 a = 4.194
-cryst = Crystal(crystal(['Mg', 'O'], 
-                [(0, 0, 0), (0.5, 0.5, 0.5)], 
+cryst = Crystal(crystal(['Mg', 'O'],
+                [(0, 0, 0), (0.5, 0.5, 0.5)],
                 spacegroup=225,
                 cellpar=[a, a, a, 90, 90, 90]))
 
@@ -47,11 +47,11 @@ calc=ClusterVasp(nodes=1,ppn=8)
 cryst.set_calculator(calc)
 
 # Set the calculation parameters
-calc.set(prec = 'Accurate', 
-            xc = 'PBE', 
-            lreal = False, 
+calc.set(prec = 'Accurate',
+            xc = 'PBE',
+            lreal = False,
             nsw=30,
-            ediff=1e-8, 
+            ediff=1e-8,
             ibrion=2,
             kpts=[3,3,3])
 
@@ -75,7 +75,7 @@ Cij, Bij=cryst.get_elastic_tensor(n=5,d=0.2)
 print "Cij (GPa):", Cij/units.GPa
 
 
-# Now let us do it (only c11 and c12) by hand 
+# Now let us do it (only c11 and c12) by hand
 # with 3rd order polynomial fitting the points.
 sys=[]
 for d in linspace(-0.2,0.2,10):

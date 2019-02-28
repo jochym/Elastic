@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Command to run vasp in current directory
+RUN_VASP="run-on-tsi /opt/bin/run-vasp541"
+
+for s in $* ; do
+    d=${s%%.POSCAR}
+    echo -n  $d ": "
+    mkdir calc-$d
+    (
+        cd calc-$d
+        ln -s ../INCAR ../KPOINTS ../POTCAR ../vasprun.conf .
+        ln -s ../$s POSCAR
+        $RUN_VASP
+    )
+done

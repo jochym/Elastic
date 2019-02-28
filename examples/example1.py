@@ -29,8 +29,8 @@ import numpy
 import matplotlib.pyplot as plt
 
 a = 4.194
-cryst = crystal(['Mg', 'O'], 
-                [(0, 0, 0), (0.5, 0.5, 0.5)], 
+cryst = crystal(['Mg', 'O'],
+                [(0, 0, 0), (0.5, 0.5, 0.5)],
                 spacegroup=225,
                 cellpar=[a, a, a, 90, 90, 90])
 
@@ -43,11 +43,11 @@ calc=ClusterVasp(nodes=1,ppn=8)
 cryst.set_calculator(calc)
 
 # Set the calculation parameters
-calc.set(prec = 'Accurate', 
-            xc = 'PBE', 
-            lreal = False, 
+calc.set(prec = 'Accurate',
+            xc = 'PBE',
+            lreal = False,
             nsw=30,
-            ediff=1e-8, 
+            ediff=1e-8,
             ibrion=2,
             kpts=[3,3,3])
 
@@ -70,9 +70,9 @@ calc.clean()
 sys=[]
 # Iterate over lattice constant in the +/-5% range
 for av in numpy.linspace(a*0.95,a*1.05,5):
-    sys.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)], 
+    sys.append(crystal(['Mg', 'O'], [(0, 0, 0), (0.5, 0.5, 0.5)],
                 spacegroup=225, cellpar=[av, av, av, 90, 90, 90]))
-                   
+
 # Define the template calculator for this run
 # We can use the calc from above. It is only used as a template.
 # Just change the params to fix the cell volume

@@ -32,11 +32,22 @@ __conda_version__.txt
 .coverage
 .tox
 nosetests.xml
+tests/data/calc-*_*/
+tests/data
+docs/notebook
 
 # Translations
 *.mo
+
+# VSCode
+.vscode
 
 # Mr Developer
 .mr.developer.cfg
 .project
 .pydevproject
+.spyproject
+
+# Notebooks
+.ipynb_checkpoints
+

@@ -1,34 +1,38 @@
 package:
   name: elastic
+  version: {{ environ.get('GIT_DESCRIBE_TAG', '') | replace('v','',1) }}
 
 source:
   git_url: https://github.com/jochym/Elastic.git
   git_branch: {{ environ.get('GIT_BRANCH','master') }}
 
 build:
-  script_env:
-    - GIT_BRANCH
   preserve_egg_dir: True
-  #entry_points:
+  number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
+  script: python setup.py install
+  entry_points:
     # Put any entry points (scripts to be generated automatically) here. The
     # syntax is module:function.  For example
     #
     # - elastic = elastic:main
     #
     # Would create an entry point called elastic that calls elastic.main()
+    - elastic = elastic.cli.elastic:cli
 
 
   # If this is a new build for the same version, increment the build
   # number. If you do not include this key, it defaults to 0.
-  number: 1
+  number: {{ GIT_DESCRIBE_NUMBER }}
 
 requirements:
   build:
     - python
     - future
     - setuptools
+    - setuptools_scm
     - sphinx
     - docutils
+    - click
 
   run:
     - python
@@ -37,29 +41,24 @@ requirements:
     - scipy
     - spglib
     - future
+    - click
 
 test:
-  # Python imports
+  source_files:
+    - test
+    - tests
+  requires:
+    - hypothesis
   imports:
     - elastic
-
   commands:
-    - ls -l {{SRC_DIR}}
-    - python {{SRC_DIR}}/test/test_elastic.py
+    - python -m unittest discover -s test
+    - elastic --version
+    - elastic -v --cij proc tests/data/calc-cij_*/vasprun.xml
 
-
-  # You can also put a file called run_test.py in the recipe that will be run
-  # at test time.
-
-  requires:
-    # Put any additional test requirements here.  For example
-    # - elastic-dev
 
 about:
   home: https://github.com/jochym/Elastic
   license: GPLv3
   summary: 'Extension for ASE to calculate elastic constants'
 
-# See
-# http://docs.continuum.io/conda/build.html for
-# more information about meta.yaml

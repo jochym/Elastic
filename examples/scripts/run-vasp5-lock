@@ -51,13 +51,6 @@ else
     type="Scalar "
 fi
 
-clean-up() {
-    for nd in \`cat \$1|sort|uniq\` ; do
-	    # echo "Cleaning up node: " \$nd
-	    ssh \$nd "ps ux|grep 'mpd\.py'|grep -v grep|awk '{print \\\$2}'|xargs -r -l1 kill"
-    done
-}
-
 echo \$type job started 
 echo "  "  at \`date\`
 echo "  "  on host \`hostname\`
@@ -85,11 +78,8 @@ if [ \$numprocs -gt 1 ] ; then
     nodefile=\`mktemp nodefile.XXXXXX\`
     #sed -e 's/^c/i/g' -e 's/^h/j/g' < \$PBS_NODEFILE >\$nodefile
     sed -e 's/^c/i/g' -e 's/^h/j/g' -e 's/^bl/k/g' < \$PBS_NODEFILE |xargs -l1 getent hosts |sort|uniq -c|awk '{ printf("%s:%s\n",\$2,\$1) }' >\$nodefile
-    #mpdboot --ifhn=\$hn -n \$nodes -f \$nodefile -r ssh
-    mpiexec.mpich2 -f \$nodefile -n \$numprocs  $VASPMPI 
-    #mpdallexit
+    mpiexec.mpich -f \$nodefile -n \$numprocs  $VASPMPI 
     rm -f \$nodefile
-    #clean-up \$PBS_NODEFILE
 else
     $VASP 
 fi
