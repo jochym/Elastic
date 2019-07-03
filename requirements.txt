@@ -1,5 +1,5 @@
 ase
-spglib
+spglib==1.13.0.post6
 numpy
 scipy
 setuptools_scm
