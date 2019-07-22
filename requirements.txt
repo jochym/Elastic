@@ -1,4 +1,4 @@
-ase
+ase==3.18.0
 spglib
 numpy
 scipy
