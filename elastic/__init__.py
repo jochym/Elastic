@@ -68,6 +68,7 @@ from .elastic import get_elementary_deformations, scan_volumes
 from .elastic import get_pressure, get_strain, BMEOS
 
 # To reach "elastic.__version__" attribute in other programs
+from setuptools_scm import get_version
 ver = get_version().split('+')[0].split('.')
 
 if ver[-1].startswith('dev'):
