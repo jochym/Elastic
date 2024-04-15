@@ -218,7 +218,7 @@ def hexagonal(u):
                  [     0, uzz,      0, uxx+uyy,     0   ],
                  [     0,   0,      0,       0, 2*uyz   ],
                  [     0,   0,      0,       0, 2*uxz   ],
-                 [ 2*uxy,   0, -2*uxy,       0,     0   ]])
+                 [   uxy,   0,   -uxy,       0,     0   ]])
 
 
 def monoclinic(u):
