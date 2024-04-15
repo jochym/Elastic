@@ -331,7 +331,9 @@ def get_lattice_type(cryst):
             [231, "Cubic"]
         ]
 
-    sg = spg.get_spacegroup(cryst)
+    sg = spg.get_spacegroup((cryst.get_cell(), 
+                             cryst.get_positions(), 
+                             cryst.numbers))
     m = re.match(r'([A-Z].*\b)\s*\(([0-9]*)\)', sg)
     sg_name = m.group(1)
     sg_nr = int(m.group(2))
