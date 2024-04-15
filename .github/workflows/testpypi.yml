@@ -26,6 +26,13 @@ jobs:
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
 
+    - name: Test 
+      run: |
+        python -m unittest discover -s test -b
+        elastic --version
+        elastic -v --cij proc tests/data/calc-cij_*/vasprun.xml
+        elastic -v --eos proc tests/data/calc-eos_*/vasprun.xml
+
     - name: Store the distribution packages
       uses: actions/upload-artifact@main
       with:
@@ -52,7 +59,7 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-        
+
     - name: Publish distribution to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
