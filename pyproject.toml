@@ -24,7 +24,7 @@ license = {text = "GPLv3"}
 keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals']
 classifiers = [
   "Development Status :: 5 - Production/Stable",
-  "License :: OSI Approved :: GPLv3",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
   "Programming Language :: Python :: 3",
 ]
 
