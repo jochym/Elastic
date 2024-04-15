@@ -1,4 +1,4 @@
-name: Publish Python distribution to PyPI and TestPyPI
+name: Test and publish to TestPyPI
 on: push
 
 jobs:
@@ -28,10 +28,9 @@ jobs:
 
     - name: Test 
       run: |
-        ls -l dist/
+        # python3 -m pip install hypothesis
         python3 -m pip install dist/elastic*.whl
         elastic --version
-        python3 -m pip install hypothesis
         python3 -m unittest discover -s test -b
         elastic -v --cij proc tests/data/calc-cij_*/vasprun.xml
         elastic -v --eos proc tests/data/calc-eos_*/vasprun.xml
@@ -42,9 +41,8 @@ jobs:
         name: python-package-distributions
         path: dist/
 
-
   publish-to-testpypi:
-    name: Publish Python distribution to TestPyPI
+    name: Publish to TestPyPI
     needs:
     - build
     runs-on: ubuntu-latest
@@ -67,3 +65,28 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
+
+
+  publish-to-pypi:
+    name: Publish to PyPI
+    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    needs:
+    - build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/elastic
+
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@main
+      with:
+        name: python-package-distributions
+        path: dist/
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
