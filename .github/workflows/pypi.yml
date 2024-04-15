@@ -1,5 +1,5 @@
 name: Build, test and publish to (test)PyPI
-on: push
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -43,6 +43,7 @@ jobs:
 
   publish-to-testpypi:
     name: Publish to TestPyPI
+    if: ${{ github.event_name == 'push' }}
     needs:
     - build
     runs-on: ubuntu-latest
@@ -69,7 +70,9 @@ jobs:
 
   publish-to-pypi:
     name: Publish to PyPI
-    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    # if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    if: github.event_name == 'push'
+    if: github.ref == 'refs/heads/master' # only publish from master
     needs:
     - build
     runs-on: ubuntu-latest
