@@ -1,11 +1,34 @@
 # -*- coding: utf-8 -*-
 
 # from setuptools import setup, find_packages
-# setup(
-#     packages=find_packages(),
-# )
-
 # from setuptools_scm import get_version
+
+# def clean_version(version: ScmVersion) -> str:
+#     from setuptools_scm.version import guess_next_version
+
+#     return version.format_next_version(guess_next_version, "{guessed}b{distance}")
+
+
+# setup(use_scm_version={"version_scheme": myversion_func})
+
+
+# we presume installed build dependencies
+from __future__ import annotations
+
+from setuptools import setup
+
+from setuptools_scm import ScmVersion
+
+
+def clean_version(version: ScmVersion) -> str:
+    from setuptools_scm.version import guess_next_version
+    
+    print("Building version:", version.format_next_version(guess_next_version, "{guessed}b{distance}"))
+
+    return version.format_next_version(guess_next_version, "{guessed}b{distance}")
+
+
+setup(use_scm_version={"version_scheme": clean_version})
 
 # ver = get_version().split('+')[0].split('.')
 
