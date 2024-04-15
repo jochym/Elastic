@@ -23,12 +23,13 @@ from setuptools_scm import ScmVersion
 def clean_version(version: ScmVersion) -> str:
     from setuptools_scm.version import guess_next_version
     
-    print("Building version:", version.format_next_version(guess_next_version, "{guessed}b{distance}"))
+    print("Building version:", version.format_next_version(guess_next_version, "{guessed}.{distance}"))
 
-    return version.format_next_version(guess_next_version, "{guessed}b{distance}")
+    return version.format_next_version(guess_next_version, "{guessed}.{distance}")
 
 
-setup(use_scm_version={"version_scheme": clean_version})
+setup(use_scm_version={"version_scheme": clean_version, 
+                        "local_scheme": ""})
 
 # ver = get_version().split('+')[0].split('.')
 
