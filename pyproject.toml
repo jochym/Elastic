@@ -11,7 +11,6 @@ dependencies = [
   "numpy",
   "scipy",
 ]
-packages = ["elastic"]
 authors = [
   {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
   {name = "Georgios Tritsaris", email = "gtritsaris@seas.harvard.edu"},
