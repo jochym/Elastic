@@ -5,16 +5,13 @@ from setuptools import setup
 from setuptools_scm import ScmVersion
 from setuptools_scm.version import get_no_local_node
 
-
-def clean_version(version: ScmVersion) -> str:
+def current_version(version: ScmVersion) -> str:
     from setuptools_scm.version import guess_next_version
-    from setuptools_scm.version import only_version
     
-    return version.format_next_version(#guess_next_version,
-                                        only_version, 
-                                        "{guessed}.{distance}")
+    return version.format_next_version(guess_next_version,
+                                        "{tag}.{distance}")
 
 
-setup(use_scm_version={"version_scheme": clean_version, 
+setup(use_scm_version={"version_scheme": current_version, 
                         "local_scheme": get_no_local_node})
 
