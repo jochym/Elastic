@@ -3,7 +3,7 @@
 from __future__ import annotations
 from setuptools import setup
 from setuptools_scm import ScmVersion
-from setuptools_scm.version import no_local_version
+from setuptools_scm.version import get_no_local_node
 
 
 def clean_version(version: ScmVersion) -> str:
@@ -16,5 +16,5 @@ def clean_version(version: ScmVersion) -> str:
 
 
 setup(use_scm_version={"version_scheme": clean_version, 
-                        "local_scheme": no_local_version})
+                        "local_scheme": get_no_local_node})
 
