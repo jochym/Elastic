@@ -1,8 +1,7 @@
 Elastic
 =======
 
-[![Build
-Status](https://travis-ci.org/jochym/Elastic.svg?branch=master)](https://travis-ci.org/jochym/Elastic)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/jochym/Elastic/pypi.yml)
 [![PVersion
 Badge](https://img.shields.io/pypi/v/elastic.svg)](https://pypi.org/project/elastic/)
 [![CVersion
@@ -12,7 +11,6 @@ Badge](https://anaconda.org/conda-forge/elastic/badges/downloads.svg)](https://a
 [![License
 Badge](https://anaconda.org/jochym/elastic/badges/license.svg)](https://anaconda.org/jochym/elastic)
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.593721.svg)](https://doi.org/10.5281/zenodo.593721)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f348d724d564ce399beb009ab9a3654)](https://www.codacy.com/app/jochym/Elastic?utm_source=github.com&utm_medium=referral&utm_content=jochym/Elastic&utm_campaign=badger)
 [![Documentation Status](https://readthedocs.org/projects/elastic/badge/?version=latest)](https://elastic.readthedocs.io/en/latest/?badge=latest)
 
 Elastic is a set of python routines for calculation of elastic
@@ -33,11 +31,6 @@ website](http://wolf.ifj.edu.pl/elastic/). You can obtain the
 file](https://media.readthedocs.org/pdf/elastic/stable/elastic.pdf) as
 well.
 
-The docs are also published at: [Elastic over
-IPFS](https://ipfs.io/ipns/QmSHUr59SLvWEZq7URTDGgouVaq7vFJYG7HqtBgL4s6M2u/)
-
-The stable site hash is:
-/ipns/QmSHUr59SLvWEZq7URTDGgouVaq7vFJYG7HqtBgL4s6M2u/
 
 Installation
 ------------
