@@ -2,14 +2,11 @@ Elastic
 =======
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/jochym/Elastic/pypi.yml)
-[![PVersion
-Badge](https://img.shields.io/pypi/v/elastic.svg)](https://pypi.org/project/elastic/)
-[![CVersion
-Badge](https://anaconda.org/conda-forge/elastic/badges/version.svg)](https://anaconda.org/conda-forge/elastic)
-[![Downloads
-Badge](https://anaconda.org/conda-forge/elastic/badges/downloads.svg)](https://anaconda.org/conda-forge/elastic)
-[![License
-Badge](https://anaconda.org/jochym/elastic/badges/license.svg)](https://anaconda.org/jochym/elastic)
+![PyPI - Version](https://img.shields.io/pypi/v/elastic)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/elastic?label=PyPi)
+![Conda Version](https://img.shields.io/conda/vn/conda-forge/elastic)
+![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/elastic?label=forge)
+![GitHub License](https://img.shields.io/github/license/jochym/Elastic)
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.593721.svg)](https://doi.org/10.5281/zenodo.593721)
 [![Documentation Status](https://readthedocs.org/projects/elastic/badge/?version=latest)](https://elastic.readthedocs.io/en/latest/?badge=latest)
 
