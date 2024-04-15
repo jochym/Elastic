@@ -28,8 +28,11 @@ def clean_version(version: ScmVersion) -> str:
     return version.format_next_version(guess_next_version, "{guessed}.{distance}")
 
 
+def no_local(version) -> str:
+    return ""
+
 setup(use_scm_version={"version_scheme": clean_version, 
-                        "local_scheme": ""})
+                        "local_scheme": no_local})
 
 # ver = get_version().split('+')[0].split('.')
 
