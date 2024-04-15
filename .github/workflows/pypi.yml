@@ -1,9 +1,5 @@
 name: Build, test and publish to (test)PyPI
-on: 
-  push
-  pull_request
-  release:
-    types: [published]
+on: [push, pull_request, release]
 
 jobs:
   build:
