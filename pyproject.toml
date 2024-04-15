@@ -29,6 +29,9 @@ classifiers = [
   "Programming Language :: Python :: 3",
 ]
 
+[tool.setuptools_scm]
+version_file = "elastic/_version.py"
+
 [project.scripts]
 elastic = "elastic.cli.elastic:cli"
 
