@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@main
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@main
       with:
         python-version: "3.x"
 
@@ -24,7 +24,7 @@ jobs:
       run: python3 -m build
 
     - name: Store the distribution packages
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@main
       with:
         name: python-package-distributions
         path: dist/
@@ -45,7 +45,7 @@ jobs:
 
     steps:
     - name: Download all the dists
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@main
       with:
         name: python-package-distributions
         path: dist/
