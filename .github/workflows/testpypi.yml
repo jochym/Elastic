@@ -28,6 +28,8 @@ jobs:
 
     - name: Test 
       run: |
+        ls -l dist/
+        python3 -m pip install --editable .
         elastic --version
         python3 -m pip install pytest pytest-cov hypothesis
         python3 -m unittest discover -s test -b

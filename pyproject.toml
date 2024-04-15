@@ -10,6 +10,7 @@
     "spglib",
     "numpy",
     "scipy",
+    "click",
     ]
     authors = [
     {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
