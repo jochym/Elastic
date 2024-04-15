@@ -28,8 +28,9 @@ jobs:
 
     - name: Test 
       run: |
-        python -m unittest discover -s test -b
         elastic --version
+        python3 -m pip install pytest pytest-cov hypothesis
+        python3 -m unittest discover -s test -b
         elastic -v --cij proc tests/data/calc-cij_*/vasprun.xml
         elastic -v --eos proc tests/data/calc-eos_*/vasprun.xml
 
