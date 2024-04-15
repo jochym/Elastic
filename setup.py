@@ -1,35 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
-from setuptools_scm import get_version
+from __future__ import annotations
+from setuptools import setup
+from setuptools_scm import ScmVersion
+from setuptools_scm.version import get_no_local_node
 
-ver = get_version().split('+')[0].split('.')
+def current_version(version: ScmVersion) -> str:
+    from setuptools_scm.version import guess_next_version
+    
+    return version.format_next_version(guess_next_version,
+                                        "{tag}.{distance}")
 
-if ver[-1].startswith('dev'):
-    ver[-1] = ver[-1][3:]
-    ver[-2] = str(int(ver[-2])-1)
 
-ver = '.'.join(ver)
+setup(use_scm_version={"version_scheme": current_version, 
+                        "local_scheme": get_no_local_node})
 
-setup(
-    name='elastic',
-    version=ver,
-    packages=find_packages(),
-    license='GPLv3',
-    description='Extension for ASE to calculate elastic constants',
-    author='Paweł T. Jochym',
-    author_email='Pawel.Jochym@ifj.edu.pl',
-    url='https://github.com/jochym/Elastic',
-    keywords=['science', 'physics', 'ase', 'elastic constants', 'crystals'],
-    requires=['click', 'spglib', 'numpy', 'scipy', 'ase'],
-    setup_requires=['docutils', 'sphinx', 'setuptools_scm'],
-    provides=['elastic', 'parcalc'],
-    platforms=['all'],
-    classifiers=[],
-    include_package_data=True,
-    install_requires=['Click', ],
-    entry_points='''
-        [console_scripts]
-        elastic=elastic.cli.elastic:cli
-        '''
-)

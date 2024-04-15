@@ -121,7 +121,7 @@ def tetragonal(u):
     The order of constants is as follows:
 
     .. math::
-       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
+       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{66}
 
     :param u: vector of deformations:
         [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
@@ -134,9 +134,9 @@ def tetragonal(u):
                 [[uxx,   0,    uyy,  uzz,      0,      0],
                  [uyy,   0,    uxx,  uzz,      0,      0],
                  [0,     uzz,  0,    uxx+uyy,  0,      0],
-                 [0,     0,    0,    0,        0,      2*uxy],
                  [0,     0,    0,    0,        2*uxz,  0],
-                 [0,     0,    0,    0,        2*uyz,  0]])
+                 [0,     0,    0,    0,        2*uyz,  0],
+                 [0,     0,    0,    0,        0,      2*uxy]])
 
 
 def orthorombic(u):
@@ -218,7 +218,7 @@ def hexagonal(u):
                  [     0, uzz,      0, uxx+uyy,     0   ],
                  [     0,   0,      0,       0, 2*uyz   ],
                  [     0,   0,      0,       0, 2*uxz   ],
-                 [ 2*uxy,   0, -2*uxy,       0,     0   ]])
+                 [   uxy,   0,   -uxy,       0,     0   ]])
 
 
 def monoclinic(u):
@@ -294,7 +294,7 @@ def get_cij_order(cryst):
                 'C_44', 'C_55', 'C_66', 'C_16', 'C_26', 'C_36', 'C_45'),
             3: ('C_11', 'C_22', 'C_33', 'C_12', 'C_13', 'C_23', 'C_44',
                 'C_55', 'C_66'),
-            4: ('C_11', 'C_33', 'C_12', 'C_13', 'C_44', 'C_14'),
+            4: ('C_11', 'C_33', 'C_12', 'C_13', 'C_44', 'C_66'),
             5: ('C_11', 'C_33', 'C_12', 'C_13', 'C_44', 'C_14'),
             6: ('C_11', 'C_33', 'C_12', 'C_13', 'C_44'),
             7: ('C_11', 'C_12', 'C_44'),
@@ -331,8 +331,10 @@ def get_lattice_type(cryst):
             [231, "Cubic"]
         ]
 
-    sg = spg.get_spacegroup(cryst)
-    m = re.match('([A-Z].*\\b)\s*\(([0-9]*)\)', sg)
+    sg = spg.get_spacegroup((cryst.get_cell(), 
+                             cryst.get_positions(), 
+                             cryst.numbers))
+    m = re.match(r'([A-Z].*\b)\s*\(([0-9]*)\)', sg)
     sg_name = m.group(1)
     sg_nr = int(m.group(2))
 
@@ -432,7 +434,7 @@ def get_BM_EOS(cryst, systems):
     # Fitting
     try :
         p1, succ = optimize.curve_fit(BMEOS, pvdat[0], pvdat[1], p0)
-    except (ValueError, RuntimeError, OptimizeWarning) as ex:
+    except (ValueError, RuntimeError, optimize.OptimizeWarning) as ex:
         raise RuntimeError('Calculation failed')
 
     cryst.bm_eos = p1
@@ -502,8 +504,7 @@ def get_elastic_tensor(cryst, systems):
     :param systems: list of Atoms object with calculated deformed structures
 
     :returns: tuple(:math:`C_{ij}` float vector,
-                    tuple(:math:`B_{ij}` float vector,
-                          residuals, solution rank, singular values)
+                    tuple(:math:`B_{ij}` float vector, residuals, solution rank, singular values))
     '''
 
     # Deformation look-up table

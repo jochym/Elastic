@@ -1,0 +1,49 @@
+[build-system]
+    requires = ["setuptools", "setuptools-scm"]
+    build-backend = "setuptools.build_meta"
+
+[project]
+    dynamic = ["version"]
+    name = "elastic"
+    dependencies = [
+        "ase",
+        "spglib",
+        "numpy",
+        "scipy",
+        "click",
+    ]
+    authors = [
+        {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
+        {name = "Georgios Tritsaris", email = "gtritsaris@seas.harvard.edu"},
+    ]
+    maintainers = [
+        {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
+    ]
+    description = "Extension for ASE to calculate elastic constants"
+    readme = "README.md"
+    license = {text = "GPLv3"}
+    keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals']
+    classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Programming Language :: Python :: 3",
+    ]
+
+[project.scripts]
+    elastic = "elastic.cli.elastic:cli"
+
+[project.urls]
+    Homepage = "https://wolf.ifj.edu.pl/elastic"
+    Documentation = "http://elastic.rtfd.org/"
+    Repository = "https://github.com/jochym/Elastic"
+    Issues = "https://github.com/jochym/Elastic/issues"
+    Changelog = "https://github.com/jochym/Elastic/blob/master/CHANGELOG.md"
+
+
+
+[tool.setuptools.packages]
+    find = {}  # Scan the project directory with the default parameters
+
+[tool.setuptools_scm]
+    version_file = "elastic/_version.py"
+

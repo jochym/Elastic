@@ -27,10 +27,12 @@ __pycache__
 pip-log.txt
 MANIFEST
 __conda_version__.txt
+elastic/_version.py
 
 # Unit test / coverage reports
 .coverage
 .tox
+.hypothesis
 nosetests.xml
 tests/data/calc-*_*/
 tests/data
@@ -38,6 +40,9 @@ docs/notebook
 
 # Translations
 *.mo
+
+# VSCode
+.vscode
 
 # Mr Developer
 .mr.developer.cfg
