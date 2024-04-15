@@ -27,7 +27,6 @@ from __future__ import print_function, absolute_import, division
 import click
 import ase.io
 import elastic
-import pkg_resources
 from click import echo
 
 verbose = 0
@@ -36,7 +35,7 @@ verbose = 0
 def banner():
     if verbose > 1:
         echo('Elastic ver. %s\n----------------------' %
-             pkg_resources.get_distribution("elastic").version)
+             elastic._version.version)
 
 
 def set_verbosity(v):
