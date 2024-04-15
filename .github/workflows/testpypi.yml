@@ -29,9 +29,9 @@ jobs:
     - name: Test 
       run: |
         ls -l dist/
-        python3 -m pip install --editable .
+        python3 -m pip install dist/elastic*.whl
         elastic --version
-        python3 -m pip install pytest pytest-cov hypothesis
+        python3 -m pip install hypothesis
         python3 -m unittest discover -s test -b
         elastic -v --cij proc tests/data/calc-cij_*/vasprun.xml
         elastic -v --eos proc tests/data/calc-eos_*/vasprun.xml
