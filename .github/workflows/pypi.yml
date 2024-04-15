@@ -28,7 +28,7 @@ jobs:
 
     - name: Test 
       run: |
-        # python3 -m pip install hypothesis
+        python3 -m pip install hypothesis
         python3 -m pip install dist/elastic*.whl
         elastic --version
         python3 -m unittest discover -s test -b
