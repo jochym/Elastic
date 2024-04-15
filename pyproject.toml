@@ -6,27 +6,27 @@
     dynamic = ["version"]
     name = "elastic"
     dependencies = [
-    "ase",
-    "spglib",
-    "numpy",
-    "scipy",
-    "click",
+        "ase",
+        "spglib",
+        "numpy",
+        "scipy",
+        "click",
     ]
     authors = [
-    {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
-    {name = "Georgios Tritsaris", email = "gtritsaris@seas.harvard.edu"},
+        {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
+        {name = "Georgios Tritsaris", email = "gtritsaris@seas.harvard.edu"},
     ]
     maintainers = [
-    {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
+        {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
     ]
     description = "Extension for ASE to calculate elastic constants"
     readme = "README.md"
     license = {text = "GPLv3"}
     keywords = ['science', 'physics', 'ase', 'elastic constants', 'crystals']
     classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-    "Programming Language :: Python :: 3",
+        "Development Status :: 5 - Production/Stable",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Programming Language :: Python :: 3",
     ]
 
 [project.scripts]
