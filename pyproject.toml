@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,7 +10,6 @@ dependencies = [
   "spglib",
   "numpy",
   "scipy",
-  "setuptools_scm"
 ]
 authors = [
   {name = "Paweł T. Jochym", email = "Pawel.Jochym@ifj.edu.pl"},
