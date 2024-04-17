@@ -63,7 +63,6 @@ There is some usefull summary also at:
 '''
 
 from __future__ import print_function, division, absolute_import
-import re
 from ase.atoms import Atoms
 
 try:
@@ -331,12 +330,10 @@ def get_lattice_type(cryst):
             [231, "Cubic"]
         ]
 
-    sg = spg.get_spacegroup((cryst.get_cell(), 
-                             cryst.get_positions(), 
-                             cryst.numbers))
-    m = re.match(r'([A-Z].*\b)\s*\(([0-9]*)\)', sg)
-    sg_name = m.group(1)
-    sg_nr = int(m.group(2))
+    cell = (cryst.cell, cryst.get_scaled_positions(), cryst.numbers)
+    dataset = spg.get_symmetry_dataset(cell)
+    sg_name = dataset['international']
+    sg_nr = dataset['number']
 
     for n, l in enumerate(lattice_types):
         if sg_nr < l[0]:
