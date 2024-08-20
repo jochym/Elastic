@@ -53,6 +53,8 @@ def process_calc(fn):
               help='Use VASP formats (default)', default=True)
 @click.option('--abinit', 'frmt', flag_value='abinit',
               help='Use AbInit formats')
+@click.option('--aims', 'frmt', flag_value='aims',
+              help='Use FHI-aims formats')
 @click.option('--cij', 'action', flag_value='cij',
               help='Generate deformations for Cij (default)', default=True)
 @click.option('--eos', 'action', flag_value='eos',
@@ -91,6 +93,9 @@ def gen(ctx, num, lo, hi, size, struct):
         kwargs = {'vasp5': True, 'direct': True}
     elif frmt == 'abinit':
         fn_tmpl += '_%03d.abinit'
+        kwargs = {}
+    elif frmt == "aims":
+        fn_tmpl += '_%03d.in'
         kwargs = {}
 
     if verbose:
