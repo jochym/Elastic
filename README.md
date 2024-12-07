@@ -8,7 +8,7 @@ Elastic
 ![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/elastic?label=forge)
 ![GitHub License](https://img.shields.io/github/license/jochym/Elastic)
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.593721.svg)](https://doi.org/10.5281/zenodo.593721)
-[![Documentation Status](https://readthedocs.org/projects/elastic/badge/?version=latest)](https://elastic.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/elastic/badge/?version=latest)](https://elastic.readthedocs.io/latest)
 
 Elastic is a set of python routines for calculation of elastic
 properties of crystals (elastic constants, equation of state, sound
