@@ -7,6 +7,9 @@ on:
       - dev
 
 jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
   publish-to-testpypi:
     name: Publish to TestPyPI
     # Only on dev pushes
@@ -14,7 +17,8 @@ jobs:
     # Run on untagged push
     # if: ${{ !startsWith(github.ref, 'refs/tags/') }}
     # if: ${{ github.ref == 'refs/heads/dev' }}
-    uses: ./.github/workflows/build.yml
+    needs:
+      - build
     runs-on: ubuntu-latest
 
     environment:
