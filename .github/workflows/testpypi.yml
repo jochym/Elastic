@@ -1,0 +1,42 @@
+name: Build, test and publish to testPyPI
+on:
+  push:
+    branches:
+      - dev
+      - hotfix
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  publish-to-testpypi:
+    name: Publish to TestPyPI
+    # Only on dev pushes
+    # if: ${{ github.event_name == 'push' && ( github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' ) }}
+    # Run on untagged push
+    if: startsWith(github.ref, 'refs/tags/')
+    needs:
+      - build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/elastic
+
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@main
+      with:
+        name: python-package-distributions
+        path: dist/
+
+    - name: Publish distribution to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+
+
+  
