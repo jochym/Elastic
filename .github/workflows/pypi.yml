@@ -1,11 +1,7 @@
 name: Build, test and publish to (test)PyPI
 on:
   push:
-    tags:
-      - 'v*'  # matches semantic versioning (e.g., v1.2.3)
     branches:
-      - main
-      - master
       - dev
 
 jobs:
@@ -54,7 +50,6 @@ jobs:
     # if: ${{ github.event_name == 'push' && ( github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' ) }}
     # Run on untagged push
     # if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-    if: ${{ github.ref == 'refs/heads/dev' }}
     needs:
     - build
     runs-on: ubuntu-latest
@@ -77,28 +72,3 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
-
-
-  publish-to-pypi:
-    name: Publish to PyPI
-    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
-    needs:
-    - build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: pypi
-      url: https://pypi.org/p/elastic
-
-    permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
-    steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@main
-      with:
-        name: python-package-distributions
-        path: dist/
-
-    - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
