@@ -1,3 +1,6 @@
+* 5.2.4
+    - FHI interface
+    - New spglib api used (pinned >= 2.5.0)
 * 5.2.3
     - Fix RTD build config
 * 5.2.2
