@@ -332,8 +332,8 @@ def get_lattice_type(cryst):
 
     cell = (cryst.cell, cryst.get_scaled_positions(), cryst.numbers)
     dataset = spg.get_symmetry_dataset(cell)
-    sg_name = dataset['international']
-    sg_nr = dataset['number']
+    sg_name = dataset.international
+    sg_nr = dataset.number
 
     for n, l in enumerate(lattice_types):
         if sg_nr < l[0]:
