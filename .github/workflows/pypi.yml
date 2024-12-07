@@ -1,8 +1,6 @@
 name: Build, test and publish to (test)PyPI
 on:
   push:
-    tags:
-      - 'v*'  # matches semantic versioning (e.g., v1.2.3)
     branches:
       - master
       - main
@@ -13,7 +11,7 @@ jobs:
 
   publish-to-pypi:
     name: Publish to PyPI
-    # if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
     needs:
       - build
     runs-on: ubuntu-latest

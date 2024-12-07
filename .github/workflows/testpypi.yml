@@ -1,10 +1,9 @@
 name: Build, test and publish to testPyPI
 on:
   push:
-    tags:
-      - 'v*'  # matches semantic versioning (e.g., v1.2.3)
     branches:
       - dev
+      - hotfix
 
 jobs:
   build:
@@ -15,8 +14,7 @@ jobs:
     # Only on dev pushes
     # if: ${{ github.event_name == 'push' && ( github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' ) }}
     # Run on untagged push
-    # if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-    # if: ${{ github.ref == 'refs/heads/dev' }}
+    if: startsWith(github.ref, 'refs/tags/')
     needs:
       - build
     runs-on: ubuntu-latest
