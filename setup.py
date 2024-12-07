@@ -19,7 +19,13 @@ def current_version(version: ScmVersion) -> str:
     return version.format_next_version(guess_next_version,
                                         "{tag}"+ delim +"{distance}")
 
+def myversion_func(version: ScmVersion) -> str:
+    from setuptools_scm.version import guess_next_version
 
-setup(use_scm_version={"version_scheme": current_version, 
-                        "local_scheme": get_no_local_node})
+    return version.format_next_version(guess_next_version, "{tag}.{distance}")
 
+
+# setup(use_scm_version={"version_scheme": current_version, 
+#                         "local_scheme": get_no_local_node})
+
+setup(use_scm_version={"version_scheme": myversion_func})
