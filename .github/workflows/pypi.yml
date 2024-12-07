@@ -2,7 +2,8 @@ name: Build, test and publish to (test)PyPI
 on:
   push:
     branches:
-      - dev
+      - master
+      - main
 
 jobs:
   build:
@@ -48,8 +49,8 @@ jobs:
     name: Publish to TestPyPI
     # Only on dev pushes
     # if: ${{ github.event_name == 'push' && ( github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' ) }}
-    # Run on untagged push
-    # if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    # Run on tagged push
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs:
     - build
     runs-on: ubuntu-latest
