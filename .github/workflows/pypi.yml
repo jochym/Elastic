@@ -1,6 +1,8 @@
 name: Build, test and publish to (test)PyPI
 on:
   push:
+    tags:
+      - 'v*'  # matches semantic versioning (e.g., v1.2.3)
     branches:
       - master
       - main
