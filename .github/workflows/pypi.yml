@@ -53,7 +53,8 @@ jobs:
     # Only on dev pushes
     # if: ${{ github.event_name == 'push' && ( github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' ) }}
     # Run on untagged push
-    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    # if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    if: ${{ github.ref == 'refs/heads/dev' }}
     needs:
     - build
     runs-on: ubuntu-latest
