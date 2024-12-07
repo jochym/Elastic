@@ -17,8 +17,6 @@ def current_version(version: ScmVersion) -> str:
         delim = '-post'
 
     return version.format_next_version(guess_next_version,
-                                        "{tag}.{distance}")
-    return version.format_next_version(guess_next_version,
                                         "{tag}"+ delim +"{distance}")
 
 setup(use_scm_version={"version_scheme": current_version, 
