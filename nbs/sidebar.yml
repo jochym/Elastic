@@ -1,0 +1,10 @@
+website:
+  sidebar:
+    contents:
+      - index.ipynb
+      - 00_Physical_Principles.ipynb
+      - 01_Installation.ipynb
+      - 01_Usage_CLI.ipynb
+      - 01_Usage_Lib.ipynb
+      - 05_Examples.ipynb
+      - 10_core.ipynb

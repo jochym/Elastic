@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "elastic"
+  site-url: "https://jochym.github.io/Elastic"
+  description: "A module for ASE for elastic constants calculation."
+  repo-branch: master
+  repo-url: "https://github.com/jochym/Elastic"

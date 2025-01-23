@@ -53,3 +53,8 @@ docs/notebook
 # Notebooks
 .ipynb_checkpoints
 
+_proc
+_docs
+elastic_old
+Elastic
+
