@@ -8,3 +8,4 @@ website:
       - 01_Usage_Lib.ipynb
       - 05_Examples.ipynb
       - 10_core.ipynb
+      - 15_cli.ipynb
