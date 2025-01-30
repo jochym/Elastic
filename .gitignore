@@ -58,3 +58,10 @@ _docs
 elastic_old
 Elastic
 
+cij_*.POSCAR
+eos_*.POSCAR
+
+nbs/data
+nbs/elastic
+
+
