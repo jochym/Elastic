@@ -430,7 +430,7 @@ def get_BM_EOS(cryst, systems):
        \\left(\\frac{V_0}{V}\\right)^{5/3}\\right] 
        \\left\\{1 + \\frac{3}{4}(B'_0 - 4)\\left[\\left(\\frac{V_0}{V}\\right)^{2/3} - 1\\right]\\right\\}
 
-    It's coefficients are estimated using n single-point structures ganerated
+    It's coefficients are estimated using n single-point structures generated
     from the crystal (cryst) by the scan_volumes function between two relative
     volumes. The BM EOS is fitted to the computed points by
     least squares method. The returned value is a list of fitted
