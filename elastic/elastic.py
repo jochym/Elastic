@@ -80,6 +80,44 @@ from math import acos, pi, cos, sin, sqrt
 
 
 def BMEOS(v, v0, b0, b0p):
+    '''
+    Third-order Birch-Murnaghan Equation of State.
+    
+    Returns pressure as a function of volume for the Birch-Murnaghan EOS.
+    
+    .. math::
+       P(V) = \\frac{3B_0}{2} \\left[\\left(\\frac{V_0}{V}\\right)^{7/3} - 
+       \\left(\\frac{V_0}{V}\\right)^{5/3}\\right] 
+       \\left\\{1 + \\frac{3}{4}(B'_0 - 4)\\left[\\left(\\frac{V_0}{V}\\right)^{2/3} - 1\\right]\\right\\}
+    
+    :param v: volume
+    :param v0: equilibrium volume V_0
+    :param b0: bulk modulus B_0
+    :param b0p: pressure derivative of bulk modulus B'_0
+    
+    :returns: pressure P(V)
+    '''
+    x = (v0/v)**(1.0/3.0)
+    return (3.0*b0/2.0) * (x**7 - x**5) * (1.0 + (3.0/4.0)*(b0p - 4.0)*(x**2 - 1.0))
+
+
+def MurnaghanEOS(v, v0, b0, b0p):
+    '''
+    Murnaghan Equation of State.
+    
+    Returns pressure as a function of volume for the Murnaghan EOS.
+    This was the equation previously (incorrectly) used for BMEOS.
+    
+    .. math::
+       P(V) = \\frac{B_0}{B'_0}\\left[\\left(\\frac{V_0}{V}\\right)^{B'_0} - 1\\right]
+    
+    :param v: volume
+    :param v0: equilibrium volume V_0
+    :param b0: bulk modulus B_0
+    :param b0p: pressure derivative of bulk modulus B'_0
+    
+    :returns: pressure P(V)
+    '''
     return (b0/b0p)*(pow(v0/v, b0p) - 1)
 
 
@@ -385,12 +423,12 @@ def get_pressure(s):
 def get_BM_EOS(cryst, systems):
     """Calculate Birch-Murnaghan Equation of State for the crystal.
 
-    The B-M equation of state is defined by:
+    The third-order Birch-Murnaghan equation of state is defined by:
 
     .. math::
-       P(V)= \\frac{B_0}{B'_0}\\left[
-       \\left({\\frac{V}{V_0}}\\right)^{-B'_0} - 1
-       \\right]
+       P(V) = \\frac{3B_0}{2} \\left[\\left(\\frac{V_0}{V}\\right)^{7/3} - 
+       \\left(\\frac{V_0}{V}\\right)^{5/3}\\right] 
+       \\left\\{1 + \\frac{3}{4}(B'_0 - 4)\\left[\\left(\\frac{V_0}{V}\\right)^{2/3} - 1\\right]\\right\\}
 
     It's coefficients are estimated using n single-point structures ganerated
     from the crystal (cryst) by the scan_volumes function between two relative
