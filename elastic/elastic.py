@@ -116,7 +116,26 @@ def regular(u):
 
 def tetragonal(u):
     '''
-    Equation matrix generation for the tetragonal lattice.
+    Equation matrix generation for the tetragonal lattice (high symmetry).
+    
+    This function is an alias for tetragonal_high for backward compatibility.
+    The order of constants is as follows:
+
+    .. math::
+       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{66}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
+    '''
+    return tetragonal_high(u)
+
+
+def tetragonal_high(u):
+    '''
+    Equation matrix generation for the tetragonal lattice (high symmetry).
+    Crystal classes: 4/m, 422, 4mm, 4̄2m, 4/mmm (space groups 89-142).
     The order of constants is as follows:
 
     .. math::
@@ -136,6 +155,31 @@ def tetragonal(u):
                  [0,     0,    0,    0,        2*uxz,  0],
                  [0,     0,    0,    0,        2*uyz,  0],
                  [0,     0,    0,    0,        0,      2*uxy]])
+
+
+def tetragonal_low(u):
+    '''
+    Equation matrix generation for the tetragonal lattice (low symmetry).
+    Crystal classes: 4, 4̄ (space groups 75-88).
+    The order of constants is as follows:
+
+    .. math::
+       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{66}, C_{16}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
+    '''
+
+    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    return array(
+                [[uxx,   0,    uyy,  uzz,      0,      0,       2*uxy],
+                 [uyy,   0,    uxx,  uzz,      0,      0,      -2*uxy],
+                 [0,     uzz,  0,    uxx+uyy,  0,      0,       0    ],
+                 [0,     0,    0,    0,        2*uyz,  0,       0    ],
+                 [0,     0,    0,    0,        2*uxz,  0,       0    ],
+                 [2*uxy, 0,   -2*uxy, 0,       0,      2*uxy,   uxx-uyy]])
 
 
 def orthorombic(u):
@@ -165,6 +209,26 @@ def orthorombic(u):
 
 def trigonal(u):
     '''
+    Equation matrix generation for the trigonal lattice (high symmetry).
+    
+    This function is an alias for trigonal_high for backward compatibility.
+    The order of constants is as follows:
+
+    .. math::
+       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
+    '''
+    return trigonal_high(u)
+
+
+def trigonal_high(u):
+    '''
+    Equation matrix generation for the trigonal lattice (high symmetry).
+    Crystal classes: 32, 3m, 3̄m (space groups 149-167).
     The matrix is constructed based on the approach from L&L
     using auxiliary coordinates: :math:`\\xi=x+iy`, :math:`\\eta=x-iy`.
     The components are calculated from free energy using formula
@@ -180,8 +244,6 @@ def trigonal(u):
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
-    # TODO: Not tested yet.
-    # TODO: There is still some doubt about the :math:`C_{14}` constant.
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
                 [[   uxx,   0,    uyy,     uzz,     0,   2*uxz      ],
@@ -190,6 +252,37 @@ def trigonal(u):
                  [     0,   0,      0,       0, 2*uyz,  -4*uxy      ],
                  [     0,   0,      0,       0, 2*uxz,   2*(uxx-uyy)],
                  [ 2*uxy,   0, -2*uxy,       0,     0,  -4*uyz      ]])
+
+
+def trigonal_low(u):
+    '''
+    Equation matrix generation for the trigonal lattice (low symmetry).
+    Crystal classes: 3, 3̄ (space groups 143-148).
+    The matrix is constructed based on the approach from L&L
+    using auxiliary coordinates: :math:`\\xi=x+iy`, :math:`\\eta=x-iy`.
+    The components are calculated from free energy using formula
+    introduced in :ref:`symmetry` with appropriate coordinate changes.
+    
+    Low symmetry trigonal has additional coupling between components.
+    The order of constants is as follows:
+
+    .. math::
+       C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
+
+    :param u: vector of deformations:
+        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+
+    :returns: Symmetry defined stress-strain equation matrix
+    '''
+
+    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    return array(
+                [[   uxx,   0,    uyy,     uzz,     0,   2*uxz      ],
+                 [   uyy,   0,    uxx,     uzz,     0,  -2*uxz      ],
+                 [     0, uzz,      0, uxx+uyy,     0,   0          ],
+                 [     0,   0,      0,       0, 2*uyz,  -2*uxz      ],
+                 [     0,   0,      0,       0, 2*uxz,   2*uxy      ],
+                 [ 2*uxy,   0, -2*uxy,       0,     0,   2*uyz      ]])
 
 
 def hexagonal(u):
@@ -297,8 +390,28 @@ def get_cij_order(cryst):
             5: ('C_11', 'C_33', 'C_12', 'C_13', 'C_44', 'C_14'),
             6: ('C_11', 'C_33', 'C_12', 'C_13', 'C_44'),
             7: ('C_11', 'C_12', 'C_44'),
+            # New entries for low symmetry variants
+            'tetragonal_low': ('C_11', 'C_33', 'C_12', 'C_13', 'C_44', 'C_66', 'C_16'),
+            'trigonal_low': ('C_11', 'C_33', 'C_12', 'C_13', 'C_44', 'C_14'),
+            'trigonal_high': ('C_11', 'C_33', 'C_12', 'C_13', 'C_44', 'C_14'),
+            'tetragonal_high': ('C_11', 'C_33', 'C_12', 'C_13', 'C_44', 'C_66'),
             }
-    return orders[get_lattice_type(cryst)[0]]
+    
+    # Get symmetry function and lattice info
+    symm_func, axes, (lattype, bravais, sg_name, sg_nr) = get_symmetry_function(cryst)
+    
+    # Determine the correct order based on the symmetry function
+    if symm_func == tetragonal_low:
+        return orders['tetragonal_low']
+    elif symm_func == tetragonal_high:
+        return orders['tetragonal_high']
+    elif symm_func == trigonal_low:
+        return orders['trigonal_low']
+    elif symm_func == trigonal_high:
+        return orders['trigonal_high']
+    else:
+        # Use the old lattice type number for other systems
+        return orders[lattype]
 
 
 def get_lattice_type(cryst):
@@ -342,6 +455,62 @@ def get_lattice_type(cryst):
             break
 
     return lattype, bravais, sg_name, sg_nr
+
+
+def get_symmetry_function(cryst):
+    '''Get the appropriate symmetry function for the crystal structure.
+    
+    This function determines whether to use high or low symmetry variants
+    for tetragonal and trigonal crystal systems based on the space group number.
+    
+    For tetragonal systems:
+    - Low symmetry (4, 4̄): Space groups 75-88 -> tetragonal_low
+    - High symmetry (4/m, 422, 4mm, 4̄2m, 4/mmm): Space groups 89-142 -> tetragonal_high
+    
+    For trigonal systems:
+    - Low symmetry (3, 3̄): Space groups 143-148 -> trigonal_low
+    - High symmetry (32, 3m, 3̄m): Space groups 149-167 -> trigonal_high
+    
+    :param cryst: ASE Atoms object
+    
+    :returns: tuple (symmetry function, deformation axes list, lattice type info)
+    '''
+    lattype, bravais, sg_name, sg_nr = get_lattice_type(cryst)
+    
+    # Mapping of lattice types to their symmetry functions and deformation axes
+    symmetry_map = {
+        "Cubic": (regular, [0, 3]),
+        "Hexagonal": (hexagonal, [0, 2, 3, 5]),
+        "Orthorombic": (orthorombic, [0, 1, 2, 3, 4, 5]),
+        "Monoclinic": (monoclinic, [0, 1, 2, 3, 4, 5]),
+        "Triclinic": (triclinic, [0, 1, 2, 3, 4, 5])
+    }
+    
+    # Handle tetragonal systems with high/low symmetry distinction
+    if bravais == "Tetragonal":
+        if sg_nr <= 88:
+            # Low symmetry tetragonal (classes 4, 4̄)
+            return tetragonal_low, [0, 2, 3, 5], (lattype, bravais, sg_name, sg_nr)
+        else:
+            # High symmetry tetragonal (classes 4/m, 422, 4mm, 4̄2m, 4/mmm)
+            return tetragonal_high, [0, 2, 3, 5], (lattype, bravais, sg_name, sg_nr)
+    
+    # Handle trigonal systems with high/low symmetry distinction
+    elif bravais == "Trigonal":
+        if sg_nr <= 148:
+            # Low symmetry trigonal (classes 3, 3̄)
+            return trigonal_low, [0, 1, 2, 3, 4, 5], (lattype, bravais, sg_name, sg_nr)
+        else:
+            # High symmetry trigonal (classes 32, 3m, 3̄m)
+            return trigonal_high, [0, 1, 2, 3, 4, 5], (lattype, bravais, sg_name, sg_nr)
+    
+    # For other lattice types, use the standard mapping
+    elif bravais in symmetry_map:
+        symm_func, axes = symmetry_map[bravais]
+        return symm_func, axes, (lattype, bravais, sg_name, sg_nr)
+    
+    else:
+        raise ValueError(f"Unknown Bravais lattice type: {bravais}")
 
 
 def get_bulk_modulus(cryst):
@@ -451,22 +620,8 @@ def get_elementary_deformations(cryst, n=5, d=2):
 
     :returns: list of deformed structures
     '''
-    # Deformation look-up table
-    # Perhaps the number of deformations for trigonal
-    # system could be reduced to [0,3] but better safe then sorry
-    deform = {
-        "Cubic": [[0, 3], regular],
-        "Hexagonal": [[0, 2, 3, 5], hexagonal],
-        "Trigonal": [[0, 1, 2, 3, 4, 5], trigonal],
-        "Tetragonal": [[0, 2, 3, 5], tetragonal],
-        "Orthorombic": [[0, 1, 2, 3, 4, 5], orthorombic],
-        "Monoclinic": [[0, 1, 2, 3, 4, 5], monoclinic],
-        "Triclinic": [[0, 1, 2, 3, 4, 5], triclinic]
-    }
-
-    lattyp, brav, sg_name, sg_nr = get_lattice_type(cryst)
-    # Decide which deformations should be used
-    axis, symm = deform[brav]
+    # Get the appropriate symmetry function and deformation axes
+    symm, axis, lattice_info = get_symmetry_function(cryst)
 
     systems = []
     for a in axis:
@@ -504,22 +659,8 @@ def get_elastic_tensor(cryst, systems):
                     tuple(:math:`B_{ij}` float vector, residuals, solution rank, singular values))
     '''
 
-    # Deformation look-up table
-    # Perhaps the number of deformations for trigonal
-    # system could be reduced to [0,3] but better safe then sorry
-    deform = {
-        "Cubic": [[0, 3], regular],
-        "Hexagonal": [[0, 2, 3, 5], hexagonal],
-        "Trigonal": [[0, 1, 2, 3, 4, 5], trigonal],
-        "Tetragonal": [[0, 2, 3, 5], tetragonal],
-        "Orthorombic": [[0, 1, 2, 3, 4, 5], orthorombic],
-        "Monoclinic": [[0, 1, 2, 3, 4, 5], monoclinic],
-        "Triclinic": [[0, 1, 2, 3, 4, 5], triclinic]
-    }
-
-    lattyp, brav, sg_name, sg_nr = get_lattice_type(cryst)
-    # Decide which deformations should be used
-    axis, symm = deform[brav]
+    # Get the appropriate symmetry function
+    symm, axis, lattice_info = get_symmetry_function(cryst)
 
     ul = []
     sl = []
@@ -543,11 +684,15 @@ def get_elastic_tensor(cryst, systems):
     # TODO: Check the sign of the pressure array in the B <=> C relation
     if (symm == orthorombic):
         Cij = Bij[0] - array([-p, -p, -p, p, p, p, -p, -p, -p])
-    elif (symm == tetragonal):
+    elif (symm == tetragonal_high):
         Cij = Bij[0] - array([-p, -p, p, p, -p, -p])
+    elif (symm == tetragonal_low):
+        Cij = Bij[0] - array([-p, -p, p, p, -p, -p, p])
     elif (symm == regular):
         Cij = Bij[0] - array([-p, p, -p])
-    elif (symm == trigonal):
+    elif (symm == trigonal_high):
+        Cij = Bij[0] - array([-p, -p, p, p, -p, p])
+    elif (symm == trigonal_low):
         Cij = Bij[0] - array([-p, -p, p, p, -p, p])
     elif (symm == hexagonal):
         Cij = Bij[0] - array([-p, -p, p, p, -p])
