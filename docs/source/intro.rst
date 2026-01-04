@@ -164,7 +164,7 @@ index u runs over all independent components of the :math:`C_{ij}` matrix.
 .. note::
    In the mathematical formulation below, the strain vector :math:`s` uses
    tensor components (i.e., :math:`s_4 = \epsilon_{23}`) and the factor of 2 appears
-   explicitly in the matrices. However, the Elastic module's :python:`get_strain()`
+   explicitly in the matrices. However, the Elastic module's ``get_strain()``
    function returns strains in standard Voigt notation with engineering shear strains
    (i.e., :math:`\epsilon_4 = 2\epsilon_{23}`), and the symmetry functions account
    for this convention. Both formulations are mathematically equivalent and yield

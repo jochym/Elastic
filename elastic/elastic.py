@@ -184,6 +184,9 @@ def trigonal(u):
 
     # TODO: Not tested yet.
     # TODO: There is still some doubt about the :math:`C_{14}` constant.
+    # Note: Some coupling terms retain factors of 2 due to trigonal symmetry
+    # relationships, not due to Voigt notation. These are part of the
+    # crystallographic symmetry and are distinct from the engineering strain factors.
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
                 [[   uxx,   0,    uyy,     uzz,     0,   uxz        ],
