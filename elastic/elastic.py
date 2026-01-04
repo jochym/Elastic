@@ -241,12 +241,12 @@ def monoclinic(u):
 
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,    0    ],
-                 [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,    0    ],
-                 [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,    0    ],
-                 [  0,  0,  0,  0,  0,  0,  uyz,    0,    0,  0,  0,  0,  uxz/2.0],
-                 [  0,  0,  0,  0,  0,  0,    0,  uxz,    0,  0,  0,  0,  uyz/2.0],
-                 [  0,  0,  0,  0,  0,  0,    0,    0,  uxy,uxx,uyy,uzz,    0    ]])
+                [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0  ],
+                 [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0  ],
+                 [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,  0  ],
+                 [  0,  0,  0,  0,  0,  0,  uyz,    0,    0,  0,  0,  0,uxz  ],
+                 [  0,  0,  0,  0,  0,  0,    0,  uxz,    0,  0,  0,  0,uyz  ],
+                 [  0,  0,  0,  0,  0,  0,    0,    0,  uxy,uxx,uyy,uzz,  0  ]])
 
 
 def triclinic(u):
@@ -274,12 +274,12 @@ def triclinic(u):
     # If you have test cases for this symmetry send them to the author.
     uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-    [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,    0,    0,  uyz/2.0,uxz/2.0,      0,      0    ],
-     [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,    0,    0,        0,      0,uxz/2.0,      0    ],
-     [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,    0,    0,        0,      0,      0,      0    ],
-     [  0,  0,  0,  0,  0,  0,  uyz,    0,    0,  0,  0,  0,uxy/2.0,    0,      uxx,    0,      0,uxz/2.0],
-     [  0,  0,  0,  0,  0,  0,    0,  uxz,    0,  0,  0,  0,    0,uxy/2.0,        0,  uxx,    uyy,uyz/2.0],
-     [  0,  0,  0,  0,  0,  0,    0,    0,  uxy,uxx,uyy,uzz,uyz/2.0,uxz/2.0,        0,    0,      0,      0    ]])
+    [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0,  0,uyz,uxz,  0,  0],
+     [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0,  0,  0,  0,uxz,  0],
+     [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,  0,  0,  0,  0,  0,  0],
+     [  0,  0,  0,  0,  0,  0,  uyz,    0,    0,  0,  0,  0,uxy,  0,uxx,  0,  0,uxz],
+     [  0,  0,  0,  0,  0,  0,    0,  uxz,    0,  0,  0,  0,  0,uxy,  0,uxx,uyy,uyz],
+     [  0,  0,  0,  0,  0,  0,    0,    0,  uxy,uxx,uyy,uzz,uyz,uxz,  0,  0,  0,  0]])
 
 
 def get_cij_order(cryst):
