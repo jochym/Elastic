@@ -602,10 +602,16 @@ def get_elastic_tensor(cryst, systems):
 def scan_pressures(cryst, lo, hi, n=5, eos=None):
     '''
     Scan the pressure axis from lo to hi (inclusive)
-    using B-M EOS as the volume predictor.
+    using inverse Murnaghan EOS as the volume predictor.
+    
+    Note: This function uses the inverse Murnaghan equation as an approximation
+    for computational efficiency. The inverse of the full 3rd-order Birch-Murnaghan
+    equation requires numerical solution and is more complex. For moderate pressure
+    ranges, the Murnaghan approximation provides reasonable volume estimates.
+    
     Pressure (lo, hi) in GPa
     '''
-    # Inverse B-M EOS to get volumes from pressures
+    # Inverse Murnaghan EOS to get volumes from pressures
     # This will work only in limited pressure range p>-B/B'.
     # Warning! Relative, the V0 prefactor is removed.
     def invbmeos(b, bp, x):
