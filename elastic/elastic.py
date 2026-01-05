@@ -614,18 +614,18 @@ def scan_pressures(cryst, lo, hi, n=5, eos=None):
     # Inverse Murnaghan EOS to get volumes from pressures
     # This will work only in limited pressure range p>-B/B'.
     # Warning! Relative, the V0 prefactor is removed.
-    def invbmeos(b, bp, x):
+    def invmurneos(b, bp, x):
         return array([pow(b/(bp*xv+b), 1/(3*bp)) for xv in x])
 
     if eos is None:
         raise RuntimeError('Required EOS data missing')
 
     # Limit negative pressures to 90% of the singularity value.
-    # Beyond this B-M EOS is bound to be wrong anyway.
+    # Beyond this Murnaghan EOS is bound to be wrong anyway.
     lo = max(lo, -0.9*eos[1]/eos[2])
 
-    scale = (eos[0]/cryst.get_volume())*invbmeos(eos[1], eos[2],
-                                                 linspace(lo, hi, num=n))
+    scale = (eos[0]/cryst.get_volume())*invmurneos(eos[1], eos[2],
+                                                   linspace(lo, hi, num=n))
     # print(scale)
     uc = cryst.get_cell()
     systems = [Atoms(cryst) for s in scale]
