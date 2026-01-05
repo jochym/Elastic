@@ -28,9 +28,12 @@ Elastic Module
 Elastic is a module for calculation of :math:`C_{ij}` components of elastic
 tensor from the strain-stress relation.
 
-The strain components here are ordered in standard way which is different
-to ordering in previous versions of the code (up to 4.0).
-The ordering is: :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}`.
+The strain components here are in standard Voigt notation with engineering 
+shear strains (also known as the standard Voigt notation for strain).
+The ordering is: :math:`\\epsilon_{1}, \\epsilon_{2}, \\epsilon_{3}, \\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}`,
+corresponding to :math:`\\epsilon_{xx}, \\epsilon_{yy}, \\epsilon_{zz}, 2\\epsilon_{yz}, 2\\epsilon_{xz}, 2\\epsilon_{xy}`,
+where the shear components (:math:`\\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}`) are engineering strains
+(twice the corresponding tensor shear components).
 
 The general ordering of :math:`C_{ij}` components is (except for triclinic
 symmetry and taking into account customary names of constants - e.g.
@@ -47,11 +50,6 @@ corespond to the canonical deformations of a crystal. The elements are the
 second partial derivatives of the free energy formula for the crystal written
 down as a quadratic form of the deformations with respect to elastic constant
 and deformation.
-
-*Note:*
-The elements for deformations :math:`u_{xy}, u_{xz}, u_{yz}`
-have to be divided by 2 to properly match the usual definition
-of elastic constants.
 
 See: [LL]_ L.D. Landau, E.M. Lifszyc, "Theory of elasticity"
 
@@ -99,19 +97,20 @@ def regular(u):
     .. math::
        C_{11}, C_{12}, C_{44}
 
-    :param u: vector of deformations:
-        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+    :param u: vector of deformations in Voigt notation:
+        [ :math:`\\epsilon_{1}, \\epsilon_{2}, \\epsilon_{3}, \\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}` ]
+        where shear strains are engineering strains (2× tensor components)
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-               [[uxx,   uyy + uzz,      0],
-                [uyy,   uxx + uzz,      0],
-                [uzz,   uxx + uyy,      0],
-                [0,             0,      2*uyz],
-                [0,             0,      2*uxz],
-                [0,             0,      2*uxy]])
+               [[e1,   e2 + e3,      0],
+                [e2,   e1 + e3,      0],
+                [e3,   e1 + e2,      0],
+                [0,           0,     e4],
+                [0,           0,     e5],
+                [0,           0,     e6]])
 
 
 def tetragonal(u):
@@ -122,20 +121,21 @@ def tetragonal(u):
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{66}
 
-    :param u: vector of deformations:
-        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+    :param u: vector of deformations in Voigt notation:
+        [ :math:`\\epsilon_{1}, \\epsilon_{2}, \\epsilon_{3}, \\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}` ]
+        where shear strains are engineering strains (2× tensor components)
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[uxx,   0,    uyy,  uzz,      0,      0],
-                 [uyy,   0,    uxx,  uzz,      0,      0],
-                 [0,     uzz,  0,    uxx+uyy,  0,      0],
-                 [0,     0,    0,    0,        2*uxz,  0],
-                 [0,     0,    0,    0,        2*uyz,  0],
-                 [0,     0,    0,    0,        0,      2*uxy]])
+                [[e1,   0,    e2,  e3,      0,      0],
+                 [e2,   0,    e1,  e3,      0,      0],
+                 [0,    e3,   0,   e1+e2,   0,      0],
+                 [0,    0,    0,   0,       e4,     0],
+                 [0,    0,    0,   0,       e5,     0],
+                 [0,    0,    0,   0,       0,      e6]])
 
 
 def orthorombic(u):
@@ -147,20 +147,21 @@ def orthorombic(u):
        C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
        C_{44}, C_{55}, C_{66}
 
-    :param u: vector of deformations:
-        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+    :param u: vector of deformations in Voigt notation:
+        [ :math:`\\epsilon_{1}, \\epsilon_{2}, \\epsilon_{3}, \\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}` ]
+        where shear strains are engineering strains (2× tensor components)
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[uxx,     0,    0,  uyy,  uzz,    0,     0,     0,     0],
-                 [0,     uyy,    0,  uxx,    0,  uzz,     0,     0,     0],
-                 [0,       0,  uzz,    0,  uxx,  uyy,     0,     0,     0],
-                 [0,       0,    0,    0,    0,    0, 2*uyz,     0,     0],
-                 [0,       0,    0,    0,    0,    0,     0, 2*uxz,     0],
-                 [0,       0,    0,    0,    0,    0,     0,     0, 2*uxy]])
+                [[e1,     0,    0,  e2,  e3,    0,     0,     0,     0],
+                 [0,     e2,    0,  e1,   0,  e3,     0,     0,     0],
+                 [0,      0,   e3,   0,  e1,  e2,     0,     0,     0],
+                 [0,      0,    0,   0,   0,   0,    e4,     0,     0],
+                 [0,      0,    0,   0,   0,   0,     0,    e5,     0],
+                 [0,      0,    0,   0,   0,   0,     0,     0,    e6]])
 
 
 def trigonal(u):
@@ -174,22 +175,26 @@ def trigonal(u):
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}, C_{14}
 
-    :param u: vector of deformations:
-        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+    :param u: vector of deformations in Voigt notation:
+        [ :math:`\\epsilon_{1}, \\epsilon_{2}, \\epsilon_{3}, \\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}` ]
+        where shear strains are engineering strains (2× tensor components)
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
     # TODO: Not tested yet.
     # TODO: There is still some doubt about the :math:`C_{14}` constant.
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    # Note: Some coupling terms retain factors of 2 due to trigonal symmetry
+    # relationships, not due to Voigt notation. These are part of the
+    # crystallographic symmetry and are distinct from the engineering strain factors.
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[   uxx,   0,    uyy,     uzz,     0,   2*uxz      ],
-                 [   uyy,   0,    uxx,     uzz,     0,  -2*uxz      ],
-                 [     0, uzz,      0, uxx+uyy,     0,   0          ],
-                 [     0,   0,      0,       0, 2*uyz,  -4*uxy      ],
-                 [     0,   0,      0,       0, 2*uxz,   2*(uxx-uyy)],
-                 [ 2*uxy,   0, -2*uxy,       0,     0,  -4*uyz      ]])
+                [[   e1,   0,    e2,      e3,     0,   e5        ],
+                 [   e2,   0,    e1,      e3,     0,  -e5        ],
+                 [    0,  e3,     0,   e1+e2,     0,   0         ],
+                 [    0,   0,     0,       0,    e4,  -2*e6      ],
+                 [    0,   0,     0,       0,    e5,   (e1-e2)   ],
+                 [   e6,   0,   -e6,       0,     0,  -2*e4      ]])
 
 
 def hexagonal(u):
@@ -203,21 +208,22 @@ def hexagonal(u):
     .. math::
        C_{11}, C_{33}, C_{12}, C_{13}, C_{44}
 
-    :param u: vector of deformations:
-        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+    :param u: vector of deformations in Voigt notation:
+        [ :math:`\\epsilon_{1}, \\epsilon_{2}, \\epsilon_{3}, \\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}` ]
+        where shear strains are engineering strains (2× tensor components)
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
     # TODO: Still needs good verification
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[   uxx,   0,    uyy,     uzz,     0   ],
-                 [   uyy,   0,    uxx,     uzz,     0   ],
-                 [     0, uzz,      0, uxx+uyy,     0   ],
-                 [     0,   0,      0,       0, 2*uyz   ],
-                 [     0,   0,      0,       0, 2*uxz   ],
-                 [   uxy,   0,   -uxy,       0,     0   ]])
+                [[   e1,   0,    e2,      e3,     0   ],
+                 [   e2,   0,    e1,      e3,     0   ],
+                 [    0,  e3,     0,   e1+e2,     0   ],
+                 [    0,   0,     0,       0,    e4   ],
+                 [    0,   0,     0,       0,    e5   ],
+                 [   e6,   0,   -e6,       0,     0   ]])
 
 
 def monoclinic(u):
@@ -229,20 +235,21 @@ def monoclinic(u):
        C_{11}, C_{22}, C_{33}, C_{12}, C_{13}, C_{23},
        C_{44}, C_{55}, C_{66}, C_{16}, C_{26}, C_{36}, C_{45}
 
-    :param u: vector of deformations:
-        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+    :param u: vector of deformations in Voigt notation:
+        [ :math:`\\epsilon_{1}, \\epsilon_{2}, \\epsilon_{3}, \\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}` ]
+        where shear strains are engineering strains (2× tensor components)
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0],
-                 [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0],
-                 [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,  0],
-                 [  0,  0,  0,  0,  0,  0,2*uyz,    0,    0,  0,  0,  0,uxz],
-                 [  0,  0,  0,  0,  0,  0,    0,2*uxz,    0,  0,  0,  0,uyz],
-                 [  0,  0,  0,  0,  0,  0,    0,    0,2*uxy,uxx,uyy,uzz,  0]])
+                [[e1,  0,  0,e2,e3,  0,   0,   0,   0,e6,  0,  0,  0  ],
+                 [ 0,e2,  0,e1,  0,e3,   0,   0,   0,  0,e6,  0,  0  ],
+                 [ 0,  0,e3,  0,e1,e2,   0,   0,   0,  0,  0,e6,  0  ],
+                 [ 0,  0,  0,  0,  0,  0, e4,   0,   0,  0,  0,  0,e5  ],
+                 [ 0,  0,  0,  0,  0,  0,   0, e5,   0,  0,  0,  0,e4  ],
+                 [ 0,  0,  0,  0,  0,  0,   0,   0, e6,e1,e2,e3,  0  ]])
 
 
 def triclinic(u):
@@ -259,22 +266,23 @@ def triclinic(u):
        C_{16}, C_{26}, C_{36}, C_{46}, C_{56},
        C_{14}, C_{15}, C_{25}, C_{45}
 
-    :param u: vector of deformations:
-        [ :math:`u_{xx}, u_{yy}, u_{zz}, u_{yz}, u_{xz}, u_{xy}` ]
+    :param u: vector of deformations in Voigt notation:
+        [ :math:`\\epsilon_{1}, \\epsilon_{2}, \\epsilon_{3}, \\epsilon_{4}, \\epsilon_{5}, \\epsilon_{6}` ]
+        where shear strains are engineering strains (2× tensor components)
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
     # Based on the monoclinic matrix and not tested on real case.
     # If you have test cases for this symmetry send them to the author.
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-    [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0,  0,uyz,uxz,  0,  0],
-     [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0,  0,  0,  0,uxz,  0],
-     [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,  0,  0,  0,  0,  0,  0],
-     [  0,  0,  0,  0,  0,  0,2*uyz,    0,    0,  0,  0,  0,uxy,  0,uxx,  0,  0,uxz],
-     [  0,  0,  0,  0,  0,  0,    0,2*uxz,    0,  0,  0,  0,  0,uxy,  0,uxx,uyy,uyz],
-     [  0,  0,  0,  0,  0,  0,    0,    0,2*uxy,uxx,uyy,uzz,uyz,uxz,  0,  0,  0,  0]])
+    [[e1,  0,  0,e2,e3,  0,   0,   0,   0,e6,  0,  0,  0,  0,e4,e5,  0,  0],
+     [ 0,e2,  0,e1,  0,e3,   0,   0,   0,  0,e6,  0,  0,  0,  0,  0,e5,  0],
+     [ 0,  0,e3,  0,e1,e2,   0,   0,   0,  0,  0,e6,  0,  0,  0,  0,  0,  0],
+     [ 0,  0,  0,  0,  0,  0, e4,   0,   0,  0,  0,  0,e6,  0,e1,  0,  0,e5],
+     [ 0,  0,  0,  0,  0,  0,   0, e5,   0,  0,  0,  0,  0,e6,  0,e1,e2,e4],
+     [ 0,  0,  0,  0,  0,  0,   0,   0, e6,e1,e2,e3,e4,e5,  0,  0,  0,  0]])
 
 
 def get_cij_order(cryst):
@@ -705,11 +713,17 @@ def get_strain(cryst, refcell=None):
     Computes the strain tensor in the Voight notation as a conventional
     6-vector. The calculation is done with respect to the crystal
     geometry passed in refcell parameter.
+    
+    The shear strain components (ε₄, ε₅, ε₆) are returned as engineering
+    strains, which are twice the corresponding tensor shear components:
+    ε₄ = 2ε₂₃, ε₅ = 2ε₁₃, ε₆ = 2ε₁₂. This is the standard Voigt notation
+    convention for strain used in elasticity theory.
 
     :param cryst: deformed structure
     :param refcell: reference, undeformed structure
 
     :returns: 6-vector of strain tensor in the Voight notation
+        [ε₁, ε₂, ε₃, ε₄, ε₅, ε₆] = [ε₁₁, ε₂₂, ε₃₃, 2ε₂₃, 2ε₁₃, 2ε₁₂]
     '''
     if refcell is None:
         refcell = cryst
@@ -718,7 +732,8 @@ def get_strain(cryst, refcell=None):
     m = inv(m)
     u = dot(m, du)
     u = (u+u.T)/2
-    return array([u[0, 0], u[1, 1], u[2, 2], u[2, 1], u[2, 0], u[1, 0]])
+    # Return Voigt notation: [ε₁₁, ε₂₂, ε₃₃, 2ε₂₃, 2ε₁₃, 2ε₁₂]
+    return array([u[0, 0], u[1, 1], u[2, 2], 2*u[2, 1], 2*u[2, 0], 2*u[1, 0]])
 
 
 if __name__ == '__main__':

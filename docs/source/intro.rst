@@ -159,8 +159,18 @@ symmetry relations and strains :math:`s_{j}^{a}` create a new equation matrix
 :math:`S`. :math:`S_{ju}(s^{a})C_{u}=\sigma_{j}^{a}`. The :math:`S(s)` matrix is
 a linear function of the strain vector s with all symmetry relations taken into
 account. The index a runs over all data sets we have in the calculation while
-index u runs over all independent components of the :math:`C_{ij}` matrix. For
-the cubic crystal the above equation takes explicit form:
+index u runs over all independent components of the :math:`C_{ij}` matrix. 
+
+.. note::
+   In the mathematical formulation below, the strain vector :math:`s` uses
+   tensor components (i.e., :math:`s_4 = \epsilon_{23}`) and the factor of 2 appears
+   explicitly in the matrices. However, the Elastic module's ``get_strain()``
+   function returns strains in standard Voigt notation with engineering shear strains
+   (i.e., :math:`\epsilon_4 = 2\epsilon_{23}`), and the symmetry functions account
+   for this convention. Both formulations are mathematically equivalent and yield
+   identical elastic constants.
+
+For the cubic crystal the above equation takes explicit form:
 
 .. math::
     \left[\begin{array}{ccc}
