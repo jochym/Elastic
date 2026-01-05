@@ -65,7 +65,7 @@ There is some usefull summary also at:
 from __future__ import print_function, division, absolute_import
 from .elastic import get_BM_EOS, get_elastic_tensor
 from .elastic import get_elementary_deformations, scan_volumes
-from .elastic import get_pressure, get_strain, BMEOS
+from .elastic import get_pressure, get_strain, BMEOS, MurnaghanEOS
 
 # To reach "elastic.__version__" attribute in other programs
 from ._version import __version__

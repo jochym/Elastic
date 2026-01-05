@@ -80,6 +80,44 @@ from math import acos, pi, cos, sin, sqrt
 
 
 def BMEOS(v, v0, b0, b0p):
+    '''
+    Third-order Birch-Murnaghan Equation of State.
+    
+    Returns pressure as a function of volume for the Birch-Murnaghan EOS.
+    
+    .. math::
+       P(V) = \\frac{3B_0}{2} \\left[\\left(\\frac{V_0}{V}\\right)^{7/3} - 
+       \\left(\\frac{V_0}{V}\\right)^{5/3}\\right] 
+       \\left\\{1 + \\frac{3}{4}(B'_0 - 4)\\left[\\left(\\frac{V_0}{V}\\right)^{2/3} - 1\\right]\\right\\}
+    
+    :param v: volume
+    :param v0: equilibrium volume V_0
+    :param b0: bulk modulus B_0
+    :param b0p: pressure derivative of bulk modulus B'_0
+    
+    :returns: pressure P(V)
+    '''
+    x = (v0/v)**(1.0/3.0)
+    return (3.0*b0/2.0) * (x**7 - x**5) * (1.0 + (3.0/4.0)*(b0p - 4.0)*(x**2 - 1.0))
+
+
+def MurnaghanEOS(v, v0, b0, b0p):
+    '''
+    Murnaghan Equation of State.
+    
+    Returns pressure as a function of volume for the Murnaghan EOS.
+    This was the equation previously (incorrectly) used for BMEOS.
+    
+    .. math::
+       P(V) = \\frac{B_0}{B'_0}\\left[\\left(\\frac{V_0}{V}\\right)^{B'_0} - 1\\right]
+    
+    :param v: volume
+    :param v0: equilibrium volume V_0
+    :param b0: bulk modulus B_0
+    :param b0p: pressure derivative of bulk modulus B'_0
+    
+    :returns: pressure P(V)
+    '''
     return (b0/b0p)*(pow(v0/v, b0p) - 1)
 
 
@@ -385,14 +423,14 @@ def get_pressure(s):
 def get_BM_EOS(cryst, systems):
     """Calculate Birch-Murnaghan Equation of State for the crystal.
 
-    The B-M equation of state is defined by:
+    The third-order Birch-Murnaghan equation of state is defined by:
 
     .. math::
-       P(V)= \\frac{B_0}{B'_0}\\left[
-       \\left({\\frac{V}{V_0}}\\right)^{-B'_0} - 1
-       \\right]
+       P(V) = \\frac{3B_0}{2} \\left[\\left(\\frac{V_0}{V}\\right)^{7/3} - 
+       \\left(\\frac{V_0}{V}\\right)^{5/3}\\right] 
+       \\left\\{1 + \\frac{3}{4}(B'_0 - 4)\\left[\\left(\\frac{V_0}{V}\\right)^{2/3} - 1\\right]\\right\\}
 
-    It's coefficients are estimated using n single-point structures ganerated
+    It's coefficients are estimated using n single-point structures generated
     from the crystal (cryst) by the scan_volumes function between two relative
     volumes. The BM EOS is fitted to the computed points by
     least squares method. The returned value is a list of fitted
@@ -564,24 +602,30 @@ def get_elastic_tensor(cryst, systems):
 def scan_pressures(cryst, lo, hi, n=5, eos=None):
     '''
     Scan the pressure axis from lo to hi (inclusive)
-    using B-M EOS as the volume predictor.
+    using inverse Murnaghan EOS as the volume predictor.
+    
+    Note: This function uses the inverse Murnaghan equation as an approximation
+    for computational efficiency. The inverse of the full 3rd-order Birch-Murnaghan
+    equation requires numerical solution and is more complex. For moderate pressure
+    ranges, the Murnaghan approximation provides reasonable volume estimates.
+    
     Pressure (lo, hi) in GPa
     '''
-    # Inverse B-M EOS to get volumes from pressures
+    # Inverse Murnaghan EOS to get volumes from pressures
     # This will work only in limited pressure range p>-B/B'.
     # Warning! Relative, the V0 prefactor is removed.
-    def invbmeos(b, bp, x):
+    def invmurneos(b, bp, x):
         return array([pow(b/(bp*xv+b), 1/(3*bp)) for xv in x])
 
     if eos is None:
         raise RuntimeError('Required EOS data missing')
 
     # Limit negative pressures to 90% of the singularity value.
-    # Beyond this B-M EOS is bound to be wrong anyway.
+    # Beyond this Murnaghan EOS is bound to be wrong anyway.
     lo = max(lo, -0.9*eos[1]/eos[2])
 
-    scale = (eos[0]/cryst.get_volume())*invbmeos(eos[1], eos[2],
-                                                 linspace(lo, hi, num=n))
+    scale = (eos[0]/cryst.get_volume())*invmurneos(eos[1], eos[2],
+                                                   linspace(lo, hi, num=n))
     # print(scale)
     uc = cryst.get_cell()
     systems = [Atoms(cryst) for s in scale]

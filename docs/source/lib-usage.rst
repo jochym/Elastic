@@ -127,16 +127,16 @@ Birch-Murnaghan Equation of State
 
 Let us now use the tools provided by the modules to calculate equation
 of state for the crystal and verify it by plotting the data points
-against fitted EOS curve. The EOS used by the module is a well
-established Birch-Murnaghan formula (P - pressure, V - volume, B -
-parameters):
+against fitted EOS curve. The EOS used by the module is the well
+established third-order Birch-Murnaghan formula (P - pressure, V - volume, 
+B - parameters):
 
 .. math::
 
 
-      P(V)= \frac{B_0}{B'_0}\left[
-      \left({\frac{V}{V_0}}\right)^{-B'_0} - 1
-      \right]
+      P(V) = \frac{3B_0}{2} \left[\left(\frac{V_0}{V}\right)^{7/3} - 
+      \left(\frac{V_0}{V}\right)^{5/3}\right] 
+      \left\{1 + \frac{3}{4}(B'_0 - 4)\left[\left(\frac{V_0}{V}\right)^{2/3} - 1\right]\right\}
 
 Now we repeat the setup and optimization procedure from the example 1
 above but using a new Crystal class (see above we skip this part for
