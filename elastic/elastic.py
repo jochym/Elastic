@@ -103,14 +103,14 @@ def regular(u):
 
     :returns: Symmetry defined stress-strain equation matrix
     '''
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-               [[uxx,   uyy + uzz,      0],
-                [uyy,   uxx + uzz,      0],
-                [uzz,   uxx + uyy,      0],
-                [0,             0,      uyz],
-                [0,             0,      uxz],
-                [0,             0,      uxy]])
+               [[e1,   e2 + e3,      0],
+                [e2,   e1 + e3,      0],
+                [e3,   e1 + e2,      0],
+                [0,           0,     e4],
+                [0,           0,     e5],
+                [0,           0,     e6]])
 
 
 def tetragonal(u):
@@ -128,14 +128,14 @@ def tetragonal(u):
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[uxx,   0,    uyy,  uzz,      0,      0],
-                 [uyy,   0,    uxx,  uzz,      0,      0],
-                 [0,     uzz,  0,    uxx+uyy,  0,      0],
-                 [0,     0,    0,    0,        uxz,    0],
-                 [0,     0,    0,    0,        uyz,    0],
-                 [0,     0,    0,    0,        0,      uxy]])
+                [[e1,   0,    e2,  e3,      0,      0],
+                 [e2,   0,    e1,  e3,      0,      0],
+                 [0,    e3,   0,   e1+e2,   0,      0],
+                 [0,    0,    0,   0,       e5,     0],
+                 [0,    0,    0,   0,       e4,     0],
+                 [0,    0,    0,   0,       0,      e6]])
 
 
 def orthorombic(u):
@@ -154,14 +154,14 @@ def orthorombic(u):
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[uxx,     0,    0,  uyy,  uzz,    0,     0,     0,     0],
-                 [0,     uyy,    0,  uxx,    0,  uzz,     0,     0,     0],
-                 [0,       0,  uzz,    0,  uxx,  uyy,     0,     0,     0],
-                 [0,       0,    0,    0,    0,    0,   uyz,     0,     0],
-                 [0,       0,    0,    0,    0,    0,     0,   uxz,     0],
-                 [0,       0,    0,    0,    0,    0,     0,     0,   uxy]])
+                [[e1,     0,    0,  e2,  e3,    0,     0,     0,     0],
+                 [0,     e2,    0,  e1,   0,  e3,     0,     0,     0],
+                 [0,      0,   e3,   0,  e1,  e2,     0,     0,     0],
+                 [0,      0,    0,   0,   0,   0,    e4,     0,     0],
+                 [0,      0,    0,   0,   0,   0,     0,    e5,     0],
+                 [0,      0,    0,   0,   0,   0,     0,     0,    e6]])
 
 
 def trigonal(u):
@@ -187,14 +187,14 @@ def trigonal(u):
     # Note: Some coupling terms retain factors of 2 due to trigonal symmetry
     # relationships, not due to Voigt notation. These are part of the
     # crystallographic symmetry and are distinct from the engineering strain factors.
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[   uxx,   0,    uyy,     uzz,     0,   uxz        ],
-                 [   uyy,   0,    uxx,     uzz,     0,  -uxz        ],
-                 [     0, uzz,      0, uxx+uyy,     0,   0          ],
-                 [     0,   0,      0,       0,   uyz,  -2*uxy      ],
-                 [     0,   0,      0,       0,   uxz,   (uxx-uyy)  ],
-                 [   uxy,   0,   -uxy,       0,     0,  -2*uyz      ]])
+                [[   e1,   0,    e2,      e3,     0,   e5        ],
+                 [   e2,   0,    e1,      e3,     0,  -e5        ],
+                 [    0,  e3,     0,   e1+e2,     0,   0         ],
+                 [    0,   0,     0,       0,    e4,  -2*e6      ],
+                 [    0,   0,     0,       0,    e5,   (e1-e2)   ],
+                 [   e6,   0,   -e6,       0,     0,  -2*e4      ]])
 
 
 def hexagonal(u):
@@ -216,14 +216,14 @@ def hexagonal(u):
     '''
 
     # TODO: Still needs good verification
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[   uxx,   0,    uyy,     uzz,     0   ],
-                 [   uyy,   0,    uxx,     uzz,     0   ],
-                 [     0, uzz,      0, uxx+uyy,     0   ],
-                 [     0,   0,      0,       0,   uyz   ],
-                 [     0,   0,      0,       0,   uxz   ],
-                 [   uxy,   0,   -uxy,       0,     0   ]])
+                [[   e1,   0,    e2,      e3,     0   ],
+                 [   e2,   0,    e1,      e3,     0   ],
+                 [    0,  e3,     0,   e1+e2,     0   ],
+                 [    0,   0,     0,       0,    e4   ],
+                 [    0,   0,     0,       0,    e5   ],
+                 [   e6,   0,   -e6,       0,     0   ]])
 
 
 def monoclinic(u):
@@ -242,14 +242,14 @@ def monoclinic(u):
     :returns: Symmetry defined stress-strain equation matrix
     '''
 
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-                [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0  ],
-                 [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0  ],
-                 [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,  0  ],
-                 [  0,  0,  0,  0,  0,  0,  uyz,    0,    0,  0,  0,  0,uxz  ],
-                 [  0,  0,  0,  0,  0,  0,    0,  uxz,    0,  0,  0,  0,uyz  ],
-                 [  0,  0,  0,  0,  0,  0,    0,    0,  uxy,uxx,uyy,uzz,  0  ]])
+                [[e1,  0,  0,e2,e3,  0,   0,   0,   0,e6,  0,  0,  0  ],
+                 [ 0,e2,  0,e1,  0,e3,   0,   0,   0,  0,e6,  0,  0  ],
+                 [ 0,  0,e3,  0,e1,e2,   0,   0,   0,  0,  0,e6,  0  ],
+                 [ 0,  0,  0,  0,  0,  0, e4,   0,   0,  0,  0,  0,e5  ],
+                 [ 0,  0,  0,  0,  0,  0,   0, e5,   0,  0,  0,  0,e4  ],
+                 [ 0,  0,  0,  0,  0,  0,   0,   0, e6,e1,e2,e3,  0  ]])
 
 
 def triclinic(u):
@@ -275,14 +275,14 @@ def triclinic(u):
 
     # Based on the monoclinic matrix and not tested on real case.
     # If you have test cases for this symmetry send them to the author.
-    uxx, uyy, uzz, uyz, uxz, uxy = u[0], u[1], u[2], u[3], u[4], u[5]
+    e1, e2, e3, e4, e5, e6 = u[0], u[1], u[2], u[3], u[4], u[5]
     return array(
-    [[uxx,  0,  0,uyy,uzz,  0,    0,    0,    0,uxy,  0,  0,  0,  0,uyz,uxz,  0,  0],
-     [  0,uyy,  0,uxx,  0,uzz,    0,    0,    0,  0,uxy,  0,  0,  0,  0,  0,uxz,  0],
-     [  0,  0,uzz,  0,uxx,uyy,    0,    0,    0,  0,  0,uxy,  0,  0,  0,  0,  0,  0],
-     [  0,  0,  0,  0,  0,  0,  uyz,    0,    0,  0,  0,  0,uxy,  0,uxx,  0,  0,uxz],
-     [  0,  0,  0,  0,  0,  0,    0,  uxz,    0,  0,  0,  0,  0,uxy,  0,uxx,uyy,uyz],
-     [  0,  0,  0,  0,  0,  0,    0,    0,  uxy,uxx,uyy,uzz,uyz,uxz,  0,  0,  0,  0]])
+    [[e1,  0,  0,e2,e3,  0,   0,   0,   0,e6,  0,  0,  0,  0,e4,e5,  0,  0],
+     [ 0,e2,  0,e1,  0,e3,   0,   0,   0,  0,e6,  0,  0,  0,  0,  0,e5,  0],
+     [ 0,  0,e3,  0,e1,e2,   0,   0,   0,  0,  0,e6,  0,  0,  0,  0,  0,  0],
+     [ 0,  0,  0,  0,  0,  0, e4,   0,   0,  0,  0,  0,e6,  0,e1,  0,  0,e5],
+     [ 0,  0,  0,  0,  0,  0,   0, e5,   0,  0,  0,  0,  0,e6,  0,e1,e2,e4],
+     [ 0,  0,  0,  0,  0,  0,   0,   0, e6,e1,e2,e3,e4,e5,  0,  0,  0,  0]])
 
 
 def get_cij_order(cryst):
